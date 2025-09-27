@@ -1,0 +1,10 @@
+liverpool1.
+
+9251
+
+1529
+
+
+
+
+looks like v = 128 in the production algorithm when auto operations computer is fitted

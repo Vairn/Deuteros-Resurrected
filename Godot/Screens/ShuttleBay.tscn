@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://du6cxq2xabkyu"]
+
+[ext_resource type="Texture2D" uid="uid://3pkg8u2dy5mw" path="res://Sprites/Scenes/ShuttleBay_Empty.png" id="2"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="ShuttleBay_Empty" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("2")

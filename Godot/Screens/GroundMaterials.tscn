@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://380q5ahay68h"]
+
+[ext_resource type="Texture2D" uid="uid://dyyddnxh7d4pg" path="res://Sprites/Scenes/Store.png" id="2"]
+[ext_resource type="Script" path="res://Code/Platform/Screens/GroundMaterials.cs" id="3"]
+[ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="4"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Resource" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("2")
+
+[node name="DerrickCount" type="Label" parent="."]
+offset_left = 1061.19
+offset_top = 630.238
+offset_right = 1116.19
+offset_bottom = 682.238
+
+[node name="AddDerrick" type="Button" parent="."]
+show_behind_parent = true
+offset_left = 1130.0
+offset_top = 629.0
+offset_right = 1219.0
+offset_bottom = 687.0
+
+[node name="SoundController" parent="." instance=ExtResource("4")]
+SoundToPlay = 3
+
+[node name="ScriptNode" type="Node2D" parent="."]
+script = ExtResource("3")

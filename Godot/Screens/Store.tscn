@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7hf45yhv86cn"]
+
+[ext_resource type="Script" path="res://Code/Platform/Screens/Store.cs" id="1_arae6"]
+[ext_resource type="Texture2D" uid="uid://clrq3llnfq3a5" path="res://Sprites/Scenes/Store_Resource.png" id="1_qtqov"]
+[ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont18.tres" id="3_jtic2"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_arae6")
+
+[node name="Store_Resource" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("1_qtqov")
+expand_mode = 1
+
+[node name="StoreButtons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1080.0
+offset_top = 150.0
+offset_right = 1210.0
+offset_bottom = 651.0
+
+[node name="SwitchStoreType" type="Button" parent="."]
+show_behind_parent = true
+offset_left = 340.0
+offset_top = 731.0
+offset_right = 380.0
+offset_bottom = 771.0
+scale = Vector2(2.24, 1.56)
+
+[node name="ResourceList" type="Label" parent="."]
+offset_left = 330.0
+offset_top = 186.0
+offset_right = 747.0
+offset_bottom = 641.0
+theme = ExtResource("3_jtic2")
+
+[node name="Recipe" type="Label" parent="."]
+offset_left = 723.0
+offset_top = 200.0
+offset_right = 1057.0
+offset_bottom = 655.0
+theme = ExtResource("3_jtic2")
+autowrap_mode = 3

@@ -1,0 +1,87 @@
+[gd_scene load_steps=5 format=3 uid="uid://dm6c3u7eka7hc"]
+
+[ext_resource type="Script" path="res://Code/Platform/Screens/Production.cs" id="1_7mj6f"]
+[ext_resource type="Texture2D" uid="uid://clcj5c7woisxx" path="res://Sprites/Scenes/Production.png" id="2"]
+[ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont18.tres" id="2_e5ye3"]
+[ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3_purcx"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_7mj6f")
+
+[node name="Production" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("2")
+stretch_mode = 5
+
+[node name="ProductionButtons" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1079.0
+offset_top = 149.0
+offset_right = 1209.0
+offset_bottom = 650.0
+
+[node name="Labels" type="Node2D" parent="."]
+
+[node name="ProductionNameLabel" type="Label" parent="Labels"]
+anchors_preset = -1
+anchor_bottom = 0.012
+offset_left = 166.0
+offset_top = 64.0
+offset_right = 490.0
+offset_bottom = 100.0
+pivot_offset = Vector2(73.838, 18)
+theme = ExtResource("2_e5ye3")
+horizontal_alignment = 2
+
+[node name="StaffNameLabel" type="Label" parent="Labels"]
+anchors_preset = -1
+anchor_bottom = 0.012
+offset_left = 971.0
+offset_top = 683.0
+offset_right = 1245.0
+offset_bottom = 719.0
+pivot_offset = Vector2(73.838, 18)
+theme = ExtResource("2_e5ye3")
+horizontal_alignment = 2
+
+[node name="StaffRankLabel" type="Label" parent="Labels"]
+anchors_preset = -1
+anchor_bottom = 0.012
+offset_left = 898.0
+offset_top = 712.0
+offset_right = 1247.0
+offset_bottom = 748.0
+pivot_offset = Vector2(73.838, 18)
+theme = ExtResource("2_e5ye3")
+horizontal_alignment = 2
+
+[node name="StaffCountLabel" type="Label" parent="Labels"]
+anchors_preset = -1
+anchor_bottom = 0.012
+offset_left = 954.0
+offset_top = 745.0
+offset_right = 1158.0
+offset_bottom = 781.0
+pivot_offset = Vector2(73.838, 18)
+theme = ExtResource("2_e5ye3")
+horizontal_alignment = 2
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="ItemProgressImage" type="TextureRect" parent="Sprites"]
+offset_left = 174.0
+offset_top = 217.0
+offset_right = 518.0
+offset_bottom = 533.0
+
+[node name="SmallItemImage" type="TextureRect" parent="Sprites"]
+offset_left = 578.0
+offset_top = 331.0
+offset_right = 720.0
+offset_bottom = 470.0
+
+[node name="SoundController" parent="." instance=ExtResource("3_purcx")]
+SoundToPlay = 2

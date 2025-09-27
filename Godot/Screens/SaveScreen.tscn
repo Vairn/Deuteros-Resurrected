@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bly47yo5xdow4"]
+
+[ext_resource type="Texture2D" uid="uid://da0fk2yjenn8p" path="res://Sprites/Scenes/SaveScreen.png" id="2"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="SaveScreen" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("2")
+stretch_mode = 5

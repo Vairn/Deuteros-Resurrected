@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhmt6vu1aebrs"]
+
+[ext_resource type="Texture2D" uid="uid://bv1axqponpg3u" path="res://Sprites/Scenes/Earth_Ground.png" id="1"]
+[ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Earth_Ground" type="TextureRect" parent="."]
+offset_right = 1281.0
+offset_bottom = 1025.0
+mouse_filter = 2
+texture = ExtResource("1")
+stretch_mode = 5
+
+[node name="SoundController" parent="." instance=ExtResource("3")]
