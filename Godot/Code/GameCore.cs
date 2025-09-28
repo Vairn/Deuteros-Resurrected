@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Deuteros.Code
 {
-	public partial class GameCore : Node2D
+	public partial class GameCore : BaseSubScene
 	{
         private static GameCore _instance;
         private Node _currentScreen;
@@ -140,8 +140,8 @@ namespace Deuteros.Code
                 _currentScreen.QueueFree();
             }
 
-            var newScene = GD.Load<PackedScene>("res://Screens/" + sceneName).Instantiate<Node>();
-            ((BaseSubScene)newScene).SceneFlags = sceneFlags.Select(T => T.ToLower()).ToList();
+            var newScene = GD.Load<PackedScene>("res://Screens/" + sceneName).Instantiate<BaseSubScene>();
+            newScene.SceneFlags = sceneFlags.Select(T => T.ToLower()).ToList();
             GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
             _currentScreen = newScene;
         }
