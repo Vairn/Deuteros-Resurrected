@@ -1,4 +1,5 @@
 using Godot;
+using System.Linq;
 
 namespace Deuteros.Code.Platform
 {
@@ -17,7 +18,12 @@ namespace Deuteros.Code.Platform
 
         private void SceneChange_ButtonUp()
         {
-            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(TargetScene.ToString().Replace("_", "/") + ".tscn");
+            //Double underscores in scene names represent a flag to pass to the scene
+            var sceneNameSplit = TargetScene.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
+            var sceneFlags = sceneNameSplit.Skip(1);
+
+            //Underscores in scene names represent a folder
+            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", sceneFlags.ToList());
         }
     }
 }

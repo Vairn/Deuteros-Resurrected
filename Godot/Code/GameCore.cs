@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.IO;
+using Deuteros.Code.Platform.Base;
+using System.Linq;
 
 namespace Deuteros.Code
 {
@@ -71,7 +73,7 @@ namespace Deuteros.Code
 
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
 
-            ChangeScene("IntroScreen.tscn");
+            ChangeScene("IntroScreen.tscn", new List<string>());
         }
 
 		private void TriggerDay(uint currentDay, uint nextDay)
@@ -123,7 +125,8 @@ namespace Deuteros.Code
 		}
 
 		//When we change scene we must re-load the menus and perform some house keeping
-		public void ChangeScene(string sceneName)
+        //SceneFlags can be passed in to give the scene some hints on its setup
+		public void ChangeScene(string sceneName, List<string> sceneFlags)
 		{
 			if (_currentScreen != null && _currentScreen.SceneFilePath.Contains("IntroScreen"))
 			{
@@ -138,6 +141,7 @@ namespace Deuteros.Code
             }
 
             var newScene = GD.Load<PackedScene>("res://Screens/" + sceneName).Instantiate<Node>();
+            ((BaseSubScene)newScene).SceneFlags = sceneFlags.Select(T => T.ToLower()).ToList();
             GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
             _currentScreen = newScene;
         }

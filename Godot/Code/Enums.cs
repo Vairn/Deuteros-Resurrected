@@ -258,6 +258,8 @@ namespace Deuteros.Code
             hidden
         }
 
+        //Double underscores in scene names represent a flag to pass to the scene
+        //Underscores in scene names represent a folder
         [Serializable]
         public enum Scenes
         {
@@ -269,7 +271,11 @@ namespace Deuteros.Code
             SaveScreen,
             News,
             Store,
-            ShuttleBay
+            Store__Ground,
+            ShipBay,
+            ShipBay__Shuttle,
+            ShipBay__Shuttle__Ground,
+            ShipBay__Ground
         }
 
         [Serializable]

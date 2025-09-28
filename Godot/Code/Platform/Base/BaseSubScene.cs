@@ -1,6 +1,7 @@
 using Deuteros.Code.Platform.Helpers;
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 namespace Deuteros.Code.Platform.Base
@@ -10,6 +11,7 @@ namespace Deuteros.Code.Platform.Base
         public static Font DefaultFont { get; set; }
         private PackedScene _SettingsScreen;
         public bool SettingsShown { get; set; }
+        public List<string> SceneFlags { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
