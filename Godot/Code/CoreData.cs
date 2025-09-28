@@ -38,7 +38,7 @@ namespace Deuteros.Code
 
         public static CoreData CreateNewGameFile()
         {
-            if (!System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Data"))
+            if (!System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Data") || 1==1)
             {
                 System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Data");
 
@@ -774,17 +774,17 @@ namespace Deuteros.Code
                 newEarth.TrainingData.ReferenceDuration = 58.0;
 
                 var earthMaterials = new List<Objects.Material>();
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.iron, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.titanium, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.aluminium, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.carbon, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.copper, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.hydrogen, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.deuterium, 1));
-                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.methane, 1));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.iron, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.titanium, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.aluminium, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.carbon, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.copper, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.hydrogen, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.deuterium, 2));
+                earthMaterials.Add(new Objects.Material(Enums.ItemTypes.methane, 2));
                 newEarth.PlanetResources = new Objects.PlanetResource(earthMaterials);
+                newEarth.PlanetResources.Derricks = 1;
                 newEarth.Stores = new Objects.Store();
-                newEarth.Stores[Enums.ItemTypes.derrick] = 1;
                 newEarth.PlanetId = Enums.Planetoids.earth;
 
                 newGameData.Planets.Add(Enums.Planetoids.earth, newEarth);

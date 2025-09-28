@@ -16,7 +16,7 @@ namespace Deuteros.Code.Platform.Screens
 			Location = GetNode<Label>("TimeAndLocation/Location");
 			Time = GetNode<Label>("TimeAndLocation/Time");
 
-			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay + 1);
+			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay);
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
 		}
@@ -42,8 +42,8 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void UpdateTime(uint currentDay, uint nextDay)
 		{
-			var curDay = (currentDay % 1000).ToString().PadLeft(3, '0');
-			var outputYear = (3100 + Math.Floor((decimal)(currentDay / 1000))) + " " + curDay + ".00";
+			var curDay = (nextDay % 1000).ToString().PadLeft(3, '0');
+			var outputYear = (3100 + Math.Floor((decimal)(nextDay / 1000))) + " " + curDay + ".00";
 
 			Time.Text = outputYear;
 		}

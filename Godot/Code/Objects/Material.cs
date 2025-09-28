@@ -16,6 +16,7 @@ namespace Deuteros.Code.Objects
         {
             MaterialType = materialType;
             SurveyTicks = surveyTicks;
+            GroundAmount = 0;
         }
     }
 }
