@@ -331,5 +331,25 @@ namespace Deuteros.Code
             Yellow = 600,
             Green = 700
         }
+
+        public enum Ship_Types
+        {
+            Shuttle = 100,
+            IOS = 200,
+            SCG = 300
+        }
+
+        public enum Module_Types
+        {
+            Tool = 100,
+            Supply = 200,
+            Cryo = 300
+        }
+
+        public enum Fuel_Types
+        {
+            MEH_Fuel = 100,
+            HED_Fuel = 200
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace Deuteros.Code.Objects
         public Enums.Planetoids PlanetId { get; set; }
         public Enums.Planetoids MoonParentPlanetId { get; set; }
         public Enums.Stars ParentStar { get; set; }
+        public Shuttle Shuttle { get; set; }
 
         public Planet()
         {
