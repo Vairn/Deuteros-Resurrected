@@ -13,8 +13,8 @@ namespace Deuteros.Code.Platform.Screens
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            DerrickCount = (Label)GetParent().GetNode("DerrickCount");
-            AddDerrick = (Button)GetParent().GetNode("AddDerrick");
+            DerrickCount = (Label)GetNode("DerrickCount");
+            AddDerrick = (Button)GetNode("AddDerrick");
             AddDerrick.Connect("button_up", new Callable(this, nameof(AddDerrick_ButtonUp)));
 
             GreenArrow = (Texture2D)ResourceLoader.Load("res://Sprites/Buttons/GreenArrowRight.fw.png");

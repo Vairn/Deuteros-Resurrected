@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="4"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("3")
 
 [node name="Resource" type="TextureRect" parent="."]
 offset_right = 1281.0
@@ -27,6 +28,3 @@ offset_bottom = 687.0
 
 [node name="SoundController" parent="." instance=ExtResource("4")]
 SoundToPlay = 3
-
-[node name="ScriptNode" type="Node2D" parent="."]
-script = ExtResource("3")
