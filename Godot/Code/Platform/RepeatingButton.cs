@@ -7,11 +7,16 @@ namespace Deuteros.Code.Platform
     {
         private Timer _repeatTimer;
         private bool _isHeld = false;
+        public bool IsRepeating { 
+            get {
+                return _isHeld && !_repeatTimer.OneShot;
+            }
+        }
 
         [Export] public double RepeatDelay { get; set; } = 0.5;
         [Export] public double RepeatRate { get; set; } = 0.1;
 
-        public override void _Ready()
+               public override void _Ready()
         {
             _repeatTimer = new Timer
             {

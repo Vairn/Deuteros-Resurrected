@@ -1,6 +1,7 @@
 using Deuteros.Code.Objects;
 using Godot;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -120,7 +121,8 @@ namespace Deuteros.Code.Platform.Screens
                 GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount--;
             }
 
-            DoorButtonSound.Play();
+            if (!ResearchButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
 
             QueueRedraw();
         }
@@ -139,7 +141,8 @@ namespace Deuteros.Code.Platform.Screens
                 GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount++;
             }
 
-            DoorButtonSound.Play();
+            if (!ResearchButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
 
             QueueRedraw();
         }
@@ -151,7 +154,8 @@ namespace Deuteros.Code.Platform.Screens
                 GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount--;
             }
 
-            DoorButtonSound.Play();
+            if (!ProductionButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
 
             QueueRedraw();
         }
@@ -164,30 +168,38 @@ namespace Deuteros.Code.Platform.Screens
             {
                 GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount++;
             }
-            DoorButtonSound.Play();
+
+            if (!ProductionButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
+
             QueueRedraw();
         }
 
         public void MarinesMinusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount > 0)
+            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && 
+                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount > 0)
             {
                 GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount--;
             }
 
-            DoorButtonSound.Play();
+            if (!MarinesButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
 
             QueueRedraw();
         }
 
         public void MarinesPlusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount)
+            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && 
+                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount &&
+                GameCore.SingletonInstance.Earth.PlanetResources.Staff.Count < 4)
             {
                 GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount++;
             }
 
-            DoorButtonSound.Play();
+            if (!MarinesButtons.Any(T => T.IsRepeating))
+                DoorButtonSound.Play();
 
             QueueRedraw();
         }

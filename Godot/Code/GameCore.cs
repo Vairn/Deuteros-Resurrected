@@ -152,7 +152,8 @@ namespace Deuteros.Code
 			{
                 return (Earth)GameData.Planets[Enums.Planetoids.earth];
             }
-		set
+		    
+            set
 			{
                 GameData.Planets[Enums.Planetoids.earth] = value;
             }

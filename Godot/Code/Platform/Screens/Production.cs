@@ -56,8 +56,6 @@ namespace Deuteros.Code.Platform.Screens
         {
             var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
 
-            //TODO - Check resources are available, and if they are, remove them and add to the queue
-
             if (SelectedButton != null)
             {
                 var addedItem = (Item)SelectedButton.ObjectData;
