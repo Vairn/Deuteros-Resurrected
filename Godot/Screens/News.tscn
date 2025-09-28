@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://cqlhxpg2h3gxk"]
+[gd_scene load_steps=3 format=3 uid="uid://cqlhxpg2h3gxk"]
 
+[ext_resource type="Script" path="res://Code/Platform/Screens/NoScript.cs" id="1_sd4xw"]
 [ext_resource type="Texture2D" uid="uid://mjrmk8b30a7l" path="res://Sprites/Scenes/News.png" id="2"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_sd4xw")
 
 [node name="News" type="TextureRect" parent="."]
 offset_right = 1281.0

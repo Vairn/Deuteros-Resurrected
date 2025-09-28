@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bly47yo5xdow4"]
+[gd_scene load_steps=3 format=3 uid="uid://bly47yo5xdow4"]
 
+[ext_resource type="Script" path="res://Code/Platform/Screens/NoScript.cs" id="1_7lp4p"]
 [ext_resource type="Texture2D" uid="uid://da0fk2yjenn8p" path="res://Sprites/Scenes/SaveScreen.png" id="2"]
 
 [node name="Node2D" type="Node2D"]
+script = ExtResource("1_7lp4p")
 
 [node name="SaveScreen" type="TextureRect" parent="."]
 offset_right = 1281.0
