@@ -67,7 +67,7 @@ offset_top = 683.746
 offset_right = 119.114
 offset_bottom = 729.746
 pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 8
+TargetScene = 11
 HoverText = "Shuttle Bay"
 metadata/_edit_use_anchors_ = true
 
