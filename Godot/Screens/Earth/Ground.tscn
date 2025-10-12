@@ -8,8 +8,10 @@
 script = ExtResource("1_1w2k1")
 
 [node name="Earth_Ground" type="TextureRect" parent="."]
-offset_right = 1281.0
-offset_bottom = 1025.0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 184.0
 mouse_filter = 2
 texture = ExtResource("1")
 stretch_mode = 5

@@ -7,8 +7,11 @@
 script = ExtResource("1_sd4xw")
 
 [node name="News" type="TextureRect" parent="."]
-offset_right = 1281.0
-offset_bottom = 1025.0
+offset_left = 77.0
+offset_top = 1.0
+offset_right = 320.0
+offset_bottom = 195.0
 mouse_filter = 2
 texture = ExtResource("2")
+expand_mode = 1
 stretch_mode = 5

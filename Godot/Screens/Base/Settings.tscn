@@ -1,7 +1,8 @@
 [gd_scene load_steps=3 format=3 uid="uid://cpdbfevqjaiv"]
 
-[ext_resource type="Theme" uid="uid://44d6jm1awi5s" path="res://Themes/RedFont18.tres" id="1_2svh5"]
+[ext_resource type="Theme" uid="uid://44d6jm1awi5s" path="res://Themes/RedFont5.tres" id="1_2svh5"]
 [ext_resource type="Script" path="res://Code/Platform/Screens/Settings.cs" id="1_d0fdf"]
+
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_d0fdf")

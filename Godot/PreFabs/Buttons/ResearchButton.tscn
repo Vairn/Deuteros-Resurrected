@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bus7lio0ccs6j"]
+[gd_scene load_steps=15 format=3 uid="uid://bus7lio0ccs6j"]
 
 [ext_resource type="Script" path="res://Code/Platform/ResearchButton.cs" id="1_dk6cx"]
 [ext_resource type="Texture2D" uid="uid://vwrwvx5xp5aq" path="res://Sprites/Buttons/Research_Animations/Green1.png" id="1_j34i8"]
@@ -8,13 +8,11 @@
 [ext_resource type="Texture2D" uid="uid://ce00pg4cqhsor" path="res://Sprites/Buttons/Research_Animations/Yellow1.png" id="5_8pphp"]
 [ext_resource type="Texture2D" uid="uid://xqerxrchlvw" path="res://Sprites/Buttons/Research_Animations/Yellow2.png" id="6_wv06h"]
 [ext_resource type="Texture2D" uid="uid://c7x8218tboqi2" path="res://Sprites/Buttons/Research_Animations/Yellow3.png" id="7_udfqt"]
-[ext_resource type="Texture2D" uid="uid://c6vmp2su7d7hj" path="res://Sprites/Buttons/Research_Locked.png" id="8_50ul3"]
-[ext_resource type="Texture2D" uid="uid://c3gbacrl824cx" path="res://Sprites/Buttons/Research_Researched.png" id="9_ma7ek"]
-[ext_resource type="Texture2D" uid="uid://cb2btoggms4ys" path="res://Sprites/Buttons/Research_Researching.png" id="10_h06gb"]
-[ext_resource type="Texture2D" uid="uid://d0bx66ggrqvvp" path="res://Sprites/Buttons/Research_Unresearched.png" id="11_gkcql"]
+[ext_resource type="Texture2D" uid="uid://cam7dwlkfy2m6" path="res://Sprites/Buttons/Research_Animations/Red4.png" id="9_btquc"]
 [ext_resource type="Texture2D" uid="uid://dedhcckchrh61" path="res://Sprites/Buttons/Research_Animations/Red1.png" id="12_hf0l5"]
 [ext_resource type="Texture2D" uid="uid://bv0b4ly4ipn8m" path="res://Sprites/Buttons/Research_Animations/Red2.png" id="13_n3twx"]
 [ext_resource type="Texture2D" uid="uid://d21mqxs04uf6x" path="res://Sprites/Buttons/Research_Animations/Red3.png" id="14_6erys"]
+[ext_resource type="Texture2D" uid="uid://bwyxtpg446tph" path="res://Sprites/Buttons/Research_Animations/Yellow4.png" id="17_o62qj"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2se6l"]
 animations = [{
@@ -44,6 +42,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("14_6erys")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_btquc")
 }],
 "loop": true,
 "name": &"Red",
@@ -51,23 +52,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_ma7ek")
+"texture": ExtResource("1_j34i8")
 }],
 "loop": false,
 "name": &"Static_Green",
 "speed": 5.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("8_50ul3")
-}],
+"frames": [],
 "loop": false,
 "name": &"Static_Locked",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("11_gkcql")
+"texture": ExtResource("12_hf0l5")
 }],
 "loop": false,
 "name": &"Static_Red",
@@ -75,7 +73,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("10_h06gb")
+"texture": ExtResource("5_8pphp")
 }],
 "loop": false,
 "name": &"Static_Yellow",
@@ -90,6 +88,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("7_udfqt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_o62qj")
 }],
 "loop": true,
 "name": &"Yellow",
@@ -98,13 +99,12 @@ animations = [{
 
 [node name="Button" type="Button"]
 show_behind_parent = true
-offset_right = 65.0
-offset_bottom = 32.0
+offset_right = 16.0
+offset_bottom = 8.0
 script = ExtResource("1_dk6cx")
 
 [node name="ButtonSpriteAnimation" type="AnimatedSprite2D" parent="."]
-position = Vector2(0.25, 0)
+position = Vector2(8, 4)
 scale = Vector2(0.96, 1)
 sprite_frames = SubResource("SpriteFrames_2se6l")
-animation = &"Red"
-offset = Vector2(32, 16)
+animation = &"Static_Locked"

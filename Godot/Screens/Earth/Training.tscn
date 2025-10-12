@@ -2,17 +2,19 @@
 
 [ext_resource type="Texture2D" uid="uid://rfjd46ce2jbj" path="res://Sprites/Scenes/Training.png" id="2_7nv2c"]
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://cj5mtfs103lao" path="res://Sprites/Buttons/Training_Left.png" id="3_u3cm6"]
 [ext_resource type="Script" path="res://Code/Platform/Screens/Training.cs" id="4"]
-[ext_resource type="Texture2D" uid="uid://bxqbxgm2yfvyr" path="res://Sprites/Scenes/Door_Right_Light.png" id="4_b577m"]
+[ext_resource type="Texture2D" uid="uid://dt084d6t16tc5" path="res://Sprites/Buttons/Training_Right.png" id="4_mst8a"]
 [ext_resource type="PackedScene" uid="uid://dlpf322m5s804" path="res://PreFabs/Buttons/RepeatingButton.tscn" id="5_esdh4"]
-[ext_resource type="Texture2D" uid="uid://c3jdafxvoecc1" path="res://Sprites/Scenes/Door_Left_Light.png" id="5_mp7rb"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("4")
 
 [node name="Training" type="TextureRect" parent="."]
-offset_right = 1281.0
-offset_bottom = 1025.0
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 184.0
 mouse_filter = 2
 texture = ExtResource("2_7nv2c")
 stretch_mode = 5
@@ -21,144 +23,144 @@ stretch_mode = 5
 
 [node name="Marines" type="Node" parent="Doors"]
 
-[node name="MarinesMinusButton" parent="Doors/Marines" instance=ExtResource("5_esdh4")]
+[node name="MinusButton" type="TextureRect" parent="Doors/Marines"]
+offset_left = 264.0
+offset_top = 120.0
+offset_right = 278.0
+offset_bottom = 136.0
+texture = ExtResource("3_u3cm6")
+stretch_mode = 2
+
+[node name="MarinesMinusButton" parent="Doors/Marines/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 1048.09
-offset_top = 557.548
-offset_right = 1091.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
-[node name="MarinesPlusButton" parent="Doors/Marines" instance=ExtResource("5_esdh4")]
+[node name="PlusButton" type="TextureRect" parent="Doors/Marines"]
+offset_left = 280.0
+offset_top = 120.0
+offset_right = 294.0
+offset_bottom = 136.0
+texture = ExtResource("4_mst8a")
+stretch_mode = 2
+
+[node name="MarinesPlusButton" parent="Doors/Marines/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 1109.09
-offset_top = 557.548
-offset_right = 1151.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
 [node name="MarinesTrainingCountLabel" type="Label" parent="Doors/Marines"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 1024.52
-offset_top = 456.001
-offset_right = 1130.85
-offset_bottom = 479.713
+offset_left = 131.0
+offset_top = 96.0
+offset_right = 170.0
+offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 horizontal_alignment = 2
 
-[node name="RightDoor" type="TextureRect" parent="Doors/Marines"]
-offset_left = 1099.0
-offset_top = 455.0
-offset_right = 1171.0
-offset_bottom = 748.0
-texture = ExtResource("4_b577m")
-stretch_mode = 2
-
-[node name="LeftDoor" type="TextureRect" parent="Doors/Marines"]
-offset_left = 1022.0
-offset_top = 455.0
-offset_right = 1094.0
-offset_bottom = 748.0
-texture = ExtResource("5_mp7rb")
-stretch_mode = 2
-
 [node name="Product" type="Node" parent="Doors"]
 
-[node name="ProductionMinusButton" parent="Doors/Product" instance=ExtResource("5_esdh4")]
+[node name="MinusButton" type="TextureRect" parent="Doors/Product"]
+offset_left = 200.0
+offset_top = 120.0
+offset_right = 214.0
+offset_bottom = 136.0
+texture = ExtResource("3_u3cm6")
+stretch_mode = 2
+
+[node name="ProductionMinusButton" parent="Doors/Product/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 804.09
-offset_top = 557.548
-offset_right = 846.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
-[node name="ProductionPlusButton" parent="Doors/Product" instance=ExtResource("5_esdh4")]
+[node name="PlusButton" type="TextureRect" parent="Doors/Product"]
+offset_left = 216.0
+offset_top = 120.0
+offset_right = 230.0
+offset_bottom = 136.0
+texture = ExtResource("4_mst8a")
+stretch_mode = 2
+
+[node name="ProductionPlusButton" parent="Doors/Product/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 865.09
-offset_top = 557.548
-offset_right = 907.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
 [node name="ProductionTrainingCountLabel" type="Label" parent="Doors/Product"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 781.365
-offset_top = 454.666
-offset_right = 887.7
-offset_bottom = 478.378
+offset_left = 195.0
+offset_top = 96.0
+offset_right = 234.0
+offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(0, 0.133333, 0.533333, 1)
 horizontal_alignment = 2
 
-[node name="RightDoor" type="TextureRect" parent="Doors/Product"]
-offset_left = 855.0
-offset_top = 455.0
-offset_right = 927.0
-offset_bottom = 748.0
-texture = ExtResource("4_b577m")
-stretch_mode = 2
-
-[node name="LeftDoor" type="TextureRect" parent="Doors/Product"]
-offset_left = 779.0
-offset_top = 455.0
-offset_right = 851.0
-offset_bottom = 748.0
-texture = ExtResource("5_mp7rb")
-stretch_mode = 2
-
 [node name="Research" type="Node" parent="Doors"]
 
-[node name="ResearchMinusButton" parent="Doors/Research" instance=ExtResource("5_esdh4")]
+[node name="MinusButton" type="TextureRect" parent="Doors/Research"]
+offset_left = 136.0
+offset_top = 120.0
+offset_right = 150.0
+offset_bottom = 136.0
+texture = ExtResource("3_u3cm6")
+stretch_mode = 2
+
+[node name="ResearchMinusButton" parent="Doors/Research/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 561.09
-offset_top = 557.548
-offset_right = 602.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
-[node name="ResearchPlusButton" parent="Doors/Research" instance=ExtResource("5_esdh4")]
+[node name="PlusButton" type="TextureRect" parent="Doors/Research"]
+offset_left = 152.0
+offset_top = 120.0
+offset_right = 166.0
+offset_bottom = 136.0
+texture = ExtResource("4_mst8a")
+stretch_mode = 2
+
+[node name="ResearchPlusButton" parent="Doors/Research/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
-offset_left = 621.09
-offset_top = 557.548
-offset_right = 663.09
-offset_bottom = 604.548
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 13.0
+offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
 [node name="ResearchTrainingCountLabel" type="Label" parent="Doors/Research"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 537.0
-offset_top = 455.0
-offset_right = 643.335
-offset_bottom = 478.712
+offset_left = 259.0
+offset_top = 96.0
+offset_right = 298.0
+offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 horizontal_alignment = 2
-
-[node name="RightDoor" type="TextureRect" parent="Doors/Research"]
-offset_left = 611.0
-offset_top = 455.0
-offset_right = 683.0
-offset_bottom = 748.0
-texture = ExtResource("4_b577m")
-stretch_mode = 2
-
-[node name="LeftDoor" type="TextureRect" parent="Doors/Research"]
-offset_left = 535.0
-offset_top = 455.0
-offset_right = 607.0
-offset_bottom = 748.0
-texture = ExtResource("5_mp7rb")
-stretch_mode = 2
 
 [node name="SoundController" parent="." instance=ExtResource("3")]
 SoundToPlay = 1
@@ -168,8 +170,8 @@ SoundToPlay = 1
 [node name="TraineeCountLabel" type="Label" parent="."]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 256.0
-offset_top = 483.0
-offset_right = 385.0
-offset_bottom = 513.0
+offset_left = 56.0
+offset_top = 103.0
+offset_right = 90.0
+offset_bottom = 113.0
 pivot_offset = Vector2(73.838, 18)
