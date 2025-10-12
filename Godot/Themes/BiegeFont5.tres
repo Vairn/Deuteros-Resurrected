@@ -1,0 +1,11 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://befke7oqkcv3j"]
+
+[ext_resource type="FontFile" uid="uid://onpj2h56c3cq" path="res://Fonts/Deuteros.tres" id="1_44xcw"]
+
+[resource]
+default_font = ExtResource("1_44xcw")
+default_font_size = 5
+Label/colors/font_color = Color(0.6, 0.666667, 0.466667, 1)
+Label/constants/line_spacing = 0
+Label/font_sizes/font_size = 5
+Label/fonts/font = ExtResource("1_44xcw")

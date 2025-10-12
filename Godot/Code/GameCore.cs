@@ -35,7 +35,6 @@ namespace Deuteros.Code
         }
 
         public CoreData GameData { get; set; }
-		public static Font DefaultFont { get; set; }
 
 		public static string HoverText { get; set; }
 

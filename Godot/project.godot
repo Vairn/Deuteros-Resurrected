@@ -26,9 +26,9 @@ settings/stdout/verbose_stdout=true
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=1024
-window/size/resizable=false
+window/size/viewport_width=320
+window/size/viewport_height=200
+window/stretch/mode="viewport"
 window/stretch/scale_mode="integer"
 window/main_scene="res://Screens/Master.tscn"
 
@@ -43,7 +43,8 @@ import/blender/enabled=false
 [gui]
 
 theme/custom="res://Themes/DefaultTheme.tres"
-theme/custom_font="res://Fonts/Deuteros.tres"
+theme/custom_font="res://Fonts/deuteros.ttf"
+theme/default_font_antialiasing=0
 
 [logging]
 
@@ -55,5 +56,6 @@ debugger_agent/wait_timeout=15000
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
 environment/defaults/default_environment="res://default_env.tres"
