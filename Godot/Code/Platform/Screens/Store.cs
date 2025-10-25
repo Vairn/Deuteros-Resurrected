@@ -23,7 +23,7 @@ namespace Deuteros.Code.Platform.Screens
 
         public override void _Ready()
         {
-            SwitchStoreType = (Button)GetNode("SwitchStoreType");
+            SwitchStoreType = (Button)GetNode("SwitchStoreImage/SwitchStoreType");
             SwitchStoreType.Connect("button_up", new Callable(this, nameof(SwitchStoreType_ButtonUp)));
 
             ResourceListLabel = (Label)GetNode("ResourceList");
@@ -33,7 +33,7 @@ namespace Deuteros.Code.Platform.Screens
 
             SelectedButton = null;
 
-            StoreButtonsNode = GetNode<Control>("StoreButtons");
+            StoreButtonsNode = GetNode<Control>("ButtonsImage/StoreButtons");
 
             Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
                 GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),

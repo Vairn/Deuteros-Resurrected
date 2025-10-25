@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Deuteros.Code.Platform.Helpers;
+using System.Threading.Tasks;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -38,13 +39,13 @@ namespace Deuteros.Code.Platform.Screens
             ItemNameLabel = GetNode<Label>("Labels/ItemNameLabel");
             TechLevelDataLabel = GetNode<Label>("Labels/TechLevelDataLabel");
             TechLevelLabel = GetNode<Label>("Labels/TechLevelLabel");
-            MassLabel = GetNode<Label>("Labels/MassLabel");
-            TeamWorkingLabel = GetNode<Label>("Labels/TeamWorkingLabel");
-            ProjectCompletionLabel = GetNode<Label>("Labels/ProjectCompletionLabel");
-            MassDataLabel = GetNode<Label>("Labels/MassDataLabel");
-            ProductionMaterialListLabel = GetNode<Label>("Labels/ProductionMaterialListLabel");
-            ItemNotesLabel = GetNode<Label>("Labels/ItemNotesLabel");
-            ItemNotesDataLabel = GetNode<Label>("Labels/ItemNotesDataLabel");
+            MassLabel = GetNode<Label>("Labels/Researched/MassLabel");
+            TeamWorkingLabel = GetNode<Label>("Labels/InProgress/TeamWorkingLabel");
+            ProjectCompletionLabel = GetNode<Label>("Labels/InProgress/ProjectCompletionLabel");
+            MassDataLabel = GetNode<Label>("Labels/Researched/MassDataLabel");
+            ProductionMaterialListLabel = GetNode<Label>("Labels/Researched/ProductionMaterialListLabel");
+            ItemNotesLabel = GetNode<Label>("Labels/Researched/ItemNotesLabel");
+            ItemNotesDataLabel = GetNode<Label>("Labels/Researched/ItemNotesDataLabel");
 
             ResearchImageTextureRect = GetNode<TextureRect>("Sprites/ResearchImage");
 
@@ -88,7 +89,7 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override void DayTick(uint currentDay, uint nextDay)
+        protected override async void DayTick(uint currentDay, uint nextDay)
         {
             UpdateResearch(true);
         }

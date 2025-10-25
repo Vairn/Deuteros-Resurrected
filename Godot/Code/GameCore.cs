@@ -7,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.IO;
 using Deuteros.Code.Platform.Base;
 using System.Linq;
+using Deuteros.Code.Platform.Screens;
 
 namespace Deuteros.Code
 {
@@ -14,7 +15,7 @@ namespace Deuteros.Code
 	{
         private static GameCore _instance;
         private Node _currentScreen;
-        private Node _menuScreen;
+        private MainMenu _menuScreen;
 
         public static GameCore SingletonInstance
         {
@@ -72,7 +73,7 @@ namespace Deuteros.Code
 
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
 
-            ChangeScene("IntroScreen.tscn", new List<string>());
+            ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
         }
 
 		private void TriggerDay(uint currentDay, uint nextDay)
@@ -125,11 +126,11 @@ namespace Deuteros.Code
 
 		//When we change scene we must re-load the menus and perform some house keeping
         //SceneFlags can be passed in to give the scene some hints on its setup
-		public void ChangeScene(string sceneName, List<string> sceneFlags)
+		public void ChangeScene(string sceneName, List<Enums.SceneVariables> sceneVariables)
 		{
 			if (_currentScreen != null && _currentScreen.SceneFilePath.Contains("IntroScreen"))
 			{
-                var newMenuScene = GD.Load<PackedScene>("res://Screens/Base/MenuBase.tscn").Instantiate<Node>();
+                var newMenuScene = GD.Load<PackedScene>("res://Screens/Base/MenuBase.tscn").Instantiate<MainMenu>();
                 GetNode<Node>("/root/Master/MainScene").AddChild(newMenuScene);
                 _menuScreen = newMenuScene;
             }
@@ -140,9 +141,16 @@ namespace Deuteros.Code
             }
 
             var newScene = GD.Load<PackedScene>("res://Screens/" + sceneName).Instantiate<BaseSubScene>();
-            newScene.SceneFlags = sceneFlags.Select(T => T.ToLower()).ToList();
+            newScene.SceneVariables = sceneVariables;
             GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
             _currentScreen = newScene;
+
+            if (newScene.MenuButtons != null)
+            {
+                _menuScreen.MenuButtons = newScene.MenuButtons;
+
+                _menuScreen.SetupMenus();
+            }
         }
 
 		public PlanetType GetPlanet<PlanetType>(Enums.Planetoids planet)

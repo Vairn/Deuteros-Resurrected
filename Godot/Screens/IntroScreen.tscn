@@ -8,14 +8,13 @@
 script = ExtResource("1_hkffy")
 
 [node name="IntroScreen" type="TextureRect" parent="."]
-offset_right = 253.0
+offset_left = 33.0
+offset_right = 286.0
 offset_bottom = 202.0
 mouse_filter = 2
 texture = ExtResource("1_cmpej")
-expand_mode = 1
+expand_mode = 3
 
 [node name="Button" parent="." instance=ExtResource("2_dynyq")]
-offset_left = 0.0
-offset_top = 0.0
 offset_right = 320.0
 offset_bottom = 200.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://d0uqnho3uu3r3"]
+[gd_scene load_steps=8 format=3 uid="uid://d0uqnho3uu3r3"]
 
 [ext_resource type="Texture2D" uid="uid://rfjd46ce2jbj" path="res://Sprites/Scenes/Training.png" id="2_7nv2c"]
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Code/Platform/Screens/Training.cs" id="4"]
 [ext_resource type="Texture2D" uid="uid://dt084d6t16tc5" path="res://Sprites/Buttons/Training_Right.png" id="4_mst8a"]
 [ext_resource type="PackedScene" uid="uid://dlpf322m5s804" path="res://PreFabs/Buttons/RepeatingButton.tscn" id="5_esdh4"]
+[ext_resource type="PackedScene" uid="uid://dp0lxsds7dkua" path="res://PreFabs/TrainingDoors.tscn" id="6_t8wod"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("4")
@@ -33,6 +34,7 @@ stretch_mode = 2
 
 [node name="MarinesMinusButton" parent="Doors/Marines/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -50,6 +52,7 @@ stretch_mode = 2
 
 [node name="MarinesPlusButton" parent="Doors/Marines/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -60,17 +63,20 @@ RepeatRate = 0.005
 [node name="MarinesTrainingCountLabel" type="Label" parent="Doors/Marines"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 131.0
+offset_left = 259.0
 offset_top = 96.0
-offset_right = 170.0
+offset_right = 298.0
 offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 horizontal_alignment = 2
 
-[node name="Product" type="Node" parent="Doors"]
+[node name="TrainingDoors" parent="Doors/Marines" instance=ExtResource("6_t8wod")]
+position = Vector2(258, 96)
 
-[node name="MinusButton" type="TextureRect" parent="Doors/Product"]
+[node name="Production" type="Node" parent="Doors"]
+
+[node name="MinusButton" type="TextureRect" parent="Doors/Production"]
 offset_left = 200.0
 offset_top = 120.0
 offset_right = 214.0
@@ -78,8 +84,9 @@ offset_bottom = 136.0
 texture = ExtResource("3_u3cm6")
 stretch_mode = 2
 
-[node name="ProductionMinusButton" parent="Doors/Product/MinusButton" instance=ExtResource("5_esdh4")]
+[node name="ProductionMinusButton" parent="Doors/Production/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -87,7 +94,7 @@ offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
-[node name="PlusButton" type="TextureRect" parent="Doors/Product"]
+[node name="PlusButton" type="TextureRect" parent="Doors/Production"]
 offset_left = 216.0
 offset_top = 120.0
 offset_right = 230.0
@@ -95,8 +102,9 @@ offset_bottom = 136.0
 texture = ExtResource("4_mst8a")
 stretch_mode = 2
 
-[node name="ProductionPlusButton" parent="Doors/Product/PlusButton" instance=ExtResource("5_esdh4")]
+[node name="ProductionPlusButton" parent="Doors/Production/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -104,7 +112,7 @@ offset_bottom = 14.0
 keep_pressed_outside = true
 RepeatRate = 0.005
 
-[node name="ProductionTrainingCountLabel" type="Label" parent="Doors/Product"]
+[node name="ProductionTrainingCountLabel" type="Label" parent="Doors/Production"]
 anchors_preset = -1
 anchor_bottom = 0.012
 offset_left = 195.0
@@ -114,6 +122,9 @@ offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(0, 0.133333, 0.533333, 1)
 horizontal_alignment = 2
+
+[node name="TrainingDoors" parent="Doors/Production" instance=ExtResource("6_t8wod")]
+position = Vector2(194, 96)
 
 [node name="Research" type="Node" parent="Doors"]
 
@@ -127,6 +138,7 @@ stretch_mode = 2
 
 [node name="ResearchMinusButton" parent="Doors/Research/MinusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -144,6 +156,7 @@ stretch_mode = 2
 
 [node name="ResearchPlusButton" parent="Doors/Research/PlusButton" instance=ExtResource("5_esdh4")]
 show_behind_parent = true
+layout_mode = 0
 offset_left = 2.0
 offset_top = 2.0
 offset_right = 13.0
@@ -154,13 +167,16 @@ RepeatRate = 0.005
 [node name="ResearchTrainingCountLabel" type="Label" parent="Doors/Research"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 259.0
+offset_left = 131.0
 offset_top = 96.0
-offset_right = 298.0
+offset_right = 170.0
 offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 horizontal_alignment = 2
+
+[node name="TrainingDoors" parent="Doors/Research" instance=ExtResource("6_t8wod")]
+position = Vector2(130, 96)
 
 [node name="SoundController" parent="." instance=ExtResource("3")]
 SoundToPlay = 1

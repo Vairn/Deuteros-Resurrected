@@ -3,6 +3,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Deuteros.Code.Platform.Base
 {
@@ -11,7 +12,8 @@ namespace Deuteros.Code.Platform.Base
         public static Font DefaultFont { get; set; }
         private PackedScene _SettingsScreen;
         public bool SettingsShown { get; set; }
-        public List<string> SceneFlags { get; set; }
+        public List<Enums.SceneVariables> SceneVariables { get; set; }
+        public List<Objects.MenuButton> MenuButtons { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -45,12 +47,12 @@ namespace Deuteros.Code.Platform.Base
             Deuteros.Code.GameCore.SingletonInstance.ResearchFinished -= ResearchFinished;
         }
 
-        protected virtual void DayTick(uint currentDay, uint nextDay) { QueueRedraw(); }
+        protected virtual async void DayTick(uint currentDay, uint nextDay) { QueueRedraw(); }
 
-        protected virtual void PlanetChange(Deuteros.Code.Objects.Interfaces.IPlanet newPlanet) { QueueRedraw(); }
+        protected virtual async void PlanetChange(Deuteros.Code.Objects.Interfaces.IPlanet newPlanet) { QueueRedraw(); }
 
-        protected virtual void ProductionFinished(Deuteros.Code.Objects.Factory factory) { QueueRedraw(); }
+        protected virtual async void ProductionFinished(Deuteros.Code.Objects.Factory factory) { QueueRedraw(); }
 
-        protected virtual void ResearchFinished(Deuteros.Code.Objects.ResearchItem researchItem) { QueueRedraw(); }
+        protected virtual async void ResearchFinished(Deuteros.Code.Objects.ResearchItem researchItem) { QueueRedraw(); }
     }
 }

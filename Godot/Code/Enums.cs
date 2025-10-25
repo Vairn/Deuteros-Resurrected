@@ -258,7 +258,6 @@ namespace Deuteros.Code
             hidden
         }
 
-        //Double underscores in scene names represent a flag to pass to the scene
         //Underscores in scene names represent a folder
         [Serializable]
         public enum Scenes
@@ -271,11 +270,21 @@ namespace Deuteros.Code
             SaveScreen,
             News,
             Store,
-            Store__Ground,
+            StoreMTX,
             ShipBay,
-            ShipBay__Shuttle,
-            ShipBay__Shuttle__Ground,
-            ShipBay__Ground
+            Shuttle,
+            None
+        }
+
+        //Variables to pass to scenes to notify them of button types
+        //E.G. The shuttle button can be for the ground, or in orbit
+        [Serializable]
+        public enum SceneVariables
+        {
+            Ground,
+            Orbit,
+            Shuttle,
+            Ship
         }
 
         [Serializable]
@@ -313,12 +322,13 @@ namespace Deuteros.Code
 
         public enum Game_Stages
         {
-            Left_Earth = 100,
-            Recovered_Moon = 200,
-            Discovered_Methanoids = 300,
-            Traded_Methanoids = 400,
-            War_Methanoids = 500,
-            Left_Sol = 600
+            Earth_Shuttle_Built = 100,
+            Left_Earth = 200,
+            Recovered_Moon = 300,
+            Discovered_Methanoids = 400,
+            Traded_Methanoids = 500,
+            War_Methanoids = 600,
+            Left_Sol = 700
         }
 
         public enum SidePanel_Button_State_Animations
@@ -350,6 +360,24 @@ namespace Deuteros.Code
         {
             MEH_Fuel = 100,
             HED_Fuel = 200
+        }
+
+        public enum Menu_Buttons
+        {
+            Empty = 100,
+            Production = 200,
+            Research = 300,
+            Shuttle = 400,
+            GroundMaterials = 500,
+            Planet_Left = 600,
+            Planet_Right = 700,
+            SDM = 800,
+            Ship_Bay = 900,
+            Shuttle_Bay = 1000,
+            Station_Left = 1100,
+            Station_Right = 1200,
+            Store = 1300,
+            Training = 1400
         }
     }
 }

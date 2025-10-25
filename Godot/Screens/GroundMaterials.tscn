@@ -27,7 +27,7 @@ text = "1"
 [node name="SoundController" parent="." instance=ExtResource("4")]
 SoundToPlay = 3
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="Derrick" type="TextureRect" parent="."]
 offset_left = 287.0
 offset_top = 139.0
 offset_right = 311.0
@@ -35,7 +35,7 @@ offset_bottom = 155.0
 texture = ExtResource("4_n5d4x")
 stretch_mode = 2
 
-[node name="AddDerrick" type="Button" parent="TextureRect"]
+[node name="AddDerrick" type="Button" parent="Derrick"]
 show_behind_parent = true
 layout_mode = 0
 offset_right = 24.0

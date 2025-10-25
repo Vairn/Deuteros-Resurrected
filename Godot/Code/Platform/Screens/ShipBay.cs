@@ -33,8 +33,8 @@ namespace Deuteros.Code.Platform.Screens
             //Setup some flags to make our lives easier
             CurrentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
             Earth = CurrentPlanet.PlanetId == Enums.Planetoids.earth;
-            Ground = SceneFlags.Contains("ground");
-            Shuttle = SceneFlags.Contains("shuttle");
+            Ground = SceneVariables.Contains(Enums.SceneVariables.Ground);
+            Shuttle = SceneVariables.Contains(Enums.SceneVariables.Shuttle);
 
             RefreshButtons();
 

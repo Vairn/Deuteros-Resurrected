@@ -1,11 +1,9 @@
-[gd_scene load_steps=87 format=3 uid="uid://cyvepalenoyly"]
+[gd_scene load_steps=86 format=3 uid="uid://cyvepalenoyly"]
 
-[ext_resource type="Texture2D" uid="uid://h85arqeixa5n" path="res://Sprites/Menus/StarBox.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://c1m77vuqlfv8f" path="res://Sprites/Menus/TimeAndLocation.png" id="3"]
-[ext_resource type="Texture2D" uid="uid://uohkq34cwm27" path="res://Sprites/Menus/Bottom.png" id="4"]
+[ext_resource type="PackedScene" uid="uid://qfrsmxasaluu" path="res://PreFabs/Buttons/MenuButton.tscn" id="2_okowm"]
 [ext_resource type="PackedScene" uid="uid://bbgh6fbx8hoja" path="res://PreFabs/Buttons/ChangeScene.tscn" id="5"]
+[ext_resource type="Script" path="res://Code/Platform/TimerHoldButton.cs" id="5_fg076"]
 [ext_resource type="PackedScene" uid="uid://c20saow7lsa7y" path="res://PreFabs/Buttons/TimerSwitch.tscn" id="7"]
-[ext_resource type="Texture2D" path="res://Sprites/Buttons/Nav_Animations/Time/AnimSheet.png" id="7_dn3m0"]
 [ext_resource type="Script" path="res://Code/Platform/Screens/MainMenu.cs" id="8"]
 [ext_resource type="Texture2D" uid="uid://drjnovgs7fiye" path="res://Sprites/Buttons/Nav_Animations/Save_Sheet.png" id="8_qjc3x"]
 [ext_resource type="Texture2D" uid="uid://cms6477711i6x" path="res://Sprites/Buttons/Nav_Animations/Time_Static.png" id="8_vr43h"]
@@ -13,16 +11,17 @@
 [ext_resource type="PackedScene" uid="uid://8oiqnrsqqhko" path="res://PreFabs/Buttons/TimerHold.tscn" id="9"]
 [ext_resource type="Texture2D" uid="uid://0o5prynt2514" path="res://Sprites/Buttons/Nav_Animations/News_Static.png" id="9_a70dp"]
 [ext_resource type="Texture2D" uid="uid://bwv2wgij8qsbj" path="res://Sprites/Buttons/Nav_Animations/Save_Static.png" id="9_o3rdf"]
-[ext_resource type="Script" path="res://Code/Platform/TimerHoldButton.cs" id="10"]
 [ext_resource type="Texture2D" uid="uid://dcc6esesm0a2b" path="res://Sprites/Buttons/Nav_Animations/Earth_Sheet.png" id="12_ao6n4"]
 [ext_resource type="Texture2D" uid="uid://dqptj3nuchd12" path="res://Sprites/Buttons/Nav_Animations/Earth_Static.png" id="13_cr0bq"]
 [ext_resource type="Texture2D" uid="uid://bfd1on8yuf2pc" path="res://Sprites/Buttons/Nav_Animations/MasterControl_Sheet.png" id="15_npctg"]
+[ext_resource type="Texture2D" uid="uid://c1jyh14rh28ry" path="res://Sprites/Buttons/Nav_Animations/Time_Sheet.png" id="15_xlljl"]
 [ext_resource type="Texture2D" uid="uid://dg5wuf3lpqnsr" path="res://Sprites/Buttons/Nav_Animations/MasterControl_Static.png" id="16_ahs2b"]
 [ext_resource type="Texture2D" uid="uid://d00cvlrnux4rg" path="res://Sprites/Menus/Nav_Background.png" id="17_e6ux5"]
 [ext_resource type="Texture2D" uid="uid://dg41h8h7tretl" path="res://Sprites/Buttons/Nav_Animations/Stock_Sheet.png" id="20_bhx1m"]
 [ext_resource type="Texture2D" uid="uid://c0g5kexkagpa1" path="res://Sprites/Buttons/Nav_Animations/Stock_Static.png" id="21_1cm2v"]
 [ext_resource type="Texture2D" uid="uid://cbjpy38fyyv7n" path="res://Sprites/Buttons/Nav_Animations/DepositAnalysis_Sheet.png" id="22_5t1eh"]
 [ext_resource type="Texture2D" uid="uid://cgowslc8ewkhg" path="res://Sprites/Buttons/Nav_Animations/DepositAnalysis_Static.png" id="23_7yyd2"]
+[ext_resource type="PackedScene" uid="uid://be1t4kk6a6g1h" path="res://PreFabs/UI/UIBox.tscn" id="24_byn3j"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_km18m"]
 atlas = ExtResource("8_yfyma")
@@ -240,64 +239,64 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mqibd"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_kecj8"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(0, 0, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j8clb"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_xip5u"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(24, 0, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pq283"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_i7jxj"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(48, 0, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_gk3ag"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2y58"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(72, 0, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xbc6w"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_pvb46"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(0, 16, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_civbn"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_mysjl"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(24, 16, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_cbr7d"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_monpv"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(48, 16, 24, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jpxa1"]
-atlas = ExtResource("7_dn3m0")
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqwhq"]
+atlas = ExtResource("15_xlljl")
 region = Rect2(72, 16, 24, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_m2s3h"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_mqibd")
+"texture": SubResource("AtlasTexture_kecj8")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_j8clb")
+"texture": SubResource("AtlasTexture_xip5u")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pq283")
+"texture": SubResource("AtlasTexture_i7jxj")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gk3ag")
+"texture": SubResource("AtlasTexture_y2y58")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_xbc6w")
+"texture": SubResource("AtlasTexture_pvb46")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_civbn")
+"texture": SubResource("AtlasTexture_mysjl")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_cbr7d")
+"texture": SubResource("AtlasTexture_monpv")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jpxa1")
+"texture": SubResource("AtlasTexture_fqwhq")
 }],
 "loop": true,
 "name": &"animated",
@@ -528,173 +527,145 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Node2D" type="Node2D"]
-position = Vector2(36, 79)
-
-[node name="MainMenu" type="Node" parent="."]
+[node name="MainMenu" type="Node2D"]
 script = ExtResource("8")
 
-[node name="Bottom" type="TextureRect" parent="MainMenu"]
-offset_left = 37.0
-offset_top = 425.0
-offset_right = 221.0
-offset_bottom = 801.0
-texture = ExtResource("4")
+[node name="MainButtons" type="GridContainer" parent="."]
+offset_top = 87.0
+offset_right = 48.0
+offset_bottom = 183.0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 2
 
-[node name="Production" parent="MainMenu/Bottom" instance=ExtResource("5")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 45.5911
-offset_top = 434.0
-offset_right = 116.591
-offset_bottom = 480.0
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 4
-HoverText = "Production"
+[node name="A1" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B1" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="A2" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B2" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="A3" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B3" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="Training" parent="MainMenu/Bottom" instance=ExtResource("5")]
+[node name="A4" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B4" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="A5" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B5" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="A6" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="B6" parent="MainButtons" instance=ExtResource("2_okowm")]
+layout_mode = 2
+
+[node name="Location" type="Node2D" parent="."]
+
+[node name="LocationBox" parent="Location" instance=ExtResource("24_byn3j")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 160.0
+offset_top = 183.0
+offset_right = 320.0
+offset_bottom = 199.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="Location" type="Label" parent="Location/LocationBox"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 3.0
+offset_right = 156.0
+offset_bottom = 13.0
+text = "The Shuttle Bay
+"
+
+[node name="Time" type="Node2D" parent="."]
+
+[node name="TimeBox" parent="Time" instance=ExtResource("24_byn3j")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 48.0
+offset_top = 183.0
+offset_right = 160.0
+offset_bottom = 199.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="Time" type="Label" parent="Time/TimeBox"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 46.4319
-offset_top = 618.997
-offset_right = 117.432
-offset_bottom = 664.997
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 2
-HoverText = "Training"
+anchor_left = 0.0292537
+anchor_top = 0.622288
+anchor_right = 1.15011
+anchor_bottom = 1.67297
+offset_left = -2.27642
+offset_top = -6.9566
+offset_right = -23.8124
+offset_bottom = -13.7676
+text = "3110 618.80"
+horizontal_alignment = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="ShuttleBay" parent="MainMenu/Bottom" instance=ExtResource("5")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 48.1137
-offset_top = 683.746
-offset_right = 119.114
-offset_bottom = 729.746
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 11
-HoverText = "Shuttle Bay"
-metadata/_edit_use_anchors_ = true
-
-[node name="Store" parent="MainMenu/Bottom" instance=ExtResource("5")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 140.287
-offset_top = 743.075
-offset_right = 211.287
-offset_bottom = 789.075
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 7
-HoverText = "MiningStore"
-metadata/_edit_use_anchors_ = true
-
-[node name="GroundMaterials" parent="MainMenu/Bottom" instance=ExtResource("5")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 140.287
-offset_top = 681.627
-offset_right = 211.287
-offset_bottom = 727.627
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 3
-HoverText = "Resource"
-metadata/_edit_use_anchors_ = true
-
-[node name="Research" parent="MainMenu/Bottom" instance=ExtResource("5")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = -0.221809
-anchor_top = -1.13333
-anchor_right = -0.221809
-anchor_bottom = -1.13333
-offset_left = 140.287
-offset_top = 620.178
-offset_right = 211.287
-offset_bottom = 666.178
-pivot_offset = Vector2(35.5, 145.349)
-TargetScene = 1
-HoverText = "Research"
-metadata/_edit_use_anchors_ = true
-
-[node name="StarBox" type="Sprite2D" parent="MainMenu"]
-position = Vector2(1102.07, 110.041)
-texture = ExtResource("2")
-
-[node name="TimeAndLocation" type="Sprite2D" parent="MainMenu"]
-position = Vector2(736.558, 829.387)
-texture = ExtResource("3")
-
-[node name="TimerHoldButton" parent="MainMenu/TimeAndLocation" instance=ExtResource("9")]
-offset_left = -515.558
-offset_top = -28.387
-offset_right = -98.558
-offset_bottom = 27.613
-script = ExtResource("10")
+[node name="TimerHoldButton" parent="Time/TimeBox" instance=ExtResource("9")]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 108.0
+offset_bottom = 13.0
+script = ExtResource("5_fg076")
 HoverText = "Advance Time"
+
+[node name="HoverInfo" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = -1.2375
+anchor_top = -0.184686
+anchor_right = -1.2375
+anchor_bottom = -0.184686
+offset_right = 200.0
+offset_bottom = 16.0
+text = "Advance Time"
+vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="Time" type="Label" parent="MainMenu/TimeAndLocation"]
-offset_left = -501.941
-offset_top = -18.0
-offset_right = -103.941
-offset_bottom = 18.0
-metadata/_edit_use_anchors_ = true
+[node name="Top" type="Node2D" parent="."]
+position = Vector2(0, 16)
 
-[node name="Location" type="Label" parent="MainMenu/TimeAndLocation"]
-offset_left = -67.0
-offset_top = -18.0
-offset_right = 508.0
-offset_bottom = 19.0
-metadata/_edit_use_anchors_ = true
-
-[node name="HoverInfo" type="Label" parent="MainMenu"]
-offset_left = 43.0594
-offset_top = 85.1784
-offset_right = 485.059
-offset_bottom = 131.178
-metadata/_edit_use_anchors_ = true
-
-[node name="Top" type="Node2D" parent="MainMenu"]
-
-[node name="News" parent="MainMenu/Top" instance=ExtResource("5")]
-offset_left = 28.0
+[node name="News" parent="Top" instance=ExtResource("5")]
+offset_left = 24.0
 offset_top = 33.0
-offset_right = 52.0
+offset_right = 48.0
 offset_bottom = 49.0
 pivot_offset = Vector2(35.5, 145.349)
 TargetScene = 6
 HoverText = "News Bulletins"
 metadata/_edit_use_anchors_ = true
 
-[node name="NewsAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/News"]
+[node name="NewsAnimation" type="AnimatedSprite2D" parent="Top/News"]
 z_index = 1
 position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_ush4h")
-animation = &"animated"
+animation = &"static"
 
-[node name="Save" parent="MainMenu/Top" instance=ExtResource("5")]
-offset_left = 0.0
+[node name="Save" parent="Top" instance=ExtResource("5")]
 offset_top = 32.0
 offset_right = 24.0
 offset_bottom = 48.0
@@ -703,14 +674,13 @@ TargetScene = 5
 HoverText = "Disk Access"
 metadata/_edit_use_anchors_ = true
 
-[node name="SaveAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/Save"]
+[node name="SaveAnimation" type="AnimatedSprite2D" parent="Top/Save"]
 z_index = 1
 position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_0bq4i")
-animation = &"animated"
-frame_progress = 0.41572
+animation = &"static"
 
-[node name="Earth" parent="MainMenu/Top" instance=ExtResource("5")]
+[node name="Earth" parent="Top" instance=ExtResource("5")]
 offset_left = 1.0
 offset_top = 49.0
 offset_right = 25.0
@@ -719,13 +689,13 @@ pivot_offset = Vector2(35.5, 145.349)
 HoverText = "Earth City"
 metadata/_edit_use_anchors_ = true
 
-[node name="EarthAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/Earth"]
+[node name="EarthAnimation" type="AnimatedSprite2D" parent="Top/Earth"]
 z_index = 1
 position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_8ed5t")
-animation = &"animation"
+animation = &"static"
 
-[node name="Time" parent="MainMenu/Top" instance=ExtResource("7")]
+[node name="Time" parent="Top" instance=ExtResource("7")]
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 24.0
@@ -733,59 +703,81 @@ offset_bottom = 16.0
 HoverText = "Advance Time"
 metadata/_edit_use_anchors_ = true
 
-[node name="TimeAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/Time"]
+[node name="TimeAnimation" type="AnimatedSprite2D" parent="Top/Time"]
 z_index = 1
 position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_m2s3h")
-animation = &"animated"
+animation = &"static"
 
-[node name="MasterControl" parent="MainMenu/Top" instance=ExtResource("7")]
+[node name="MasterControl" parent="Top" instance=ExtResource("7")]
 offset_left = 24.0
-offset_top = -1.0
+offset_top = 0.0
 offset_right = 48.0
-offset_bottom = 15.0
+offset_bottom = 16.0
 HoverText = "Advance Time"
 metadata/_edit_use_anchors_ = true
 
-[node name="MasterControlAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/MasterControl"]
+[node name="MasterControlAnimation" type="AnimatedSprite2D" parent="Top/MasterControl"]
 z_index = 1
 position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_4esgw")
-animation = &"animation"
+animation = &"static"
 
-[node name="Stock" parent="MainMenu/Top" instance=ExtResource("5")]
-offset_left = 28.0
-offset_top = 33.0
-offset_right = 52.0
-offset_bottom = 49.0
+[node name="Stock" parent="Top" instance=ExtResource("5")]
+offset_top = 16.0
+offset_right = 24.0
+offset_bottom = 32.0
 pivot_offset = Vector2(35.5, 145.349)
 TargetScene = 6
 HoverText = "News Bulletins"
 metadata/_edit_use_anchors_ = true
 
-[node name="StockAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/Stock"]
+[node name="StockAnimation" type="AnimatedSprite2D" parent="Top/Stock"]
 z_index = 1
-position = Vector2(-16, -9)
+position = Vector2(11, 7)
 sprite_frames = SubResource("SpriteFrames_npoil")
-animation = &"animation"
+animation = &"static"
 
-[node name="DepositAnalysis" parent="MainMenu/Top" instance=ExtResource("5")]
-offset_left = 28.0
-offset_top = 33.0
-offset_right = 52.0
-offset_bottom = 49.0
+[node name="DepositAnalysis" parent="Top" instance=ExtResource("5")]
+offset_left = 23.0
+offset_top = 13.0
+offset_right = 47.0
+offset_bottom = 29.0
 pivot_offset = Vector2(35.5, 145.349)
 TargetScene = 6
 HoverText = "News Bulletins"
 metadata/_edit_use_anchors_ = true
 
-[node name="DepositAnalysisAnimation" type="AnimatedSprite2D" parent="MainMenu/Top/DepositAnalysis"]
+[node name="DepositAnalysisAnimation" type="AnimatedSprite2D" parent="Top/DepositAnalysis"]
 z_index = 1
-position = Vector2(8, -9)
+position = Vector2(12, 8)
 sprite_frames = SubResource("SpriteFrames_kxv8y")
-animation = &"animation"
+animation = &"static"
 
-[node name="MenuBackground" type="TextureRect" parent="MainMenu/Top"]
+[node name="MenuBackground" type="TextureRect" parent="Top"]
 offset_right = 48.0
 offset_bottom = 64.0
 texture = ExtResource("17_e6ux5")
+
+[node name="Boxes" type="Node2D" parent="."]
+position = Vector2(1, 3)
+
+[node name="StarName" parent="Boxes" instance=ExtResource("24_byn3j")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 239.0
+offset_top = -4.0
+offset_right = 319.0
+offset_bottom = 12.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="Star" type="Label" parent="Boxes/StarName"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 76.0
+offset_bottom = 13.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "dasdas"

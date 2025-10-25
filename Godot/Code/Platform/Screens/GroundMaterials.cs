@@ -14,7 +14,7 @@ namespace Deuteros.Code.Platform.Screens
         public override void _Ready()
         {
             DerrickCount = (Label)GetNode("DerrickCount");
-            AddDerrick = (Button)GetNode("AddDerrick");
+            AddDerrick = (Button)GetNode("Derrick/AddDerrick");
             AddDerrick.Connect("button_up", new Callable(this, nameof(AddDerrick_ButtonUp)));
 
             GreenArrow = (Texture2D)ResourceLoader.Load("res://Sprites/Buttons/GreenArrowRight.fw.png");
