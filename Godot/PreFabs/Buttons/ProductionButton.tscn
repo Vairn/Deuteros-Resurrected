@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://oi1xywbqhsbj"]
+[gd_scene load_steps=20 format=3 uid="uid://oi1xywbqhsbj"]
 
 [ext_resource type="Texture2D" uid="uid://vwrwvx5xp5aq" path="res://Sprites/Buttons/Research_Animations/Green1.png" id="1_3h5ou"]
 [ext_resource type="Script" path="res://Code/Platform/ProductionButton.cs" id="1_5p1nm"]
@@ -13,6 +13,16 @@
 [ext_resource type="Texture2D" uid="uid://bv0b4ly4ipn8m" path="res://Sprites/Buttons/Research_Animations/Red2.png" id="13_74u7w"]
 [ext_resource type="Texture2D" uid="uid://bwyxtpg446tph" path="res://Sprites/Buttons/Research_Animations/Yellow4.png" id="13_fmqqk"]
 [ext_resource type="Texture2D" uid="uid://d21mqxs04uf6x" path="res://Sprites/Buttons/Research_Animations/Red3.png" id="14_uodht"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nmr5p"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m3fag"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3utib"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ans2t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5tui5"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_2se6l"]
 animations = [{
@@ -99,12 +109,22 @@ animations = [{
 
 [node name="Button" type="Button"]
 show_behind_parent = true
-offset_right = 16.0
-offset_bottom = 8.0
+custom_minimum_size = Vector2(17, 8)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -303.0
+offset_bottom = -192.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_nmr5p")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_m3fag")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_3utib")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ans2t")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_5tui5")
 script = ExtResource("1_5p1nm")
 
 [node name="ButtonSpriteAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, 4)
-scale = Vector2(0.96, 1)
 sprite_frames = SubResource("SpriteFrames_2se6l")
-animation = &"Yellow"
+animation = &"Static_Red"

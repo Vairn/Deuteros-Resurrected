@@ -19,7 +19,6 @@ namespace Deuteros.Code.Platform.Base
         public override void _Ready()
         {
             DefaultFont = Deuteros.Code.GameCore.DefaultFont;
-            DefaultFont.Set("size", 18);
 
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
             Deuteros.Code.GameCore.SingletonInstance.PlanetChanged += PlanetChange;

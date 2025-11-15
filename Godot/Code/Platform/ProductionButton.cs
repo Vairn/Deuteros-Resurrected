@@ -26,13 +26,9 @@ namespace Deuteros.Code.Platform
                 else
                     currentFactory = currentPlanet.Station.Factory;
 
-                if (!currentFactory.AOC && Selected)
+                if (!currentFactory.AOC)
                 {
-                    AnimationState = Enums.SidePanel_Button_State_Animations.Red;
-                }
-                else if(!currentFactory.AOC && !Selected)
-                {
-                    AnimationState = Enums.SidePanel_Button_State_Animations.Static_Locked;
+                    AnimationState = Enums.SidePanel_Button_State_Animations.Static_Green;
                 }
                 else if (currentFactory.AOC && currentFactory.ProductionQueue.Any(T => T.Product.ItemType == ObjectData.ItemType) &&
                     currentFactory.ProductionQueue.Single(T => T.Product.ItemType == ObjectData.ItemType).AOCOneTime)
