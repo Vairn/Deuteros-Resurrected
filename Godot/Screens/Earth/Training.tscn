@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d0uqnho3uu3r3"]
+[gd_scene load_steps=11 format=3 uid="uid://d0uqnho3uu3r3"]
 
 [ext_resource type="Texture2D" uid="uid://rfjd46ce2jbj" path="res://Sprites/Scenes/Training.png" id="2_7nv2c"]
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3"]
@@ -6,7 +6,10 @@
 [ext_resource type="Script" path="res://Code/Platform/Screens/Training.cs" id="4"]
 [ext_resource type="Texture2D" uid="uid://dt084d6t16tc5" path="res://Sprites/Buttons/Training_Right.png" id="4_mst8a"]
 [ext_resource type="PackedScene" uid="uid://dlpf322m5s804" path="res://PreFabs/Buttons/RepeatingButton.tscn" id="5_esdh4"]
+[ext_resource type="Theme" uid="uid://44d6jm1awi5s" path="res://Themes/RedFont5.tres" id="6_soado"]
 [ext_resource type="PackedScene" uid="uid://dp0lxsds7dkua" path="res://PreFabs/TrainingDoors.tscn" id="6_t8wod"]
+[ext_resource type="Theme" uid="uid://178ghfmxejyy" path="res://Themes/BlueFont5.tres" id="8_qncj2"]
+[ext_resource type="Theme" uid="uid://bbq2svf2lcuqk" path="res://Themes/YellowFont5.tres" id="9_lbtdk"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("4")
@@ -40,6 +43,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Marines"]
@@ -58,6 +62,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="MarinesTrainingCountLabel" type="Label" parent="Doors/Marines"]
@@ -68,7 +73,7 @@ offset_top = 96.0
 offset_right = 298.0
 offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
-theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme = ExtResource("6_soado")
 horizontal_alignment = 2
 
 [node name="TrainingDoors" parent="Doors/Marines" instance=ExtResource("6_t8wod")]
@@ -92,6 +97,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Production"]
@@ -110,6 +116,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="ProductionTrainingCountLabel" type="Label" parent="Doors/Production"]
@@ -120,7 +127,7 @@ offset_top = 96.0
 offset_right = 234.0
 offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
-theme_override_colors/font_color = Color(0, 0.133333, 0.533333, 1)
+theme = ExtResource("8_qncj2")
 horizontal_alignment = 2
 
 [node name="TrainingDoors" parent="Doors/Production" instance=ExtResource("6_t8wod")]
@@ -144,6 +151,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Research"]
@@ -162,6 +170,7 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
+RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="ResearchTrainingCountLabel" type="Label" parent="Doors/Research"]
@@ -172,7 +181,7 @@ offset_top = 96.0
 offset_right = 170.0
 offset_bottom = 103.6
 pivot_offset = Vector2(73.838, 18)
-theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme = ExtResource("9_lbtdk")
 horizontal_alignment = 2
 
 [node name="TrainingDoors" parent="Doors/Research" instance=ExtResource("6_t8wod")]

@@ -43,7 +43,7 @@ import/blender/enabled=false
 [gui]
 
 theme/custom="res://Themes/DefaultTheme.tres"
-theme/custom_font="res://Fonts/deuteros.ttf"
+theme/custom_font="res://Themes/WhiteFont5.tres"
 theme/default_font_antialiasing=0
 
 [logging]
