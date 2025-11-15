@@ -13,6 +13,7 @@ namespace Deuteros.Code.Platform.Screens
     public partial class Production : BaseSubScene
     {
         public const string ResearchSpriteBasePath = "res://Sprites//Items//Research//";
+        public const string ProductionProgressSpriteBasePath = "res://Sprites//Items//Production//";
         public List<ProductionButton> Buttons { get; set; }
         public ProductionButton SelectedButton { get; set; }
         Label ProductionNameLabel { get; set; }
@@ -66,26 +67,36 @@ namespace Deuteros.Code.Platform.Screens
                 else
                     currentFactory = currentPlanet.Station.Factory;
 
+                //There is no staff
+                if (!currentFactory.AOC && (currentFactory.Builder == null || currentFactory.Builder.Count == 0))
+                    return;
+
                 if (!currentFactory.AOC)
                 {
                     if (currentFactory.CurrentProductionItem() == null || currentFactory.CurrentProductionItem().Product.ItemType != addedItem.ItemType)
                     {
                         if (CheckResourceAvailable(currentPlanet, addedItem))
                         {
-                            if (currentFactory.CurrentProductionItem() != null && currentFactory.CurrentProductionItem().Product.ItemType != addedItem.ItemType)
+                            if (currentFactory.CurrentProductionItem() != null)
                             {
-                                currentFactory.ClearQueue();
-                                AddResourceByItem(currentPlanet, addedItem);
+                                currentFactory.CurrentProductionItem().Production_Value = 1;
+                                currentFactory.CurrentProductionItem().Active = false;
                             }
 
-                            var newProdItem = new ProductionItem(addedItem);
-                            newProdItem.DaysProduced = 0;
-                            newProdItem.AOCOneTime = false;
-                            newProdItem.AOCRepeat = false;
-                            newProdItem.Active = true;
-                            currentFactory.ProductionQueue.Add(newProdItem);
+                            if (currentFactory.ProductionQueue.Any(T => T.Product.ItemType == addedItem.ItemType))
+                            {
+                                currentFactory.ProductionQueue.Single(T => T.Product.ItemType == addedItem.ItemType).Active = true;
+                            }
+                            else
+                            {
+                                var newProdItem = new ProductionItem(addedItem);
+                                newProdItem.AOCOneTime = false;
+                                newProdItem.AOCRepeat = false;
+                                newProdItem.Active = true;
+                                currentFactory.ProductionQueue.Add(newProdItem);
 
-                            RemoveResourceByItem(currentPlanet, addedItem);
+                                RemoveResourceByItem(currentPlanet, addedItem);
+                            }
                         }
                     }
                 }
@@ -96,7 +107,6 @@ namespace Deuteros.Code.Platform.Screens
                     if (production == null)
                     {
                         var newProdItem = new ProductionItem(addedItem);
-                        newProdItem.DaysProduced = 0;
                         newProdItem.AOCOneTime = true;
                         newProdItem.AOCRepeat = false;
 
@@ -125,7 +135,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
 
-            Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<Control>("ProductionButtons"),
+            Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
             GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && T.Research != null && T.Research.Researched
             && (currentPlanet.PlanetId != Enums.Planetoids.earth || !T.OrbitOnly)
             && !T.AutoProduce
@@ -193,13 +203,13 @@ namespace Deuteros.Code.Platform.Screens
                 var currentProductionItem = currentFactory.CurrentProductionItem();
                 ProductionNameLabel.Text = currentProductionItem.Product.FullName;
                 SmallItemImageTextureRect = SpriteManager.LoadImageToTextureRect(ResearchSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + ".png", SmallItemImageTextureRect);
-                ItemProgressImageTextureRect = SpriteManager.LoadImageToTextureRect(ResearchSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + ".png", ItemProgressImageTextureRect);
+                ItemProgressImageTextureRect = SpriteManager.LoadImageToTextureRect(ProductionProgressSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + "_" + currentProductionItem.Production_Complete + ".png", ItemProgressImageTextureRect);
             }
             else
             {
                 ProductionNameLabel.Text = "";
                 SmallItemImageTextureRect.Texture = null;
-                ItemProgressImageTextureRect.Texture = null;
+                ItemProgressImageTextureRect = SpriteManager.LoadImageToTextureRect(ProductionProgressSpriteBasePath + "idle.png", ItemProgressImageTextureRect);
             }
         }
 
@@ -223,7 +233,8 @@ namespace Deuteros.Code.Platform.Screens
 
                     if (currentFactory.CurrentProductionItem() != null)
                     {
-                        if (currentFactory.CurrentProductionItem().DaysProduced == 45)
+                        //Production complete
+                        if (currentFactory.CurrentProductionItem().Complete)
                         {
                             currentPlanet.AddItems(currentFactory.CurrentProductionItem().Product.ItemType, 1);
 

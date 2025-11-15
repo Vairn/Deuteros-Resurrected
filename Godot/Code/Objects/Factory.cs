@@ -28,9 +28,29 @@ namespace Deuteros.Code.Objects
 
         public void IncrementCurrentProd()
         {
-            if (CurrentProductionItem() != null)
+            var currentProductionItem = CurrentProductionItem();
+            if (currentProductionItem != null)
             {
-                CurrentProductionItem().DaysProduced += 1;
+                var VRatio = 0;
+
+                if (AOC)
+                    VRatio = (Builder.Count << Builder.GetLevel()) * currentProductionItem.Object_Multiplier / 801;
+                else
+                    VRatio = 128;
+
+                if ((currentProductionItem.Production_Value + VRatio) > 255)
+                {
+                    currentProductionItem.Production_Value = (currentProductionItem.Production_Value + VRatio) & 0xFF; // keep low 8 bits
+
+                    if (currentProductionItem.Production_Complete < 4)
+                    {
+                        currentProductionItem.Production_Complete++;
+                    }
+                }
+                else
+                {
+                    currentProductionItem.Production_Value += VRatio;
+                }
             }
         }
 
