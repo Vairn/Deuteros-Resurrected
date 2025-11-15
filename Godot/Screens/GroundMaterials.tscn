@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://380q5ahay68h"]
+[gd_scene load_steps=7 format=3 uid="uid://380q5ahay68h"]
 
 [ext_resource type="Texture2D" uid="uid://dyyddnxh7d4pg" path="res://Sprites/Scenes/Store.png" id="2"]
 [ext_resource type="Script" path="res://Code/Platform/Screens/GroundMaterials.cs" id="3"]
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="4"]
 [ext_resource type="Texture2D" uid="uid://bvmn0ua8qjqg3" path="res://Sprites/Buttons/AddDerrick.png" id="4_n5d4x"]
 [ext_resource type="Theme" uid="uid://befke7oqkcv3j" path="res://Themes/BiegeFont5.tres" id="5_fb1ts"]
+[ext_resource type="Texture2D" uid="uid://b6d7m2t8nvm" path="res://Sprites/Buttons/GreenArrowRight.png" id="6_swoae"]
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("3")
@@ -48,3 +49,88 @@ offset_right = 313.0
 offset_bottom = 139.0
 theme = ExtResource("5_fb1ts")
 text = "Rigs"
+
+[node name="MaterialNames" type="Label" parent="."]
+offset_left = 240.0
+offset_top = 31.0
+offset_right = 323.0
+offset_bottom = 96.0
+text = "Iron
+Titanium
+Aluminium
+Carbon
+Copper
+Hydrogen
+Deuterium
+Methane"
+
+[node name="GreenArrows" type="GridContainer" parent="."]
+offset_left = 225.0
+offset_top = 33.0
+offset_right = 232.0
+offset_bottom = 95.0
+theme_override_constants/v_separation = 2
+
+[node name="TextureRect6" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect7" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect2" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect3" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect4" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect5" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="TextureRect8" type="TextureRect" parent="GreenArrows"]
+layout_mode = 2
+texture = ExtResource("6_swoae")
+
+[node name="MaterialAmounts" type="Label" parent="."]
+offset_left = 175.0
+offset_top = 31.0
+offset_right = 217.0
+offset_bottom = 98.0
+text = "5212
+5224
+10345
+5216
+5216
+5235
+5363
+5235"
+horizontal_alignment = 2
+
+[node name="SeamLabel" type="Label" parent="."]
+offset_left = 184.0
+offset_top = 19.0
+offset_right = 224.0
+offset_bottom = 28.0
+theme = ExtResource("5_fb1ts")
+text = "Seam"
+
+[node name="MaterialLabel" type="Label" parent="."]
+offset_left = 240.0
+offset_top = 19.0
+offset_right = 304.0
+offset_bottom = 28.0
+theme = ExtResource("5_fb1ts")
+text = "Material
+"

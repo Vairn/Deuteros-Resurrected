@@ -7,17 +7,24 @@ namespace Deuteros.Code.Platform.Screens
     public partial class GroundMaterials : BaseSubScene
     {
         public Label DerrickCount { get; set; }
+        public Label MaterialNames { get; set; }
+        public Label MaterialAmounts { get; set; }
         public Button AddDerrick { get; set; }
         public Texture2D GreenArrow { get; set; }
+        public GridContainer GreenArrows { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
             DerrickCount = (Label)GetNode("DerrickCount");
+            MaterialNames = (Label)GetNode("MaterialNames");
+            MaterialAmounts = (Label)GetNode("MaterialAmounts");
+            GreenArrows = (GridContainer)GetNode("GreenArrows");
+            
             AddDerrick = (Button)GetNode("Derrick/AddDerrick");
             AddDerrick.Connect("button_up", new Callable(this, nameof(AddDerrick_ButtonUp)));
 
-            GreenArrow = (Texture2D)ResourceLoader.Load("res://Sprites/Buttons/GreenArrowRight.fw.png");
+            GreenArrow = (Texture2D)ResourceLoader.Load("res://Sprites/Buttons/GreenArrowRight.png");
 
             base._Ready();
         }
@@ -48,21 +55,31 @@ namespace Deuteros.Code.Platform.Screens
 
         public void DrawMinerals(Deuteros.Code.Objects.Interfaces.IPlanet currentPlanet)
         {
-            var startY = 227;
-            var textureStartY = 206;
-            var lineSizeY = 32;
-            var mineralAmountX = 687;
-            var greenArrowX = 891;
-            var mineralNameX = 950;
+            var textureStartY = 20;
+            var lineSizeY = 10;
+            var greenArrowX = 1;
             var minCount = 0;
+            MaterialNames.Text = "";
+            MaterialAmounts.Text = "";
 
-            foreach(var mineral in currentPlanet.PlanetResources.Materials)
+            foreach (Node child in GreenArrows.GetChildren())
+            {
+                child.QueueFree();
+            }
+
+            foreach (var mineral in currentPlanet.PlanetResources.Materials)
             {
                 var mineralText = mineral.SurveyTicks > 0 ? "SURVEY" : mineral.GroundAmount.ToString();
 
-                this.DrawString(DefaultFont, new Vector2(mineralNameX, startY + (lineSizeY * minCount)), mineral.MaterialType.ToString(), HorizontalAlignment.Left, -1, 16, new Color(1.0f, 1.0f, 1.0f, 1.0f));
-                this.DrawString(DefaultFont, new Vector2(mineralAmountX + Deuteros.Code.Utility.String.PadX(mineralText.Length, 6), startY + (lineSizeY * minCount)), mineralText, HorizontalAlignment.Left, -1, 16, new Color(1.0f, 1.0f, 1.0f, 1.0f));
+                MaterialNames.Text += mineral.MaterialType.ToString() + "\n";
+                MaterialAmounts.Text += mineralText + "\n";
+                                
                 this.DrawTexture(GreenArrow, new Vector2(greenArrowX, textureStartY + (lineSizeY * minCount)));
+
+                var greenArrow = new TextureRect();
+                greenArrow.Texture = GreenArrow;
+                GreenArrows.AddChild(greenArrow);
+
                 minCount++;
             }
         }

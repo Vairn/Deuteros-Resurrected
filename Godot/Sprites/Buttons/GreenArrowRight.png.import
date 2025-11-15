@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bxi3fns7sek5y"
-path="res://.godot/imported/GreenArrowRight.fw.png-0335b340bf8cb07290c838a1b9caeb6e.ctex"
+uid="uid://b6d7m2t8nvm"
+path="res://.godot/imported/GreenArrowRight.png-c73702aa7ff66f87d0f111e13cc54840.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Buttons/GreenArrowRight.fw.png"
-dest_files=["res://.godot/imported/GreenArrowRight.fw.png-0335b340bf8cb07290c838a1b9caeb6e.ctex"]
+source_file="res://Sprites/Buttons/GreenArrowRight.png"
+dest_files=["res://.godot/imported/GreenArrowRight.png-c73702aa7ff66f87d0f111e13cc54840.ctex"]
 
 [params]
 
