@@ -25,9 +25,12 @@ namespace Deuteros.Code.Platform.Screens
         Label TeamWorkingLabel { get; set; }
         Label ProjectCompletionLabel { get; set; }
         Label MassDataLabel { get; set; }
+        Label ProductionAmountListLabel { get; set; }
         Label ProductionMaterialListLabel { get; set; }
         Label ItemNotesLabel { get; set; }
         Label ItemNotesDataLabel { get; set; }
+        Node2D InProgressNode { get; set; }
+        Node2D ResearchedNode { get; set; }
         TextureRect ResearchImageTextureRect { get; set; }
 
         public override void _Ready()
@@ -39,19 +42,24 @@ namespace Deuteros.Code.Platform.Screens
             ItemNameLabel = GetNode<Label>("Labels/ItemNameLabel");
             TechLevelDataLabel = GetNode<Label>("Labels/TechLevelDataLabel");
             TechLevelLabel = GetNode<Label>("Labels/TechLevelLabel");
+
             MassLabel = GetNode<Label>("Labels/Researched/MassLabel");
             TeamWorkingLabel = GetNode<Label>("Labels/InProgress/TeamWorkingLabel");
             ProjectCompletionLabel = GetNode<Label>("Labels/InProgress/ProjectCompletionLabel");
             MassDataLabel = GetNode<Label>("Labels/Researched/MassDataLabel");
+            ProductionAmountListLabel = GetNode<Label>("Labels/Researched/ProductionAmountListLabel");
             ProductionMaterialListLabel = GetNode<Label>("Labels/Researched/ProductionMaterialListLabel");
             ItemNotesLabel = GetNode<Label>("Labels/Researched/ItemNotesLabel");
             ItemNotesDataLabel = GetNode<Label>("Labels/Researched/ItemNotesDataLabel");
+
+            InProgressNode = GetNode<Node2D>("Labels/InProgress");
+            ResearchedNode = GetNode<Node2D>("Labels/Researched");
 
             ResearchImageTextureRect = GetNode<TextureRect>("Sprites/ResearchImage");
 
             SelectedButton = new ResearchButton();
 
-            Buttons = Utility.Buttons.CreateButtons<ResearchButton, ResearchItem>(GetNode<Control>("ResearchButtons"),
+            Buttons = Utility.Buttons.CreateButtons<ResearchButton, ResearchItem>(GetNode<GridContainer>("ResearchButtonGrid"),
                 GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null).Select(T => T.Research).ToDictionary(obj => obj.Index),
                 this,
                 nameof(ResearchButton_Clicked),
@@ -121,9 +129,13 @@ namespace Deuteros.Code.Platform.Screens
             TeamWorkingLabel.Text = "";
             ProjectCompletionLabel.Text = "";
             MassDataLabel.Text = "";
+            ProductionAmountListLabel.Text = "";
             ProductionMaterialListLabel.Text = "";
             ItemNotesLabel.Text = "";
             ItemNotesDataLabel.Text = "";
+
+            InProgressNode.Visible = false;
+            ResearchedNode.Visible = false;
 
             if (GameCore.SingletonInstance.Earth.ResearchStaff == null)
             {
@@ -149,22 +161,28 @@ namespace Deuteros.Code.Platform.Screens
 
                 if (researchItem.Research.Researched)
                 {
+                    ResearchedNode.Visible = true;
+
                     ResearchImageTextureRect = SpriteManager.LoadImageToTextureRect(ResearchSpriteBasePath + researchItem.Research.ItemType.ToString() + ".png", ResearchImageTextureRect);
                     MassLabel.Text = "Mass " + "".PadRight(researchItem.Mass.ToString().Length, ' ') + "t.";
                     MassDataLabel.Text = researchItem.Mass.ToString();
                     TeamWorkingLabel.Text = "";
                     ProjectCompletionLabel.Text = "";
-                    ProductionMaterialListLabel.Text = string.Join('\n', researchItem.BuildRequirements.Select(T => T.ItemCount + " " + T.ItemType.ToString()));
+                    ProductionAmountListLabel.Text = string.Join('\n', researchItem.BuildRequirements.Select(T => T.ItemCount));
+                    ProductionMaterialListLabel.Text = string.Join('\n', researchItem.BuildRequirements.Select(T => T.ItemType.ToString()));
                     ItemNotesLabel.Text = "This item may\nbe produced";
                     ItemNotesDataLabel.Text = researchItem.OrbitOnly ? "In Orbit Only" : "by any factory";
                 }
                 else if (GameCore.SingletonInstance.Earth.ResearchStaff != null && researchItem.Research.ResearchPercentageComplete > 0 && dayPassed)
                 {
+                    InProgressNode.Visible = true;
+
                     ResearchImageTextureRect.Texture = null;
                     MassLabel.Text = "";
                     MassDataLabel.Text = "";
                     TeamWorkingLabel.Text = "Team Working";
                     ProjectCompletionLabel.Text = "Project is\n" + researchItem.Research.ResearchPercentageComplete.ToString().PadLeft(2, ' ') + "% complete";
+                    ProductionAmountListLabel.Text = "";
                     ProductionMaterialListLabel.Text = "";
                     ItemNotesLabel.Text = "";
                     ItemNotesDataLabel.Text = "";

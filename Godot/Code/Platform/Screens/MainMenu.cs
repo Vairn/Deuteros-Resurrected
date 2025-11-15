@@ -64,18 +64,19 @@ namespace Deuteros.Code.Platform.Screens
 
                 if (menuButton == null)
 				{
-					currentButton.ButtonType = Enums.Menu_Buttons.Empty;
+					currentButton.SetButtonType(Enums.Menu_Buttons.Empty);
 					currentButton.SceneVariables = null;
                     currentButton.TargetScene = Enums.Scenes.None;
                 }
 				else
 				{
-                    currentButton.ButtonType = menuButton.ButtonType;
+                    currentButton.SetButtonType(menuButton.ButtonType);
                     currentButton.SceneVariables = menuButton.SceneVariables;
                     currentButton.TargetScene = menuButton.SceneToLoad;
                 }
 
                 row++;
+
 				if (row == 7)
 				{
 					row = 1;
