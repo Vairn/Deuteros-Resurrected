@@ -19,7 +19,7 @@ namespace Deuteros.Code.Platform.Screens
         public Texture2D BlueArrow { get; set; }
         public Label ResourceListLabel { get; set; }
         public Label BuildAmountLabel { get; set; }
-        public Control StoreButtonsNode { get; set; }
+        public GridContainer StoreButtonsNode { get; set; }
 
         public override void _Ready()
         {
@@ -33,7 +33,7 @@ namespace Deuteros.Code.Platform.Screens
 
             SelectedButton = null;
 
-            StoreButtonsNode = GetNode<Control>("ButtonsImage/StoreButtons");
+            StoreButtonsNode = GetNode<GridContainer>("ButtonsImage/StoreButtons");
 
             Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
                 GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),

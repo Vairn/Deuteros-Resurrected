@@ -13,7 +13,7 @@ namespace Deuteros.Code.Utility
 {
     public class Buttons
     {
-        public static List<ButtonType> CreateButtons<ButtonType, ObjectDataType>(Control buttonControlNode, Dictionary<int, ObjectDataType> objectDataList, BaseSubScene referenceScene, string clickedEventName, string codePath, string buttonPrefabName) where ButtonType : ButtonAdapter<ObjectDataType>
+        public static List<ButtonType> CreateButtons<ButtonType, ObjectDataType>(GridContainer buttonControlNode, Dictionary<int, ObjectDataType> objectDataList, BaseSubScene referenceScene, string clickedEventName, string codePath, string buttonPrefabName) where ButtonType : ButtonAdapter<ObjectDataType>
         {
             // Add +1 to Y on all rows except these:
             HashSet<int> noExtraPixelRows = new() { 0, 5, 8, 12, 14 }; // example 5
@@ -21,7 +21,7 @@ namespace Deuteros.Code.Utility
             var packedButton = GD.Load<PackedScene>("res://PreFabs/Buttons/" + buttonPrefabName + ".tscn");
 
             var script = GD.Load<Script>("res://" + codePath);
-            
+
             var researchButtonControl = buttonControlNode;
             var xHeight = 0;
 
@@ -30,9 +30,7 @@ namespace Deuteros.Code.Utility
             foreach (Node child in researchButtonControl.GetChildren())
                 child.QueueFree();
 
-            xHeight = 0;
-
-            for (var i = 1; i < 33; i++)
+            for (var i = 1; i <= 16; i++)
             {
                 var createdButton = packedButton.Instantiate();
                 createdButton.SetScript(script);
@@ -44,22 +42,22 @@ namespace Deuteros.Code.Utility
                         typedButton.ObjectData = objectDataList[i];
                         typedButton.Connect("Clicked", new Callable(referenceScene, clickedEventName));
                     }
-
-                    var buttonPosition = typedButton.Position;
-                    buttonPosition.X = 66 * (float)((i - 1) / 16);
-                    buttonPosition.Y = 32 * (float)((i - 1) % 16);
-
-                    buttonPosition.Y = buttonPosition.Y - (xHeight - (11 * (xHeight / 11)));
-
-                    if (!noExtraPixelRows.Contains((i - 1) % 16))
-                    {
-                        buttonPosition.Y = buttonPosition.Y - 1;
-                        xHeight++;
-                    }
-
-                    typedButton.Position = buttonPosition;
                     createdButtons.Add(typedButton);
                     researchButtonControl.AddChild(typedButton);
+                }
+
+                var createdButton2 = packedButton.Instantiate();
+                createdButton2.SetScript(script);
+
+                if (createdButton2 is ButtonType typedButton2)
+                {
+                    if (objectDataList.ContainsKey(i + 16))
+                    {
+                        typedButton2.ObjectData = objectDataList[i + 16];
+                        typedButton2.Connect("Clicked", new Callable(referenceScene, clickedEventName));
+                    }
+                    createdButtons.Add(typedButton2);
+                    researchButtonControl.AddChild(typedButton2);
                 }
             }
 
