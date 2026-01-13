@@ -12,6 +12,7 @@ namespace Deuteros.Code.Objects.Interfaces
         Enums.Planetoids PlanetId { get; set; }
         Enums.Planetoids MoonParentPlanetId { get; set; }
         Enums.Stars ParentStar { get; set; }
-        Shuttle Shuttle { get; set; }
+        public int ShuttleState { get; set; }
+        public int StarShipState { get; set; }
     }
 }

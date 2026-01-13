@@ -232,8 +232,7 @@ namespace Deuteros.Code.Platform.Screens
         public void MarinesPlusButton_Pressed()
         {
             if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && 
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount &&
-                GameCore.SingletonInstance.Earth.PlanetResources.Staff.Count < 4)
+                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount)
             {
                 GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount++;
             }

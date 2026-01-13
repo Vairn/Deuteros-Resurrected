@@ -1,4 +1,5 @@
 using Deuteros.Code.Objects;
+using Deuteros.Code.Objects.Interfaces;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,8 @@ namespace Deuteros.Code
         public bool TimeSkip { get; set; }
         public ulong TimeSkipStart { get; set; }
         public bool TimeSkipDay { get; set; }
+
+        public List<IShip> Ships { get; set; }
 
         public Enums.Planetoids CurrentPlanet { get; set; }
         public List<Enums.Game_Stages> CompleteStages { get; set; }
@@ -49,6 +52,7 @@ namespace Deuteros.Code
                 newGameData.ResourceLevels_Survey_Multiplier = new Dictionary<Enums.ItemTypes, int>();
                 newGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
                 newGameData.CompleteStages = new List<Enums.Game_Stages>();
+                newGameData.Ships = new List<IShip>();
 
                 #region ItemList
 
@@ -783,8 +787,11 @@ namespace Deuteros.Code
                 earthMaterials.Add(new Objects.Material(Enums.ItemTypes.deuterium, 2));
                 earthMaterials.Add(new Objects.Material(Enums.ItemTypes.methane, 2));
                 newEarth.PlanetResources = new Objects.PlanetResource(earthMaterials);
-                newEarth.PlanetResources.Derricks = 1;
                 newEarth.Stores = new Objects.Store();
+
+                newEarth.Stores[Enums.ItemTypes.derrick] = 1;
+                newEarth.Stores[Enums.ItemTypes.s_chassis] = 1;
+
                 newEarth.PlanetId = Enums.Planetoids.earth;
 
                 newGameData.Planets.Add(Enums.Planetoids.earth, newEarth);

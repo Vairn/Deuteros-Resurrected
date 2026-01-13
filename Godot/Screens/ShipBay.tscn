@@ -1,9 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://du6cxq2xabkyu"]
+[gd_scene load_steps=13 format=3 uid="uid://du6cxq2xabkyu"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/ShipBay.cs" id="1_ka4jh"]
 [ext_resource type="Texture2D" uid="uid://c75qloyqqj1ad" path="res://Sprites/Scenes/ShipBay.png" id="2_2703a"]
+[ext_resource type="PackedScene" uid="uid://dcxdk5ribdcij" path="res://Screens/Ships/Cockpit.tscn" id="3_sa7ke"]
+[ext_resource type="Texture2D" uid="uid://k3y3odk6uu5r" path="res://Sprites/Buttons/Shipbay/Nav_Dismantle.png" id="3_svqld"]
+[ext_resource type="Texture2D" uid="uid://blepapetmyce8" path="res://Sprites/Buttons/Shipbay/Nav_Create_Shuttle.png" id="4_3f13o"]
+[ext_resource type="Texture2D" uid="uid://dib6jvo10idup" path="res://Sprites/Buttons/Shipbay/Nav_Create_SCG.png" id="4_63ts0"]
+[ext_resource type="Texture2D" uid="uid://d32ioy135it0g" path="res://Sprites/Buttons/Shipbay/Nav_Torso_Off.png" id="4_d7tqa"]
+[ext_resource type="PackedScene" uid="uid://bm6n1v0bgu6ar" path="res://Screens/Ships/Torso.tscn" id="4_pi6em"]
+[ext_resource type="Texture2D" uid="uid://dnv34nnhxqlt2" path="res://Sprites/Buttons/Shipbay/Nav_Create_IOS.png" id="4_r3grg"]
+[ext_resource type="Texture2D" uid="uid://bkjucfmigsed3" path="res://Sprites/Buttons/Shipbay/Nav_Engine_Off.png" id="5_5h710"]
+[ext_resource type="PackedScene" uid="uid://682qtxvraq1j" path="res://Screens/Ships/Engine.tscn" id="5_coh4p"]
+[ext_resource type="Texture2D" uid="uid://ctikfrf03i6ob" path="res://Sprites/Buttons/Shipbay/Nav_Cockpit_Off.png" id="8_5sjpw"]
 
-[node name="Node2D" type="Node2D"]
+[node name="ShipBay" type="Node2D"]
 script = ExtResource("1_ka4jh")
 
 [node name="ShipBay_Empty" type="TextureRect" parent="."]
@@ -13,3 +23,130 @@ offset_right = 320.0
 offset_bottom = 184.0
 mouse_filter = 2
 texture = ExtResource("2_2703a")
+
+[node name="Buttons" type="Node2D" parent="."]
+position = Vector2(80, 52)
+
+[node name="Nav_Dismantle" type="TextureButton" parent="Buttons"]
+offset_top = -36.0
+offset_right = 24.0
+offset_bottom = -20.0
+texture_normal = ExtResource("3_svqld")
+
+[node name="Nav_Create_Shuttle" type="TextureButton" parent="Buttons"]
+offset_top = -36.0
+offset_right = 24.0
+offset_bottom = -20.0
+texture_normal = ExtResource("4_3f13o")
+
+[node name="Nav_Create_IOS" type="TextureButton" parent="Buttons"]
+offset_top = -36.0
+offset_right = 24.0
+offset_bottom = -20.0
+texture_normal = ExtResource("4_r3grg")
+
+[node name="Nav_Create_SCG" type="TextureButton" parent="Buttons"]
+offset_left = 24.0
+offset_top = -36.0
+offset_right = 48.0
+offset_bottom = -20.0
+texture_normal = ExtResource("4_63ts0")
+
+[node name="ShipNav" type="HBoxContainer" parent="Buttons"]
+offset_left = 32.0
+offset_top = -36.0
+offset_right = 224.0
+offset_bottom = -20.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Nav_Cockpit" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("8_5sjpw")
+
+[node name="Nav_Torso1" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Torso2" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Torso3" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Torso4" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Torso5" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Torso6" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("4_d7tqa")
+
+[node name="Nav_Engine" type="TextureButton" parent="Buttons/ShipNav"]
+layout_mode = 2
+texture_normal = ExtResource("5_5h710")
+
+[node name="ShipContainer" type="Control" parent="."]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = 80.0
+offset_top = 52.0
+offset_right = 304.0
+offset_bottom = 172.0
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="ShipContainer"]
+layout_mode = 0
+offset_right = 224.0
+offset_bottom = 120.0
+horizontal_scroll_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ShipContainer/ScrollContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="Cockpit" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("3_sa7ke")]
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso1" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso2" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso3" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso4" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso5" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="Torso6" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("4_pi6em")]
+visible = false
+clip_contents = true
+layout_mode = 2
+
+[node name="Engine" parent="ShipContainer/ScrollContainer2/HBoxContainer" instance=ExtResource("5_coh4p")]
+clip_contents = true
+layout_mode = 2

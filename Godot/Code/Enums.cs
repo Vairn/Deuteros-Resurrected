@@ -322,13 +322,14 @@ namespace Deuteros.Code
 
         public enum Game_Stages
         {
-            Earth_Shuttle_Built = 100,
-            Left_Earth = 200,
-            Recovered_Moon = 300,
-            Discovered_Methanoids = 400,
-            Traded_Methanoids = 500,
-            War_Methanoids = 600,
-            Left_Sol = 700
+            Earth_Shuttle_Built = 1000,
+            First_OrbitalFactory = 2000,
+            Left_Earth = 3000,
+            Recovered_Moon = 4000,
+            Discovered_Methanoids = 5000,
+            Traded_Methanoids = 6000,
+            War_Methanoids = 7000,
+            Left_Sol = 8000
         }
 
         public enum SidePanel_Button_State_Animations
@@ -351,6 +352,7 @@ namespace Deuteros.Code
 
         public enum Module_Types
         {
+            None = 0,
             Tool = 100,
             Supply = 200,
             Cryo = 300

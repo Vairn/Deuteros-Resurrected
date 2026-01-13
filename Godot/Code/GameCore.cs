@@ -23,7 +23,9 @@ namespace Deuteros.Code
                     null,
                     GameCore.SingletonInstance.GameData.CompleteStages.Contains(Enums.Game_Stages.Earth_Shuttle_Built) ?
                     new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.Shuttle, true,
-                        new List<Enums.SceneVariables>() { Enums.SceneVariables.Ground })
+                        new List<Enums.SceneVariables>() { 
+                            Enums.SceneVariables.Ground 
+                        })
                         : null,
                     new Objects.MenuButton(Enums.Menu_Buttons.Training, Enums.Scenes.Earth_Training, true,
                     new List<Enums.SceneVariables>() {
@@ -31,7 +33,8 @@ namespace Deuteros.Code
                     }),
                     new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
                     new List<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground
+                        Enums.SceneVariables.Ground,
+                        Enums.SceneVariables.Shuttle
                     }),
                     null,
                     null,
@@ -185,7 +188,6 @@ namespace Deuteros.Code
             GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
             _currentScreen = newScene;
 
-            //If this is earth, then the menus are fairly 
             if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.Planetoids.earth)
             {
                 _menuScreen.MenuButtons = earthMenuButtons;

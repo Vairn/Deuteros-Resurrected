@@ -11,6 +11,9 @@ namespace Deuteros.Code.Objects
         public bool Built { get; set; }
         public int PlanetId { get; set; }
         public Factory Factory { get; set; }
+        public int ShuttleState { get; set; }
+        public int StarShipState { get; set; }
+
 
         public SpaceStation()
         {
