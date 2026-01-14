@@ -17,14 +17,6 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
         public Staff[] StaffList { get; set; }
 
         public Label PilotNameLabel { get; set; }
-        public Label Staff1NameLabel { get; set; }
-        public Label Staff1CountLabel { get; set; }
-        public Label Staff2NameLabel { get; set; }
-        public Label Staff2CountLabel { get; set; }
-        public Label Staff3NameLabel { get; set; }
-        public Label Staff3CountLabel { get; set; }
-        public Label Staff4NameLabel { get; set; }
-        public Label Staff4CountLabel { get; set; }
         
         public TextureButton AddACC { get; set; }
 
@@ -33,13 +25,8 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
         public Button Staff3Button { get; set; }
         public Button Staff4Button { get; set; }
 
-        public ColorRect Staff1Background { get; set; }
-        public ColorRect Staff2Background { get; set; }
-        public ColorRect Staff3Background { get; set; }
-        public ColorRect Staff4Background { get; set; }
-
-        public Color ProductionStaffColor { get; set; } = new Color(0, 34, 136);
-        public Color MarineStaffColor { get; set; } = new Color(255, 0, 0);
+        public Color ProductionStaffColor { get; set; } = new Color("#002288");
+        public Color MarineStaffColor { get; set; } = new Color(255, 0, 0, 255);
 
         public IShip CurrentShip { get; set; }
 
@@ -66,20 +53,6 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
             Staff4Button = GetNode<Button>("Staff/Buttons/04");
 
             PilotNameLabel = GetNode<Label>("Labels/PilotName");
-
-            Staff1NameLabel = GetNode<Label>("Staff/Labels/Staff1Name");
-            Staff1CountLabel = GetNode<Label>("Staff/Labels/Staff1Count");
-            Staff2NameLabel = GetNode<Label>("Staff/Labels/Staff2Name");
-            Staff2CountLabel = GetNode<Label>("Staff/Labels/Staff2Count");
-            Staff3NameLabel = GetNode<Label>("Staff/Labels/Staff3Name");
-            Staff3CountLabel = GetNode<Label>("Staff/Labels/Staff3Count");
-            Staff4NameLabel = GetNode<Label>("Staff/Labels/Staff4Name");
-            Staff4CountLabel = GetNode<Label>("Staff/Labels/Staff4Count");
-
-            Staff1Background = GetNode<ColorRect>("Staff/Backgrounds/01");
-            Staff2Background = GetNode<ColorRect>("Staff/Backgrounds/02");
-            Staff3Background = GetNode<ColorRect>("Staff/Backgrounds/03");
-            Staff4Background = GetNode<ColorRect>("Staff/Backgrounds/04");
 
             Staff1Button.Pressed += () => ButtonPress(0);
             Staff2Button.Pressed += () => ButtonPress(1);
@@ -142,8 +115,8 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
                 var interfaceI = i+1;
 
                 var staffBackground = GetNode<ColorRect>("Staff/Backgrounds/0" + interfaceI);
-                var staffName = GetNode<Label>("Staff/Labels/Staff" + interfaceI + "Name");
-                var staffCount = GetNode<Label>("Staff/Labels/Staff" + interfaceI + "Count");
+                var staffName = GetNode<Label>("Staff/Labels2/Staff" + interfaceI + "Name");
+                var staffCount = GetNode<Label>("Staff/Labels2/Staff" + interfaceI + "Count");
 
                 if (StaffList[i] != null)
                 {

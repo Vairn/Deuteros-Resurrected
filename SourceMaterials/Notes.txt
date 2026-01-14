@@ -1,10 +1,38 @@
+FACTS
+-----
+Main Top Right panel is 272X168
+
+Backgrounds must be positioned 48x16
+
+Original Screen Size is 320X200
+
 liverpool1.
 
-9251
 
-1529
-
+Shuttle bay on ground only ever shows middle section.
 
 
+production algorithm
+    when switching between production items the production_complete level is preserved
+    but the production value is reset from the object_current_value if you switch to another
+    production and then come back
+
+initialise at start of production:
+  production_value = object_current_value
+  production_complete = 1
+
+on each tick:
+
+v = (num_engineers << rank) * object_multipler / $321
+
+if (production_value + v)>255
+ production_value = ((production_value + v) & 255)
+ if production_complete<4
+     production_complete++
+else
+ production_value = production_value + v
+
+ends when:
+  production_complete = 4
 
 looks like v = 128 in the production algorithm when auto operations computer is fitted

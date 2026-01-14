@@ -12,7 +12,6 @@ namespace Deuteros.Code.Objects
         public Objects.Training TrainingData { get; set; }
         public bool GroundSelected { get; set; }
         public ResearchItem CurrentResearchItem { get; set; }
-        public int ShuttleState { get; set; }
 
         public Earth() : base()
         {

@@ -65,6 +65,7 @@ namespace Deuteros.Code.Platform.Screens
             EngineInstance = GetNode<ShipBayScenes.Engine>("ShipContainer/ScrollContainer2/HBoxContainer/Engine");
 
             CockpitInstance.PilotChanged += CockpitInstance_PilotChanged;
+            CockpitInstance.ProductionChanged += CockpitInstance_ProductionChanged;
             EngineInstance.EngineInstalled += EngineInstance_EngineInstalled;
             TorsoInstances[0].ModuleChanged += ShipBay_ModuleChanged;
             TorsoInstances[1].ModuleChanged += ShipBay_ModuleChanged;
@@ -455,6 +456,25 @@ namespace Deuteros.Code.Platform.Screens
                     TorsoInstances[4].TorsoSection = 4;
                     TorsoInstances[4].UpdateState();
                 }
+            }
+        }
+
+        private Staff[] CockpitInstance_ProductionChanged(Staff staff)
+        {
+            if (Ground && CurrentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)CurrentPlanet).Factory.Builder == null)
+            {
+                ((Earth)CurrentPlanet).Factory.Builder = staff;
+                ((Earth)CurrentPlanet).PlanetResources.RemoveStaff(staff);
+                return ((Earth)CurrentPlanet).PlanetResources.Staff;
+            }
+            else if (!Ground && !CurrentPlanet.Station.Factory.AOC && CurrentPlanet.Station.Factory.Builder == null)
+            {
+                CurrentPlanet.Station.Factory.Builder = staff;
+                CurrentPlanet.Station.Resources.RemoveStaff(staff);
+                return CurrentPlanet.Station.Resources.Staff;
+            } else
+            {
+                return CurrentPlanet.Station.Resources.Staff;
             }
         }
 

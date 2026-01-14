@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://dm6c3u7eka7hc"]
+[gd_scene load_steps=11 format=3 uid="uid://dm6c3u7eka7hc"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/Production.cs" id="1_7mj6f"]
 [ext_resource type="Texture2D" uid="uid://clcj5c7woisxx" path="res://Sprites/Scenes/Production.png" id="2"]
 [ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont5.tres" id="2_e5ye3"]
+[ext_resource type="Texture2D" uid="uid://bi2p2ur5o2nv8" path="res://Sprites/Buttons/ProductionRemoveStaff.png" id="3_4lyxk"]
 [ext_resource type="PackedScene" path="res://PreFabs/Sound/BackGround.tscn" id="3_purcx"]
 [ext_resource type="PackedScene" uid="uid://oi1xywbqhsbj" path="res://PreFabs/Buttons/ProductionButton.tscn" id="3_sfo6b"]
 [ext_resource type="Texture2D" uid="uid://bgbjb8hvgi1dm" path="res://Sprites/SceneSprites/team_frame.png" id="3_tqxy8"]
@@ -21,6 +22,13 @@ offset_bottom = 184.0
 mouse_filter = 2
 texture = ExtResource("2")
 stretch_mode = 5
+
+[node name="RemoveStaff" type="TextureButton" parent="."]
+offset_left = 168.0
+offset_top = 163.0
+offset_right = 192.0
+offset_bottom = 179.0
+texture_normal = ExtResource("3_4lyxk")
 
 [node name="Sprites" type="Node2D" parent="."]
 

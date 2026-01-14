@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://iui0nq7mif7w" path="res://Sprites/Buttons/Shipbay/Engine_Equip.png" id="6_1aqd4"]
 
 [node name="Engine" type="Control"]
-custom_minimum_size = Vector2(224, 120)
+custom_minimum_size = Vector2(224, 116)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 224.0
@@ -21,15 +21,16 @@ script = ExtResource("1_aljjs")
 layout_mode = 0
 offset_left = -8.0
 offset_right = 224.0
-offset_bottom = 120.0
+offset_bottom = 116.0
 texture = ExtResource("2_2olq7")
 expand_mode = 2
 stretch_mode = 1
 
 [node name="SpriteHolder" type="Control" parent="."]
 anchors_preset = 0
+offset_top = -4.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 36.0
 
 [node name="EngineNeck" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 0
@@ -65,6 +66,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="InstallEngine" type="TextureButton" parent="SpriteHolder/Buttons"]
+layout_mode = 0
 offset_top = 104.0
 offset_right = 24.0
 offset_bottom = 120.0

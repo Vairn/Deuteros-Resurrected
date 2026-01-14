@@ -23,6 +23,13 @@ namespace Deuteros.Code.Platform.Screens
         TextureRect SmallItemImageTextureRect { get; set; }
         TextureRect ItemProgressImageTextureRect { get; set; }
 
+        TextureButton RemoveStaff { get; set; }
+
+        bool Ground {  get; set; }
+
+        IPlanet CurrentPlanet { get; set; }
+        Code.Objects.Factory CurrentFactory { get; set; }
+
         public override void _Ready()
         {
             ProductionNameLabel = GetNode<Label>("Labels/ProductionNameLabel");
@@ -33,9 +40,40 @@ namespace Deuteros.Code.Platform.Screens
             SmallItemImageTextureRect = GetNode<TextureRect>("Sprites/SmallItemImage");
             ItemProgressImageTextureRect = GetNode<TextureRect>("Sprites/ItemProgressImage");
 
+            RemoveStaff = GetNode<TextureButton>("RemoveStaff");
+
+            RemoveStaff.Pressed += RemoveStaff_Pressed;
+
+            CurrentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
+
+            Ground = SceneVariables.Contains(Enums.SceneVariables.Ground);
+
+            if (Ground)
+                CurrentFactory = ((Earth)CurrentPlanet).Factory;
+            else
+                CurrentFactory = CurrentPlanet.Station.Factory;
+
             RefreshButtons();
 
             base._Ready();
+        }
+
+        private void RemoveStaff_Pressed()
+        {
+            if (CurrentFactory.Builder != null && CurrentFactory.Builder.Count > 0 && (Ground ? CurrentPlanet.PlanetResources.Staff : CurrentPlanet.Station.Resources.Staff).Any(T => T == null))
+            {
+                ((Resource)(Ground ? CurrentPlanet.PlanetResources : CurrentPlanet.Station.Resources)).AddStaff(CurrentFactory.Builder);
+                CurrentFactory.Builder = null;
+
+                foreach (var item in CurrentFactory.ProductionQueue.Where(T => T.Active))
+                    AddResourceByItem(CurrentPlanet, item.Product);
+
+                CurrentFactory.ClearQueue();
+
+                RefreshButtons();
+
+                DrawData();
+            }
         }
 
         private void ProductionButton_Clicked(int index)
@@ -55,37 +93,29 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CheckProductionStart()
         {
-            var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
-
             if (SelectedButton != null)
             {
                 var addedItem = (Item)SelectedButton.ObjectData;
-                Code.Objects.Factory currentFactory;
-
-                if (currentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)currentPlanet).GroundSelected)
-                    currentFactory = ((Earth)currentPlanet).Factory;
-                else
-                    currentFactory = currentPlanet.Station.Factory;
 
                 //There is no staff
-                if (!currentFactory.AOC && (currentFactory.Builder == null || currentFactory.Builder.Count == 0))
+                if (!CurrentFactory.AOC && (CurrentFactory.Builder == null || CurrentFactory.Builder.Count == 0))
                     return;
 
-                if (!currentFactory.AOC)
+                if (!CurrentFactory.AOC)
                 {
-                    if (currentFactory.CurrentProductionItem() == null || currentFactory.CurrentProductionItem().Product.ItemType != addedItem.ItemType)
+                    if (CurrentFactory.CurrentProductionItem() == null || CurrentFactory.CurrentProductionItem().Product.ItemType != addedItem.ItemType)
                     {
-                        if (CheckResourceAvailable(currentPlanet, addedItem))
+                        if (CheckResourceAvailable(CurrentPlanet, addedItem))
                         {
-                            if (currentFactory.CurrentProductionItem() != null)
+                            if (CurrentFactory.CurrentProductionItem() != null)
                             {
-                                currentFactory.CurrentProductionItem().Production_Value = 1;
-                                currentFactory.CurrentProductionItem().Active = false;
+                                CurrentFactory.CurrentProductionItem().Production_Value = 1;
+                                CurrentFactory.CurrentProductionItem().Active = false;
                             }
 
-                            if (currentFactory.ProductionQueue.Any(T => T.Product.ItemType == addedItem.ItemType))
+                            if (CurrentFactory.ProductionQueue.Any(T => T.Product.ItemType == addedItem.ItemType))
                             {
-                                currentFactory.ProductionQueue.Single(T => T.Product.ItemType == addedItem.ItemType).Active = true;
+                                CurrentFactory.ProductionQueue.Single(T => T.Product.ItemType == addedItem.ItemType).Active = true;
                             }
                             else
                             {
@@ -93,16 +123,16 @@ namespace Deuteros.Code.Platform.Screens
                                 newProdItem.AOCOneTime = false;
                                 newProdItem.AOCRepeat = false;
                                 newProdItem.Active = true;
-                                currentFactory.ProductionQueue.Add(newProdItem);
+                                CurrentFactory.ProductionQueue.Add(newProdItem);
 
-                                RemoveResourceByItem(currentPlanet, addedItem);
+                                RemoveResourceByItem(CurrentPlanet, addedItem);
                             }
                         }
                     }
                 }
                 else
                 {
-                    var production = currentFactory.ProductionQueue.SingleOrDefault(T => T.Product.ItemType == addedItem.ItemType);
+                    var production = CurrentFactory.ProductionQueue.SingleOrDefault(T => T.Product.ItemType == addedItem.ItemType);
 
                     if (production == null)
                     {
@@ -110,7 +140,7 @@ namespace Deuteros.Code.Platform.Screens
                         newProdItem.AOCOneTime = true;
                         newProdItem.AOCRepeat = false;
 
-                        currentFactory.ProductionQueue.Add(newProdItem);
+                        CurrentFactory.ProductionQueue.Add(newProdItem);
                     }
                     else if (production.AOCRepeat)
                     {
@@ -133,11 +163,9 @@ namespace Deuteros.Code.Platform.Screens
 
         private void RefreshButtons()
         {
-            var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
-
             Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
             GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && T.Research != null && T.Research.Researched
-            && (currentPlanet.PlanetId != Enums.Planetoids.earth || !T.OrbitOnly)
+            && (CurrentPlanet.PlanetId != Enums.Planetoids.earth || !T.OrbitOnly)
             && !T.AutoProduce
             ).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
             this,
@@ -148,16 +176,7 @@ namespace Deuteros.Code.Platform.Screens
 
         protected override void ProductionFinished(Objects.Factory factory)
         {
-            var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
-
-            Code.Objects.Factory currentFactory;
-
-            if (currentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)currentPlanet).GroundSelected)
-                currentFactory = ((Earth)currentPlanet).Factory;
-            else
-                currentFactory = currentPlanet.Station.Factory;
-
-            if (factory == currentFactory)
+            if (factory == CurrentFactory)
                 SelectedButton = null;
         }
 
@@ -177,19 +196,11 @@ namespace Deuteros.Code.Platform.Screens
 
         public void DrawData()
         {
-            var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
-            Code.Objects.Factory currentFactory;
-
-            if (currentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)currentPlanet).GroundSelected)
-                currentFactory = ((Earth)currentPlanet).Factory;
-            else
-                currentFactory = currentPlanet.Station.Factory;
-
-            if (currentFactory.Builder != null)
+            if (CurrentFactory.Builder != null)
             {
-                StaffCountLabel.Text = currentFactory.Builder.Count.ToString();
-                StaffNameLabel.Text = currentFactory.Builder.Leader;
-                StaffRankLabel.Text = currentFactory.Builder.ActionsTaken.ToString();
+                StaffCountLabel.Text = CurrentFactory.Builder.Count.ToString();
+                StaffNameLabel.Text = CurrentFactory.Builder.Leader;
+                StaffRankLabel.Text = CurrentFactory.Builder.ActionsTaken.ToString();
             }
             else
             {
@@ -198,9 +209,9 @@ namespace Deuteros.Code.Platform.Screens
                 StaffRankLabel.Text = "";
             }
 
-            if (currentFactory.CurrentProductionItem() != null)
+            if (CurrentFactory.CurrentProductionItem() != null)
             {
-                var currentProductionItem = currentFactory.CurrentProductionItem();
+                var currentProductionItem = CurrentFactory.CurrentProductionItem();
                 ProductionNameLabel.Text = currentProductionItem.Product.FullName;
                 SmallItemImageTextureRect = SpriteManager.LoadImageToTextureRect(ResearchSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + ".png", SmallItemImageTextureRect);
                 ItemProgressImageTextureRect = SpriteManager.LoadImageToTextureRect(ProductionProgressSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + "_" + currentProductionItem.Production_Complete + ".png", ItemProgressImageTextureRect);

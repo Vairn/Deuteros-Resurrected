@@ -3,14 +3,14 @@
 [ext_resource type="Script" path="res://Code/Platform/Screens/ShipBayScenes/Torso.cs" id="1_h6w6f"]
 [ext_resource type="Texture2D" uid="uid://prhn474347cd" path="res://Sprites/SceneSprites/Ships/TorsoNeck.png" id="1_taes7"]
 [ext_resource type="Texture2D" uid="uid://bqjtlnn6j6lji" path="res://Sprites/Scenes/ShuttleBackground.png" id="2_05hcw"]
-[ext_resource type="Texture2D" uid="uid://cnq3h6xb2lu53" path="res://Sprites/SceneSprites/Ships/Component_Generic.png" id="2_ubeg7"]
 [ext_resource type="Texture2D" uid="uid://icd3u8ejop2k" path="res://Sprites/SceneSprites/Ships/Support.png" id="3_shqx2"]
+[ext_resource type="Texture2D" uid="uid://ddfsn63son586" path="res://Sprites/SceneSprites/Ships/Component_Bandaid.png" id="5_r2v0k"]
 [ext_resource type="Texture2D" uid="uid://dnjp14pwp5xm" path="res://Sprites/Buttons/Shipbay/Torso_Equip_SupplyPod.png" id="6_u74nv"]
 [ext_resource type="Texture2D" uid="uid://b3cqb2nl4kgxn" path="res://Sprites/Buttons/Shipbay/Torso_Equip_ToolPod.png" id="7_quqhb"]
 [ext_resource type="Texture2D" uid="uid://bdinekamysv8t" path="res://Sprites/Buttons/Shipbay/Torso_Equip_CryoPod.png" id="8_ph8f1"]
 
 [node name="Torso" type="Control"]
-custom_minimum_size = Vector2(224, 120)
+custom_minimum_size = Vector2(224, 116)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 224.0
@@ -23,15 +23,16 @@ script = ExtResource("1_h6w6f")
 layout_mode = 0
 offset_left = -8.0
 offset_right = 224.0
-offset_bottom = 120.0
+offset_bottom = 116.0
 texture = ExtResource("2_05hcw")
 expand_mode = 2
 stretch_mode = 1
 
 [node name="SpriteHolder" type="Control" parent="."]
 anchors_preset = 0
+offset_top = -4.0
 offset_right = 40.0
-offset_bottom = 40.0
+offset_bottom = 36.0
 
 [node name="TorsoNeck" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 0
@@ -60,7 +61,7 @@ offset_left = 80.0
 offset_top = 8.0
 offset_right = 176.0
 offset_bottom = 88.0
-texture = ExtResource("2_ubeg7")
+texture = ExtResource("5_r2v0k")
 
 [node name="Buttons" type="Control" parent="SpriteHolder"]
 anchors_preset = 0
@@ -68,12 +69,14 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="AddSupplyPod" type="TextureButton" parent="SpriteHolder/Buttons"]
+layout_mode = 0
 offset_top = 104.0
 offset_right = 24.0
 offset_bottom = 120.0
 texture_normal = ExtResource("6_u74nv")
 
 [node name="AddToolPod" type="TextureButton" parent="SpriteHolder/Buttons"]
+layout_mode = 0
 offset_left = 24.0
 offset_top = 104.0
 offset_right = 48.0
@@ -81,6 +84,7 @@ offset_bottom = 120.0
 texture_normal = ExtResource("7_quqhb")
 
 [node name="AddCryoPod" type="TextureButton" parent="SpriteHolder/Buttons"]
+layout_mode = 0
 offset_left = 48.0
 offset_top = 104.0
 offset_right = 72.0
