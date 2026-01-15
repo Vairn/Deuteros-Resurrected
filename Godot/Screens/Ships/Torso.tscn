@@ -90,3 +90,10 @@ offset_top = 104.0
 offset_right = 72.0
 offset_bottom = 120.0
 texture_normal = ExtResource("8_ph8f1")
+
+[node name="ActivatePod" type="Button" parent="SpriteHolder/Buttons"]
+offset_left = 80.0
+offset_top = 10.0
+offset_right = 176.0
+offset_bottom = 79.0
+flat = true

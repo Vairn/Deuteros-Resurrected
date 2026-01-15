@@ -9,6 +9,8 @@ using System.Security.Cryptography.X509Certificates;
 using Deuteros.Code.Objects.Interfaces;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using static Deuteros.Code.Enums;
+using Deuteros.Code.Utility;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -28,6 +30,12 @@ namespace Deuteros.Code.Platform.Screens
         TextureButton Nav_Create_Shuttle { get; set; }
         TextureButton Nav_Create_IOS { get; set; }
         TextureButton Nav_Create_SCG { get; set; }
+
+        Control CargoService { get; set; }
+        Control EquipmentStock { get; set; }
+        Control StaffList { get; set; }
+
+        StaffList TorsoStaffList { get; set; }
 
         ShipBayScenes.Cockpit CockpitInstance { get; set; }
         List<ShipBayScenes.Torso> TorsoInstances { get; set; }
@@ -54,6 +62,8 @@ namespace Deuteros.Code.Platform.Screens
 
             CockpitInstance = GetNode<ShipBayScenes.Cockpit>("ShipContainer/ScrollContainer2/HBoxContainer/Cockpit");
 
+            TorsoStaffList = GetNode<StaffList>("StaffList");
+
             TorsoInstances = new List<ShipBayScenes.Torso>();
             TorsoInstances.Add(GetNode<ShipBayScenes.Torso>("ShipContainer/ScrollContainer2/HBoxContainer/Torso1"));
             TorsoInstances.Add(GetNode<ShipBayScenes.Torso>("ShipContainer/ScrollContainer2/HBoxContainer/Torso2"));
@@ -64,14 +74,26 @@ namespace Deuteros.Code.Platform.Screens
 
             EngineInstance = GetNode<ShipBayScenes.Engine>("ShipContainer/ScrollContainer2/HBoxContainer/Engine");
 
-            CockpitInstance.PilotChanged += CockpitInstance_PilotChanged;
-            CockpitInstance.ProductionChanged += CockpitInstance_ProductionChanged;
+            CargoService = GetNode<Control>("CargoService");
+            EquipmentStock = GetNode<Control>("EquipmentStock");
+            StaffList = GetNode<Control>("StaffList");
+
+            CockpitInstance.StaffList.PilotChanged += CockpitInstance_PilotChanged;
+            CockpitInstance.StaffList.ProductionChanged += CockpitInstance_ProductionChanged;
+
+            TorsoStaffList.StaffClicked += TorsoStaffList_StaffClicked;
+
             EngineInstance.EngineInstalled += EngineInstance_EngineInstalled;
             TorsoInstances[0].ModuleChanged += ShipBay_ModuleChanged;
+            TorsoInstances[0].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[1].ModuleChanged += ShipBay_ModuleChanged;
+            TorsoInstances[1].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[2].ModuleChanged += ShipBay_ModuleChanged;
+            TorsoInstances[2].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[3].ModuleChanged += ShipBay_ModuleChanged;
+            TorsoInstances[3].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[4].ModuleChanged += ShipBay_ModuleChanged;
+            TorsoInstances[4].ModuleOpened += ShipBay_ModuleOpened;
 
             LoadButtons();
 
@@ -373,7 +395,6 @@ namespace Deuteros.Code.Platform.Screens
 
                 CockpitInstance.LoadShip(Ship);
 
-                //Set all torsos to not visible to start
                 Nav_Torsos.ForEach(T => T.Visible = false);
                 TorsoInstances.ForEach(T => T.Visible = false);
                 TorsoInstances.ForEach(T => T.SpriteHolder.Visible = false);
@@ -387,7 +408,7 @@ namespace Deuteros.Code.Platform.Screens
                     TorsoInstances[0].Visible = true;
                     TorsoInstances[0].SpriteHolder.Visible = true;
 
-                    TorsoInstances[0].ChangeModuleType(Ship.Modules[0].ModuleType);
+                    TorsoInstances[0].ChangeModule(Ship.Modules[0]);
                     TorsoInstances[0].TorsoSection = 0;
                     TorsoInstances[0].UpdateState();
                 }
@@ -403,15 +424,15 @@ namespace Deuteros.Code.Platform.Screens
                     TorsoInstances[1].SpriteHolder.Visible = true;
                     TorsoInstances[2].SpriteHolder.Visible = true;
 
-                    TorsoInstances[0].ChangeModuleType(Ship.Modules[0].ModuleType);
+                    TorsoInstances[0].ChangeModule(Ship.Modules[0]);
                     TorsoInstances[0].TorsoSection = 0;
                     TorsoInstances[0].UpdateState();
 
-                    TorsoInstances[1].ChangeModuleType(Ship.Modules[1].ModuleType);
+                    TorsoInstances[1].ChangeModule(Ship.Modules[1]);
                     TorsoInstances[1].TorsoSection = 1;
                     TorsoInstances[1].UpdateState();
 
-                    TorsoInstances[2].ChangeModuleType(Ship.Modules[2].ModuleType);
+                    TorsoInstances[2].ChangeModule(Ship.Modules[2]);
                     TorsoInstances[2].TorsoSection = 2;
                     TorsoInstances[2].UpdateState();
                 }
@@ -436,23 +457,23 @@ namespace Deuteros.Code.Platform.Screens
                     TorsoInstances[4].SpriteHolder.Visible = true;
                     TorsoInstances[5].SpriteHolder.Visible = true;
 
-                    TorsoInstances[0].ChangeModuleType(Ship.Modules[0].ModuleType);
+                    TorsoInstances[0].ChangeModule(Ship.Modules[0]);
                     TorsoInstances[0].TorsoSection = 0;
                     TorsoInstances[0].UpdateState();
 
-                    TorsoInstances[1].ChangeModuleType(Ship.Modules[1].ModuleType);
+                    TorsoInstances[1].ChangeModule(Ship.Modules[1]);
                     TorsoInstances[1].TorsoSection = 1;
                     TorsoInstances[1].UpdateState();
 
-                    TorsoInstances[2].ChangeModuleType(Ship.Modules[2].ModuleType);
+                    TorsoInstances[2].ChangeModule(Ship.Modules[2]);
                     TorsoInstances[2].TorsoSection = 2;
                     TorsoInstances[2].UpdateState();
 
-                    TorsoInstances[3].ChangeModuleType(Ship.Modules[3].ModuleType);
+                    TorsoInstances[3].ChangeModule(Ship.Modules[3]);
                     TorsoInstances[3].TorsoSection = 3;
                     TorsoInstances[3].UpdateState();
 
-                    TorsoInstances[4].ChangeModuleType(Ship.Modules[4].ModuleType);
+                    TorsoInstances[4].ChangeModule(Ship.Modules[4]);
                     TorsoInstances[4].TorsoSection = 4;
                     TorsoInstances[4].UpdateState();
                 }
@@ -472,7 +493,8 @@ namespace Deuteros.Code.Platform.Screens
                 CurrentPlanet.Station.Factory.Builder = staff;
                 CurrentPlanet.Station.Resources.RemoveStaff(staff);
                 return CurrentPlanet.Station.Resources.Staff;
-            } else
+            }
+            else
             {
                 return CurrentPlanet.Station.Resources.Staff;
             }
@@ -480,30 +502,95 @@ namespace Deuteros.Code.Platform.Screens
 
         private Staff[] CockpitInstance_PilotChanged(Staff staff)
         {
-            Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
-                ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
-
-            if (staff != null && Ship.Pilot != null)
-                Ship.Pilot = resourceList.SwapStaff(staff, Ship.Pilot);
-
-            if (staff != null && Ship.Pilot == null)
+            //Detect if there is a ship present
+            if (GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
+            ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground))))
             {
-                Ship.Pilot = staff;
-                resourceList.RemoveStaff(staff);
+                Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
+                    ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
+
+                if (staff != null && Ship.Pilot != null)
+                    Ship.Pilot = resourceList.SwapStaff(staff, Ship.Pilot);
+
+                if (staff != null && Ship.Pilot == null)
+                {
+                    Ship.Pilot = staff;
+                    resourceList.RemoveStaff(staff);
+                }
+
+                if (staff == null && Ship.Pilot != null)
+                {
+                    resourceList.AddStaff(Ship.Pilot);
+                    Ship.Pilot = null;
+                }
             }
 
-            if (staff == null && Ship.Pilot != null)
-            {
-                resourceList.AddStaff(Ship.Pilot);
-                Ship.Pilot = null;
-            }
+            CockpitInstance.UpdateState();
 
             return resourceList.Staff;
         }
 
-        private void ShipBay_ModuleChanged(Enums.Module_Types moduleType, int torsoSection)
+        private Staff[] TorsoStaffList_StaffClicked(Staff staff)
         {
-            Ship.Modules[torsoSection].ModuleType = moduleType;
+            Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
+                ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
+
+            if (Ship.Modules[ScreenState].StaffStored != null)
+            {
+                resourceList.SwapStaff(staff, Ship.Modules[ScreenState].StaffStored);
+            }
+            else
+            {
+                resourceList.AddStaff(staff);
+            }
+
+            UpdateState();
+
+            return resourceList.Staff;
+        }
+
+        private bool ShipBay_ModuleChanged(Enums.Module_Types moduleType, int torsoSection)
+        {
+            var currentModule = Ship.Modules[torsoSection];
+            if (currentModule.ModuleType == Enums.Module_Types.Supply && currentModule.ItemCount > 0)
+                return false;
+            else if (currentModule.ModuleType == Enums.Module_Types.Tool && currentModule.ItemStored != Enums.ItemTypes.none)
+                return false;
+            else if (currentModule.ModuleType == Enums.Module_Types.Cryo && currentModule.StaffStored != null)
+                return false;
+            else
+                Ship.Modules[torsoSection].ModuleType = moduleType;
+
+            return true;
+        }
+
+        private void ShipBay_ModuleOpened(int torsoSection)
+        {
+            var currentModule = Ship.Modules[torsoSection];
+
+            var cursor = GetTree().CurrentScene.GetNode<CustomCursor>("VirtualCursorView");
+            Rect2 rect = new Rect2();
+
+            if (currentModule.ModuleType == Enums.Module_Types.Supply)
+            {
+                CargoService.Visible = true;
+
+                rect = CargoService.GetGlobalRect();
+            }
+            else if (currentModule.ModuleType == Enums.Module_Types.Tool)
+            {
+                EquipmentStock.Visible = true;
+
+                rect = EquipmentStock.GetGlobalRect();
+            }
+            else if (currentModule.ModuleType == Enums.Module_Types.Cryo)
+            {
+                StaffList.Visible = true;
+
+                rect = StaffList.GetGlobalRect();
+            }
+
+            cursor.LockToRect(rect);
         }
 
         private void EngineInstance_EngineInstalled()
@@ -521,6 +608,28 @@ namespace Deuteros.Code.Platform.Screens
             Nav_Torsos[4].TextureNormal = SpriteManager.LoadImage(NavSpriteBasePath + "Nav_Torso_" + (ScreenState == 5 ? "On" : "Off") + ".png");
             Nav_Torsos[5].TextureNormal = SpriteManager.LoadImage(NavSpriteBasePath + "Nav_Torso_" + (ScreenState == 6 ? "On" : "Off") + ".png");
             Nav_Engine.TextureNormal = SpriteManager.LoadImage(NavSpriteBasePath + "Nav_Engine_" + (ScreenState == 7 ? "On" : "Off") + ".png");
+        }
+
+        public override void _Input(InputEvent @event)
+        {
+            if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Right && mb.Pressed)
+            {
+                var cursor = GetTree().CurrentScene.GetNode<CustomCursor>("VirtualCursorView");
+
+                if (cursor.IsLocked)
+                {
+                    if (CargoService.Visible == true)
+                        CargoService.Visible = false;
+                    else if (EquipmentStock.Visible == true)
+                        EquipmentStock.Visible = false;
+                    else if (StaffList.Visible == true)
+                        StaffList.Visible = false;
+
+                    cursor.Unlock();
+
+                    GetViewport().SetInputAsHandled();
+                }
+            }
         }
 
         //Triggered from gamecore

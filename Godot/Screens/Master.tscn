@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://cky87cqjrgka8"]
+[gd_scene load_steps=4 format=3 uid="uid://cky87cqjrgka8"]
 
 [ext_resource type="Script" path="res://Code/GameCore.cs" id="1_udj03"]
+[ext_resource type="Script" path="res://Code/Utility/CustomCursor.cs" id="2_2sjdf"]
+[ext_resource type="Texture2D" uid="uid://bl05c2bk21a7j" path="res://Sprites/Cursor.png" id="3_kigfk"]
 
 [node name="Master" type="Node2D"]
 script = ExtResource("1_udj03")
@@ -8,3 +10,13 @@ script = ExtResource("1_udj03")
 [node name="MainScene" type="Node2D" parent="."]
 
 [node name="MainMenu" type="Node2D" parent="."]
+
+[node name="VirtualCursorView" type="CanvasLayer" parent="."]
+script = ExtResource("2_2sjdf")
+CursorTexture = ExtResource("3_kigfk")
+Hotspot = Vector2(7, 7)
+
+[node name="Cursor" type="TextureRect" parent="VirtualCursorView"]
+offset_right = 7.0
+offset_bottom = 7.0
+mouse_filter = 2

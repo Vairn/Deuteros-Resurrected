@@ -193,6 +193,7 @@ namespace Deuteros.Code
         [Serializable]
         public enum ItemTypes
         {
+            none = 0,
             iron = 1,
             titanium = 2,
             aluminium = 3,

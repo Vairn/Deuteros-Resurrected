@@ -10,6 +10,15 @@ namespace Deuteros.Code.Objects
     {
         public Enums.Module_Types ModuleType { get; set; }
         public Enums.ItemTypes ItemStored { get; set; }
+        public Staff StaffStored { get; set; }
         public int ItemCount { get; set; }
+
+        public ShipModule()
+        {
+            ItemStored = Enums.ItemTypes.none;
+            ModuleType = Enums.Module_Types.None;
+            StaffStored = null;
+            ItemCount = 0;
+        }
     }
 }

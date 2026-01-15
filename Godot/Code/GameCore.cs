@@ -8,6 +8,7 @@ using System.IO;
 using Deuteros.Code.Platform.Base;
 using System.Linq;
 using Deuteros.Code.Platform.Screens;
+using Deuteros.Code.Utility;
 
 namespace Deuteros.Code
 {
@@ -115,6 +116,8 @@ namespace Deuteros.Code
             GameData = CoreData.CreateNewGameFile();
 
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
+
+            Input.MouseMode = Input.MouseModeEnum.Hidden;
 
             ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
         }
