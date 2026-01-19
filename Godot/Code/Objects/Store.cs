@@ -18,8 +18,17 @@ namespace Deuteros.Code.Objects
 
         public int this[ItemTypes itemType]
         {
-            get => Items.ContainsKey(itemType) ? Items[itemType] : 0;
-            set => Items[itemType] = value;
+            get
+            {
+                return Items.ContainsKey(itemType) ? Items[itemType] : 0;
+            }
+            set 
+            {
+                if (Items.ContainsKey(itemType))
+                    Items[itemType] = value;
+                else
+                    Items.Add(itemType, value);
+            }
         }
     }
 }

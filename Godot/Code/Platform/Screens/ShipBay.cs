@@ -17,6 +17,7 @@ namespace Deuteros.Code.Platform.Screens
     public partial class ShipBay : BaseSubScene
     {
         public const string NavSpriteBasePath = "res://Sprites//Buttons//Shipbay//";
+        public Color SelectedCargoColor { get; set; } = new Color(255, 0, 0, 255);
         public bool Ground { get; set; }
         public bool Earth { get; set; }
         public bool Shuttle { get; set; }
@@ -84,6 +85,7 @@ namespace Deuteros.Code.Platform.Screens
             TorsoStaffList.StaffClicked += TorsoStaffList_StaffClicked;
 
             EngineInstance.EngineInstalled += EngineInstance_EngineInstalled;
+
             TorsoInstances[0].ModuleChanged += ShipBay_ModuleChanged;
             TorsoInstances[0].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[1].ModuleChanged += ShipBay_ModuleChanged;
@@ -94,6 +96,17 @@ namespace Deuteros.Code.Platform.Screens
             TorsoInstances[3].ModuleOpened += ShipBay_ModuleOpened;
             TorsoInstances[4].ModuleChanged += ShipBay_ModuleChanged;
             TorsoInstances[4].ModuleOpened += ShipBay_ModuleOpened;
+
+            foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
+                GetNode<Button>("CargoService/Buttons/" + mineral.ItemType.ToScreenString()).Pressed += () => SelectMineral(mineral.ItemType);
+
+            CargoService.Visible = false;
+            EquipmentStock.Visible = false;
+            StaffList.Visible = false;
+
+            ScreenState = GetScreenState();
+
+            ScrollToScreen();
 
             LoadButtons();
 
@@ -151,7 +164,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CreateShuttle()
         {
-            if ((Ground && CurrentPlanet.Stores[Enums.ItemTypes.s_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.s_chassis] > 0))
+            if ((Ground && CurrentPlanet.PlanetResources.Stores[Enums.ItemTypes.s_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.s_chassis] > 0))
             {
                 var newShuttle = new Shuttle();
                 newShuttle.StartTravelDay = 0;
@@ -176,7 +189,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CreateIOS()
         {
-            if ((Ground && CurrentPlanet.Stores[Enums.ItemTypes.i_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.i_chassis] > 0))
+            if ((Ground && CurrentPlanet.PlanetResources.Stores[Enums.ItemTypes.i_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.i_chassis] > 0))
             {
                 var newIOS = new IOS();
                 newIOS.StartTravelDay = 0;
@@ -200,7 +213,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CreateSCG()
         {
-            if ((Ground && CurrentPlanet.Stores[Enums.ItemTypes.g_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.g_chassis] > 0))
+            if ((Ground && CurrentPlanet.PlanetResources.Stores[Enums.ItemTypes.g_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.g_chassis] > 0))
             {
                 var newSCG = new SCG();
                 newSCG.StartTravelDay = 0;
@@ -227,7 +240,7 @@ namespace Deuteros.Code.Platform.Screens
             var returnState = 0;
 
             if (Ground && !Earth)
-                returnState = 1;
+                returnState = CurrentPlanet.ShuttleState;
             else if (Ground && Earth)
                 returnState = ((Earth)CurrentPlanet).ShuttleState;
             else if (!Ground && CurrentPlanet.Station != null && CurrentPlanet.Station.Built && Shuttle)
@@ -242,6 +255,8 @@ namespace Deuteros.Code.Platform.Screens
         {
             if (Ground && Earth)
                 ((Earth)CurrentPlanet).ShuttleState = newScreenState;
+            if (Ground && !Earth)
+                CurrentPlanet.ShuttleState = newScreenState;
             else if (!Ground && CurrentPlanet.Station != null && CurrentPlanet.Station.Built && Shuttle)
                 CurrentPlanet.Station.ShuttleState = newScreenState;
             else if (!Ground && CurrentPlanet.Station != null && CurrentPlanet.Station.Built && !Shuttle)
@@ -253,7 +268,7 @@ namespace Deuteros.Code.Platform.Screens
             if (ScreenState != 0)
             {
                 ScreenState = 0;
-                ScrollToScreen(ScreenState);
+                ScrollToScreen();
                 UpdateScreenState(ScreenState);
                 RefreshButtons();
             }
@@ -264,7 +279,7 @@ namespace Deuteros.Code.Platform.Screens
             if (ScreenState != torsoId)
             {
                 ScreenState = torsoId;
-                ScrollToScreen(ScreenState);
+                ScrollToScreen();
                 UpdateScreenState(ScreenState);
 
                 RefreshButtons();
@@ -276,16 +291,16 @@ namespace Deuteros.Code.Platform.Screens
             if (ScreenState != 7)
             {
                 ScreenState = 7;
-                ScrollToScreen(ScreenState);
+                ScrollToScreen();
                 UpdateScreenState(ScreenState);
                 RefreshButtons();
             }
         }
 
-        private void ScrollToScreen(int screenIndex)
+        private void ScrollToScreen()
         {
             //TODO - Does not work backwards
-            int targetScrollX = screenIndex * ScreenWidth;
+            int targetScrollX = ScreenState * ScreenWidth;
 
             // Smooth scrolling
             var tween = GetTree().CreateTween();
@@ -348,6 +363,7 @@ namespace Deuteros.Code.Platform.Screens
             ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
 
             CockpitInstance.UpdateStaff(Ground ? CurrentPlanet.PlanetResources.Staff : CurrentPlanet.Station.Resources.Staff);
+            TorsoStaffList.UpdateStaff(Ground ? CurrentPlanet.PlanetResources.Staff : CurrentPlanet.Station.Resources.Staff);
 
             //There is no ship, reset buttons and reset state
             if (!ShipPresent)
@@ -358,6 +374,7 @@ namespace Deuteros.Code.Platform.Screens
                 Nav_Engine.Visible = false;
 
                 CockpitInstance.LoadShip(null);
+                TorsoStaffList.UpdateShip(false);
 
                 TorsoInstances.ForEach(T => T.SpriteHolder.Visible = false);
                 EngineInstance.SpriteHolder.Visible = false;
@@ -394,6 +411,7 @@ namespace Deuteros.Code.Platform.Screens
                 ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
 
                 CockpitInstance.LoadShip(Ship);
+                TorsoStaffList.UpdateShip(Ship != null);
 
                 Nav_Torsos.ForEach(T => T.Visible = false);
                 TorsoInstances.ForEach(T => T.Visible = false);
@@ -503,12 +521,8 @@ namespace Deuteros.Code.Platform.Screens
         private Staff[] CockpitInstance_PilotChanged(Staff staff)
         {
             //Detect if there is a ship present
-            if (GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
-            ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground))))
+            if (Ship != null)
             {
-                Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
-                    ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
-
                 if (staff != null && Ship.Pilot != null)
                     Ship.Pilot = resourceList.SwapStaff(staff, Ship.Pilot);
 
@@ -523,28 +537,35 @@ namespace Deuteros.Code.Platform.Screens
                     resourceList.AddStaff(Ship.Pilot);
                     Ship.Pilot = null;
                 }
-            }
 
-            CockpitInstance.UpdateState();
+                CockpitInstance.UpdateState();
+            }
 
             return resourceList.Staff;
         }
 
         private Staff[] TorsoStaffList_StaffClicked(Staff staff)
         {
-            Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.Docked &&
-                ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
-
-            if (Ship.Modules[ScreenState].StaffStored != null)
+            if (staff != null && Ship.Modules[ScreenState - 1].StaffStored != null)
             {
-                resourceList.SwapStaff(staff, Ship.Modules[ScreenState].StaffStored);
+                Ship.Modules[ScreenState - 1].StaffStored = resourceList.SwapStaff(staff, Ship.Modules[ScreenState - 1].StaffStored);
             }
-            else
+            else if (staff == null && Ship.Modules[ScreenState - 1].StaffStored != null)
             {
-                resourceList.AddStaff(staff);
+                resourceList.AddStaff(Ship.Modules[ScreenState - 1].StaffStored);
+                Ship.Modules[ScreenState - 1].StaffStored = null;
+            }
+            else if (staff != null && Ship.Modules[ScreenState - 1].StaffStored == null)
+            {
+                Ship.Modules[ScreenState - 1].StaffStored = staff;
+                resourceList.RemoveStaff(staff);
             }
 
-            UpdateState();
+            TorsoStaffList.UpdateState();
+            CockpitInstance.UpdateStaff(resourceList.Staff);
+            CockpitInstance.UpdateState();
+
+            TorsoInstances[ScreenState - 1].UpdateState();
 
             return resourceList.Staff;
         }
@@ -568,11 +589,13 @@ namespace Deuteros.Code.Platform.Screens
         {
             var currentModule = Ship.Modules[torsoSection];
 
-            var cursor = GetTree().CurrentScene.GetNode<CustomCursor>("VirtualCursorView");
+            var cursor = GetTree().CurrentScene.GetNode<GlobalInput>("VirtualCursorView");
             Rect2 rect = new Rect2();
 
             if (currentModule.ModuleType == Enums.Module_Types.Supply)
             {
+                UpdateCargoService();
+
                 CargoService.Visible = true;
 
                 rect = CargoService.GetGlobalRect();
@@ -585,6 +608,8 @@ namespace Deuteros.Code.Platform.Screens
             }
             else if (currentModule.ModuleType == Enums.Module_Types.Cryo)
             {
+                TorsoStaffList.UpdateState();
+
                 StaffList.Visible = true;
 
                 rect = StaffList.GetGlobalRect();
@@ -597,6 +622,47 @@ namespace Deuteros.Code.Platform.Screens
         {
             Ship.Engine = true;
         }
+
+        #region CargoService
+
+        private void UpdateCargoService()
+        {
+            if (Ship.Modules[ScreenState - 1].ItemCount > 0)
+                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", SelectedCargoColor);
+
+            foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
+            {
+                GetNode<Label>("CargoService/Labels/MineralCount" + mineral.ItemType.ToScreenString()).Text = resourceList.Stores[mineral.ItemType].ToString();
+            }
+        }
+
+        private void SelectMineral(ItemTypes itemType)
+        {
+            if (Ship.Modules[ScreenState - 1].ItemStored != ItemTypes.none && Ship.Modules[ScreenState - 1].ItemCount > 0)
+            {
+                resourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
+                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).RemoveThemeColorOverride("font_color");
+            }
+
+            if (Ship.Modules[ScreenState - 1].ItemStored == itemType)
+            {
+                Ship.Modules[ScreenState - 1].ItemStored = ItemTypes.none;
+                Ship.Modules[ScreenState - 1].ItemCount = 0;
+            }
+            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && resourceList.Stores[itemType] > 0)
+            {
+                Ship.Modules[ScreenState - 1].ItemStored = itemType;
+                Ship.Modules[ScreenState - 1].ItemCount = resourceList.Stores[itemType] >= 250 ? 250 : resourceList.Stores[itemType];
+
+                resourceList.Stores[itemType] = Math.Max(0, resourceList.Stores[itemType] - 250);
+            }
+
+            TorsoInstances[ScreenState - 1].UpdateState();
+
+            UpdateCargoService();
+        }
+
+        #endregion
 
         private void RefreshButtons()
         {
@@ -614,7 +680,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Right && mb.Pressed)
             {
-                var cursor = GetTree().CurrentScene.GetNode<CustomCursor>("VirtualCursorView");
+                var cursor = GetTree().CurrentScene.GetNode<GlobalInput>("VirtualCursorView");
 
                 if (cursor.IsLocked)
                 {

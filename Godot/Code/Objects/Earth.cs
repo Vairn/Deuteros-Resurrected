@@ -22,7 +22,7 @@ namespace Deuteros.Code.Objects
         public override void AddItems(Enums.ItemTypes itemToAdd, int count)
         {
             if (GroundSelected)
-                Stores[itemToAdd] += count;
+                PlanetResources.Stores[itemToAdd] += count;
             else
                 Station.Resources.Stores[itemToAdd] += count;
         }

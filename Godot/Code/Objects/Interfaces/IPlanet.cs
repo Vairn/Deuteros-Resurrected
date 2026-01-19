@@ -5,7 +5,6 @@ namespace Deuteros.Code.Objects.Interfaces
     public interface IPlanet
     {
         PlanetResource PlanetResources { get; set; }
-        Store Stores { get; set; }
         bool IsMoon { get; set; }
         bool ActiveMethanoid { get; set; }
         SpaceStation Station { get; set; }

@@ -92,7 +92,7 @@ namespace Deuteros.Code.Platform.Screens
             ResourceListLabel.Text = "";
 
             foreach (var item in GameCore.SingletonInstance.GameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
-                ResourceListLabel.Text += item.ItemType.ToScreenString() + " " + currentPlanet.Stores[item.ItemType] + "\n";
+                ResourceListLabel.Text += item.ItemType.ToScreenString() + " " + currentPlanet.PlanetResources.Stores[item.ItemType] + "\n";
 
             if (SelectedButton != null)
             {
@@ -102,7 +102,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 foreach (var material in recipeItem.BuildRequirements)
                 {
-                    var maxProd = currentPlanet.Stores[material.ItemType] / material.ItemCount;
+                    var maxProd = currentPlanet.PlanetResources.Stores[material.ItemType] / material.ItemCount;
                     if (maxProd < maxCount)
                         maxCount = maxProd;
                 }

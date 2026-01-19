@@ -33,10 +33,10 @@ namespace Deuteros.Code.Platform.Screens
         {
             var currentPlanet = Deuteros.Code.GameCore.SingletonInstance.GetCurrentPlanet();
 
-            if (currentPlanet.PlanetResources.Derricks < 8 && currentPlanet.Stores[Deuteros.Code.Enums.ItemTypes.derrick] > 0)
+            if (currentPlanet.PlanetResources.Derricks < 8 && currentPlanet.PlanetResources.Stores[Deuteros.Code.Enums.ItemTypes.derrick] > 0)
             {
                 currentPlanet.PlanetResources.Derricks++;
-                currentPlanet.Stores[Deuteros.Code.Enums.ItemTypes.derrick]--;
+                currentPlanet.PlanetResources.Stores[Deuteros.Code.Enums.ItemTypes.derrick]--;
             }
         }
 

@@ -8,12 +8,5 @@ namespace Deuteros.Code.Objects
     [Serializable]
     public partial class StationResource : Deuteros.Code.Platform.Resource
     {
-        public Enums.Planetoids PlanetId { get; set; }
-        public Store Stores { get; set; }
-
-        public StationResource() 
-        {
-            Stores = new Store();
-        }
     }
 }

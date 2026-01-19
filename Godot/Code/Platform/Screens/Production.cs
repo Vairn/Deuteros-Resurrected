@@ -302,7 +302,7 @@ namespace Deuteros.Code.Platform.Screens
             Objects.Store currentStore;
 
             if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
-                currentStore = ((Earth)productionPlanet).Stores;
+                currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
 
@@ -320,7 +320,7 @@ namespace Deuteros.Code.Platform.Screens
             Objects.Store currentStore;
 
             if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
-                currentStore = ((Earth)productionPlanet).Stores;
+                currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
 
@@ -333,7 +333,7 @@ namespace Deuteros.Code.Platform.Screens
             Objects.Store currentStore;
 
             if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
-                currentStore = ((Earth)productionPlanet).Stores;
+                currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
 

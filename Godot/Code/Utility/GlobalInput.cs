@@ -10,11 +10,12 @@ namespace Deuteros.Code.Utility
 {
     using Godot;
 
-    public partial class CustomCursor : CanvasLayer
+    public partial class GlobalInput : CanvasLayer
     {
         [Export] public Texture2D CursorTexture;
         [Export] public Vector2 Hotspot = Vector2.Zero;
-
+        public static bool UiLocked { get; private set; }
+        private static Viewport _viewport;
         private TextureRect _cursor;
 
         // Lock state
@@ -27,6 +28,8 @@ namespace Deuteros.Code.Utility
 
         public override void _Ready()
         {
+            _viewport = GetViewport();
+
             _cursor = new TextureRect
             {
                 Texture = CursorTexture,
@@ -38,6 +41,8 @@ namespace Deuteros.Code.Utility
 
             // Show graphic cursor; do not capture or confine
             Input.MouseMode = Input.MouseModeEnum.Hidden;
+
+            UiLocked = false;
         }
 
         public override void _ExitTree()
@@ -78,6 +83,28 @@ namespace Deuteros.Code.Utility
                 Mathf.Clamp(p.X, min.X, max.X),
                 Mathf.Clamp(p.Y, min.Y, max.Y)
             );
+        }
+
+        public static void LockUi()
+        {
+            UiLocked = true;
+
+            // Hide & disable the mouse cursor
+            Input.MouseMode = Input.MouseModeEnum.Hidden;
+
+            // Disable ALL Control (UI) input: mouse + keyboard
+            _viewport.GuiDisableInput = true;
+        }
+
+        public static void UnlockUi()
+        {
+            UiLocked = false;
+
+            // Restore mouse cursor
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+
+            // Re-enable UI input
+            _viewport.GuiDisableInput = false;
         }
     }
 }

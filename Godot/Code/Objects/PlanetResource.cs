@@ -9,7 +9,6 @@ namespace Deuteros.Code.Objects
     [Serializable]
     public partial class PlanetResource : Deuteros.Code.Platform.Resource
     {
-        public Enums.Planetoids PlanetId { get; set; }
         public int Derricks { get; set; }
         public List<Objects.Material> Materials { get; set; }
 

@@ -9,11 +9,14 @@ namespace Deuteros.Code.Platform
 {
     public class Resource
     {
+        public Store Stores { get; set; }
+
         public Staff[] Staff { get; set; }
 
         public Resource()
         {
             Staff = new Staff[4];
+            Stores = new Store();
         }
 
         public void AddStaff(Staff staff)

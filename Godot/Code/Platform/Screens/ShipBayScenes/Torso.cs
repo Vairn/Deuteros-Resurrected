@@ -1,6 +1,7 @@
 ﻿using Deuteros.Code.Objects;
 using Deuteros.Code.Platform.Helpers;
 using Godot;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,12 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
     public partial class Torso : Control
     {
         public const string ComponentSpriteBasePath = "res://Sprites//SceneSprites//Ships//";
+        public Color ProductionStaffColor { get; set; } = new Color("#002288");
+        public Color MarineStaffColor { get; set; } = new Color(255, 0, 0, 255);
         public Control SpriteHolder { get; set; }
         public TextureRect Component { get; set; }
         public Control Cargo { get; set; }
+        public Label Contents { get; set; }
         public TextureButton AddSupplyPod { get; set; }
         public TextureButton AddToolPod { get; set; }
         public TextureButton AddCryoPod { get; set; }
@@ -36,6 +40,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
             SpriteHolder = GetNode<Control>("SpriteHolder");
             Component = GetNode<TextureRect>("SpriteHolder/Cargo/Component");
             Cargo = GetNode<Control>("SpriteHolder/Cargo");
+            Contents = GetNode<Label>("SpriteHolder/Labels/Contents");
             AddSupplyPod = GetNode<TextureButton>("SpriteHolder/Buttons/AddSupplyPod");
             AddToolPod = GetNode<TextureButton>("SpriteHolder/Buttons/AddToolPod");
             AddCryoPod = GetNode<TextureButton>("SpriteHolder/Buttons/AddCryoPod");
@@ -58,27 +63,60 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
             if (Module.ModuleType == Module_Types.None)
             {
                 Cargo.Visible = false;
+                Contents.Text = "";
+                Contents.RemoveThemeColorOverride("font_color");
             }
             else if (Module.ModuleType == Module_Types.Tool)
             {
                 Cargo.Visible = true;
+                Contents.RemoveThemeColorOverride("font_color");
 
                 if (Module.ItemStored == ItemTypes.none)
+                {
                     Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_ToolPod.png", Component);
+                    Contents.Text = "";
+                }
                 else if (GameCore.SingletonInstance.GameData.GetItem(Module.ItemStored).ItemCategory == Enums.ItemCategory.resource)
+                { 
                     Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_Generic.png", Component);
+                    Contents.Text = Module.ItemStored.ToScreenString();
+                }
                 else if (GameCore.SingletonInstance.GameData.GetItem(Module.ItemStored).ItemCategory == Enums.ItemCategory.item)
+                { 
                     Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_" + Module.ItemStored.ToScreenString().Replace(".", "") + ".png", Component);
+                    Contents.Text = Module.ItemStored.ToScreenString();
+                }
             }
             else if (Module.ModuleType == Module_Types.Supply)
             {
                 Cargo.Visible = true;
                 Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_SupplyPod.png", Component);
+                Contents.RemoveThemeColorOverride("font_color");
+
+                if (Module.ItemCount > 0)
+                    Contents.Text = Module.ItemCount.ToString() + " " + Module.ItemStored.ToScreenString();
+                else
+                    Contents.Text = "";
             }
             else if (Module.ModuleType == Module_Types.Cryo)
             {
                 Cargo.Visible = true;
                 Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_CryoPod.png", Component);
+
+                if (Module.StaffStored != null)
+                {
+                    Contents.Text = Module.StaffStored.Leader + "\n" + Module.StaffStored.Count;
+
+                    if (Module.StaffStored.Type == StaffType.Production)
+                        Contents.AddThemeColorOverride("font_color", ProductionStaffColor);
+                    else if (Module.StaffStored.Type == StaffType.Marines)
+                        Contents.AddThemeColorOverride("font_color", MarineStaffColor);
+                }
+                else
+                {
+                    Contents.Text = "";
+                    Contents.RemoveThemeColorOverride("font_color");
+                }
             }
         }
 
@@ -91,7 +129,8 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
             else
                 success = ModuleChanged.Invoke(moduleType, TorsoSection);
 
-            UpdateState();
+            if (success)
+                UpdateState();
         }
 
         public void ChangeModule(ShipModule module)

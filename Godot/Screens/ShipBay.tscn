@@ -113,7 +113,7 @@ offset_bottom = 168.0
 layout_mode = 0
 offset_right = 224.0
 offset_bottom = 116.0
-scroll_horizontal = 100
+scroll_horizontal = 224
 horizontal_scroll_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ShipContainer/ScrollContainer2"]
@@ -179,7 +179,7 @@ anchors_preset = 0
 offset_right = 240.0
 offset_bottom = 88.0
 
-[node name="MineralName1" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameIron" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 17.0
@@ -188,7 +188,7 @@ offset_bottom = 26.0
 text = "Iron
 "
 
-[node name="MineralCount1" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountIron" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 17.0
@@ -197,7 +197,7 @@ offset_bottom = 26.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName2" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameTitanium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 25.0
@@ -205,7 +205,7 @@ offset_right = 113.0
 offset_bottom = 34.0
 text = "Titanium"
 
-[node name="MineralCount2" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountTitanium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 25.0
@@ -214,7 +214,7 @@ offset_bottom = 34.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName3" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameAluminium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 33.0
@@ -222,7 +222,7 @@ offset_right = 121.0
 offset_bottom = 42.0
 text = "Aluminium"
 
-[node name="MineralCount3" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountAluminium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 33.0
@@ -231,7 +231,7 @@ offset_bottom = 42.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName4" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameCarbon" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 41.0
@@ -240,7 +240,7 @@ offset_bottom = 50.0
 text = "Carbon
 "
 
-[node name="MineralCount4" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountCarbon" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 41.0
@@ -249,7 +249,7 @@ offset_bottom = 50.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName5" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameCopper" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 49.0
@@ -257,7 +257,7 @@ offset_right = 97.0
 offset_bottom = 58.0
 text = "Copper"
 
-[node name="MineralCount5" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountCopper" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 49.0
@@ -266,7 +266,7 @@ offset_bottom = 58.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName6" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameHydrogen" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 57.0
@@ -274,7 +274,7 @@ offset_right = 113.0
 offset_bottom = 66.0
 text = "Hydrogen"
 
-[node name="MineralCount6" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountHydrogen" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 57.0
@@ -283,7 +283,7 @@ offset_bottom = 66.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName7" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameDeuterium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 65.0
@@ -291,7 +291,7 @@ offset_right = 121.0
 offset_bottom = 74.0
 text = "Deuterium"
 
-[node name="MineralCount7" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountDeuterium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 65.0
@@ -300,7 +300,7 @@ offset_bottom = 74.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName8" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameMethane" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 49.0
 offset_top = 73.0
@@ -308,7 +308,7 @@ offset_right = 105.0
 offset_bottom = 82.0
 text = "Methane"
 
-[node name="MineralCount8" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountMethane" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = -1.0
 offset_top = 73.0
@@ -317,7 +317,7 @@ offset_bottom = 82.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName9" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameHelium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 17.0
@@ -326,7 +326,7 @@ offset_bottom = 26.0
 text = "Helium
 "
 
-[node name="MineralCount9" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountHelium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 17.0
@@ -335,7 +335,7 @@ offset_bottom = 26.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName10" type="Label" parent="CargoService/Labels"]
+[node name="MineralNamePaladium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 25.0
@@ -344,7 +344,7 @@ offset_bottom = 34.0
 text = "Paladium
 "
 
-[node name="MineralCount10" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountPaladium" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 25.0
@@ -353,7 +353,7 @@ offset_bottom = 34.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName11" type="Label" parent="CargoService/Labels"]
+[node name="MineralNamePlatinum" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 33.0
@@ -361,7 +361,7 @@ offset_right = 241.0
 offset_bottom = 42.0
 text = "Platinum"
 
-[node name="MineralCount11" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountPlatinum" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 33.0
@@ -370,7 +370,7 @@ offset_bottom = 42.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName12" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameSilver" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 41.0
@@ -379,7 +379,7 @@ offset_bottom = 50.0
 text = "Silver
 "
 
-[node name="MineralCount12" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountSilver" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 41.0
@@ -388,7 +388,7 @@ offset_bottom = 50.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName13" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameGold" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 49.0
@@ -397,7 +397,7 @@ offset_bottom = 58.0
 text = "Gold
 "
 
-[node name="MineralCount13" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountGold" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 49.0
@@ -406,7 +406,7 @@ offset_bottom = 58.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName14" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameSilica" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 57.0
@@ -415,7 +415,7 @@ offset_bottom = 66.0
 text = "Silica
 "
 
-[node name="MineralCount14" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountSilica" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 57.0
@@ -424,7 +424,7 @@ offset_bottom = 66.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName15" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameMehFuel" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 65.0
@@ -432,7 +432,7 @@ offset_right = 241.0
 offset_bottom = 74.0
 text = "MeH Fuel"
 
-[node name="MineralCount15" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountMehFuel" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 65.0
@@ -441,7 +441,7 @@ offset_bottom = 74.0
 text = "28880"
 horizontal_alignment = 2
 
-[node name="MineralName16" type="Label" parent="CargoService/Labels"]
+[node name="MineralNameHedFuel" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 177.0
 offset_top = 73.0
@@ -449,7 +449,7 @@ offset_right = 241.0
 offset_bottom = 82.0
 text = "HeD Fuel"
 
-[node name="MineralCount16" type="Label" parent="CargoService/Labels"]
+[node name="MineralCountHedFuel" type="Label" parent="CargoService/Labels"]
 layout_mode = 0
 offset_left = 127.0
 offset_top = 73.0
@@ -457,6 +457,116 @@ offset_right = 169.0
 offset_bottom = 82.0
 text = "28880"
 horizontal_alignment = 2
+
+[node name="Buttons" type="Control" parent="CargoService"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Iron" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 122.0
+offset_bottom = 26.0
+flat = true
+
+[node name="Titanium" type="Button" parent="CargoService/Buttons"]
+offset_top = 26.0
+offset_right = 122.0
+offset_bottom = 34.0
+flat = true
+
+[node name="Aluminium" type="Button" parent="CargoService/Buttons"]
+offset_top = 34.0
+offset_right = 122.0
+offset_bottom = 42.0
+flat = true
+
+[node name="Carbon" type="Button" parent="CargoService/Buttons"]
+offset_top = 42.0
+offset_right = 122.0
+offset_bottom = 50.0
+flat = true
+
+[node name="Copper" type="Button" parent="CargoService/Buttons"]
+offset_top = 50.0
+offset_right = 122.0
+offset_bottom = 58.0
+flat = true
+
+[node name="Hydrogen" type="Button" parent="CargoService/Buttons"]
+offset_top = 58.0
+offset_right = 122.0
+offset_bottom = 66.0
+flat = true
+
+[node name="Deuterium" type="Button" parent="CargoService/Buttons"]
+offset_top = 66.0
+offset_right = 122.0
+offset_bottom = 74.0
+flat = true
+
+[node name="Methane" type="Button" parent="CargoService/Buttons"]
+offset_top = 74.0
+offset_right = 122.0
+offset_bottom = 82.0
+flat = true
+
+[node name="Helium" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 18.0
+offset_right = 240.0
+offset_bottom = 26.0
+flat = true
+
+[node name="Paladium" type="Button" parent="CargoService/Buttons"]
+offset_left = 129.0
+offset_top = 26.0
+offset_right = 241.0
+offset_bottom = 34.0
+flat = true
+
+[node name="Platinum" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 34.0
+offset_right = 240.0
+offset_bottom = 42.0
+flat = true
+
+[node name="Silver" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 42.0
+offset_right = 240.0
+offset_bottom = 50.0
+flat = true
+
+[node name="Gold" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 50.0
+offset_right = 240.0
+offset_bottom = 58.0
+flat = true
+
+[node name="Silica" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 58.0
+offset_right = 240.0
+offset_bottom = 66.0
+flat = true
+
+[node name="MehFuel" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 66.0
+offset_right = 240.0
+offset_bottom = 74.0
+flat = true
+
+[node name="HedFuel" type="Button" parent="CargoService/Buttons"]
+offset_left = 128.0
+offset_top = 74.0
+offset_right = 240.0
+offset_bottom = 82.0
+flat = true
 
 [node name="EquipmentStock" type="Control" parent="."]
 visible = false

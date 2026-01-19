@@ -8,7 +8,6 @@ namespace Deuteros.Code.Objects
     public partial class Planet : Interfaces.IPlanet
     {
         public PlanetResource PlanetResources { get; set; }
-        public Store Stores { get; set; }
         public bool ActivePlayer { get; set; }
         public bool IsMoon { get; set; }
         public bool ActiveMethanoid { get; set; }
@@ -62,7 +61,7 @@ namespace Deuteros.Code.Objects
                         int amountRemoved = (PlanetResources.Derricks * GameCore.SingletonInstance.GameData.ResourceRate_Per_Derrick[material.MaterialType]) * daysDifference;
                         material.GroundAmount -= amountRemoved;
 
-                        Stores[material.MaterialType] += amountRemoved;
+                        PlanetResources.Stores[material.MaterialType] += amountRemoved;
                     }
                 }
             }

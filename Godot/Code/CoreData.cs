@@ -657,6 +657,14 @@ namespace Deuteros.Code
 
                 newGameData.ItemList.Add(Methane);
 
+                var Helium = new Item();
+                Helium.FullName = "Helium";
+                Helium.ItemCategory = Enums.ItemCategory.resource;
+                Helium.ItemType = Enums.ItemTypes.helium;
+                Helium.Mass = 1;
+
+                newGameData.ItemList.Add(Helium);
+
                 var Paladium = new Item();
                 Paladium.FullName = "Paladium";
                 Paladium.ItemCategory = Enums.ItemCategory.resource;
@@ -742,7 +750,6 @@ namespace Deuteros.Code
                 newEarth.PlanetId = Enums.Planetoids.earth;
                 newEarth.IsMoon = false;
                 newEarth.ParentStar = Enums.Stars.the_sun;
-                newEarth.Stores = new Objects.Store();
                 newEarth.ActiveMethanoid = false;
                 newEarth.Station = new SpaceStation();
                 newEarth.Factory = new Factory();
@@ -787,10 +794,10 @@ namespace Deuteros.Code
                 earthMaterials.Add(new Objects.Material(Enums.ItemTypes.deuterium, 2));
                 earthMaterials.Add(new Objects.Material(Enums.ItemTypes.methane, 2));
                 newEarth.PlanetResources = new Objects.PlanetResource(earthMaterials);
-                newEarth.Stores = new Objects.Store();
+                newEarth.PlanetResources.Stores = new Objects.Store();
 
-                newEarth.Stores[Enums.ItemTypes.derrick] = 1;
-                newEarth.Stores[Enums.ItemTypes.s_chassis] = 1;
+                newEarth.PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
+                newEarth.PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
 
                 newEarth.PlanetId = Enums.Planetoids.earth;
 
@@ -800,14 +807,12 @@ namespace Deuteros.Code
                 newMars.PlanetId = Enums.Planetoids.mars;
                 newMars.IsMoon = false;
                 newMars.ParentStar = Enums.Stars.the_sun;
-                newMars.Stores = new Objects.Store();
 
                 var marsMaterials = new List<Objects.Material>();
                 marsMaterials.Add(new Objects.Material(Enums.ItemTypes.iron, 1));
                 marsMaterials.Add(new Objects.Material(Enums.ItemTypes.gold, 1));
                 newMars.PlanetResources = new Objects.PlanetResource(marsMaterials);
-                newMars.Stores = new Objects.Store();
-                newMars.PlanetResources.PlanetId = Enums.Planetoids.mars;
+                newMars.PlanetResources.Stores = new Objects.Store();
                 newMars.Station = new SpaceStation();
 
                 newGameData.Planets.Add(Enums.Planetoids.mars, newMars);
