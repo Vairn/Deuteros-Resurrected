@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Formats.Asn1;
+using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code.Objects
 {
@@ -13,10 +14,11 @@ namespace Deuteros.Code.Objects
         public bool GroundSelected { get; set; }
         public ResearchItem CurrentResearchItem { get; set; }
 
-        public Earth() : base()
+        public Earth(Enums.Planetoids planetId, int order) : base(planetId, order)
         {
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
             GroundSelected = true;
+            Factory = new Factory();
         }
 
         public override void AddItems(Enums.ItemTypes itemToAdd, int count)

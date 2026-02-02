@@ -17,10 +17,16 @@ namespace Deuteros.Code.Objects
         public Enums.Stars ParentStar { get; set; }
         public int ShuttleState { get; set; }
         public int StarShipState { get; set; }
+        public int Order { get; set; }
 
-        public Planet()
+        public Planet(Enums.Planetoids planetId, int order)
         {
+            PlanetId = planetId;
+            Order = order;
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
+            Station = new SpaceStation();
+            ActiveMethanoid = false;
+            MoonParentPlanetId = Enums.Planetoids.none;
         }
 
         public virtual void AddItems(Enums.ItemTypes itemToAdd, int count)

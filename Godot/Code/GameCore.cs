@@ -83,6 +83,8 @@ namespace Deuteros.Code
 
         public static string HoverText { get; set; }
 
+        public Guid ShipSelected { get; set; }
+
         //Data stored in the GameCore is temporary
         public delegate void DayPassedDelegate(uint currentDay, uint nextDay);
         public event DayPassedDelegate DayPassed;
@@ -169,9 +171,12 @@ namespace Deuteros.Code
                 }
             }
         }
+        public void ChangeScene(string sceneName, Guid shipRef, List<Enums.SceneVariables> sceneVariables)
+        {
+            ShipSelected = shipRef;
+            ChangeScene(sceneName, sceneVariables);
+        }
 
-        //When we change scene we must re-load the menus and perform some house keeping
-        //SceneFlags can be passed in to give the scene some hints on its setup
         public void ChangeScene(string sceneName, List<Enums.SceneVariables> sceneVariables)
         {
             if (_currentScreen != null && _currentScreen.SceneFilePath.Contains("IntroScreen"))
@@ -201,6 +206,8 @@ namespace Deuteros.Code
                 _menuScreen.MenuButtons = newScene.MenuButtons;
                 _menuScreen.SetupMenus();
             }
+
+            ShipSelected = Guid.Empty;
         }
 
         public PlanetType GetPlanet<PlanetType>(Enums.Planetoids planet)

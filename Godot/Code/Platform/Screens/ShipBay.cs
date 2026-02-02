@@ -17,7 +17,7 @@ namespace Deuteros.Code.Platform.Screens
     public partial class ShipBay : BaseSubScene
     {
         public const string NavSpriteBasePath = "res://Sprites//Buttons//Shipbay//";
-        public Color SelectedCargoColor { get; set; } = new Color(255, 0, 0, 255);
+        public Color SelectedItemColor { get; set; } = new Color(255, 0, 0, 255);
         public bool Ground { get; set; }
         public bool Earth { get; set; }
         public bool Shuttle { get; set; }
@@ -35,6 +35,10 @@ namespace Deuteros.Code.Platform.Screens
         Control CargoService { get; set; }
         Control EquipmentStock { get; set; }
         Control StaffList { get; set; }
+
+        Label[] EquipmentStockNameLabels { get; set; } = new Label[11];
+        Label[] EquipmentStockCountLabels { get; set; } = new Label[11];
+        Button[] EquipmentStockButtons { get; set; } = new Button[11];
 
         StaffList TorsoStaffList { get; set; }
 
@@ -75,9 +79,34 @@ namespace Deuteros.Code.Platform.Screens
 
             EngineInstance = GetNode<ShipBayScenes.Engine>("ShipContainer/ScrollContainer2/HBoxContainer/Engine");
 
+            Nav_Cockpit = GetNode<TextureButton>("Buttons/ShipNav/Nav_Cockpit");
+            Nav_Torsos = new List<TextureButton>();
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso1"));
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso2"));
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso3"));
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso4"));
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso5"));
+            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso6"));
+            Nav_Engine = GetNode<TextureButton>("Buttons/ShipNav/Nav_Engine");
+
+            Nav_Dismantle = GetNode<TextureButton>("Buttons/Nav_Dismantle");
+            Nav_Create_Shuttle = GetNode<TextureButton>("Buttons/Nav_Create_Shuttle");
+            Nav_Create_IOS = GetNode<TextureButton>("Buttons/Nav_Create_IOS");
+            Nav_Create_SCG = GetNode<TextureButton>("Buttons/Nav_Create_SCG");
+
             CargoService = GetNode<Control>("CargoService");
             EquipmentStock = GetNode<Control>("EquipmentStock");
             StaffList = GetNode<Control>("StaffList");
+
+            for (int i = 0; i < 11; i++)
+            {
+                EquipmentStockNameLabels[i] = GetNode<Label>("EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn/" + i.ToString().PadLeft(2, '0'));
+                EquipmentStockCountLabels[i] = GetNode<Label>("EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn/" + i.ToString().PadLeft(2, '0'));
+                EquipmentStockButtons[i] = GetNode<Button>("EquipmentStock/Buttons/" + i.ToString().PadLeft(2, '0'));
+
+                int index = i;
+                EquipmentStockButtons[i].Pressed += () => SelectEquipment(index);
+            }
 
             CockpitInstance.StaffList.PilotChanged += CockpitInstance_PilotChanged;
             CockpitInstance.StaffList.ProductionChanged += CockpitInstance_ProductionChanged;
@@ -100,40 +129,6 @@ namespace Deuteros.Code.Platform.Screens
             foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
                 GetNode<Button>("CargoService/Buttons/" + mineral.ItemType.ToScreenString()).Pressed += () => SelectMineral(mineral.ItemType);
 
-            CargoService.Visible = false;
-            EquipmentStock.Visible = false;
-            StaffList.Visible = false;
-
-            ScreenState = GetScreenState();
-
-            ScrollToScreen();
-
-            LoadButtons();
-
-            UpdateState();
-
-            RefreshButtons();
-
-            base._Ready();
-        }
-
-        public void LoadButtons()
-        {
-            Nav_Cockpit = GetNode<TextureButton>("Buttons/ShipNav/Nav_Cockpit");
-            Nav_Torsos = new List<TextureButton>();
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso1"));
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso2"));
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso3"));
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso4"));
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso5"));
-            Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso6"));
-            Nav_Engine = GetNode<TextureButton>("Buttons/ShipNav/Nav_Engine");
-
-            Nav_Dismantle = GetNode<TextureButton>("Buttons/Nav_Dismantle");
-            Nav_Create_Shuttle = GetNode<TextureButton>("Buttons/Nav_Create_Shuttle");
-            Nav_Create_IOS = GetNode<TextureButton>("Buttons/Nav_Create_IOS");
-            Nav_Create_SCG = GetNode<TextureButton>("Buttons/Nav_Create_SCG");
-
             Nav_Cockpit.Pressed += NavCockpitPressed;
 
             Nav_Torsos[0].Pressed += () => NavTorsoPressed(1);
@@ -149,6 +144,20 @@ namespace Deuteros.Code.Platform.Screens
             Nav_Create_IOS.Pressed += CreateIOS;
             Nav_Create_SCG.Pressed += CreateSCG;
             Nav_Dismantle.Pressed += DismantleShip;
+
+            CargoService.Visible = false;
+            EquipmentStock.Visible = false;
+            StaffList.Visible = false;
+
+            ScreenState = GetScreenState();
+
+            ScrollToScreen();
+
+            UpdateState();
+
+            RefreshButtons();
+
+            base._Ready();
         }
 
         private void DismantleShip()
@@ -175,7 +184,7 @@ namespace Deuteros.Code.Platform.Screens
                 newShuttle.Fuel = 0;
                 newShuttle.Engine = false;
                 newShuttle.FuelType = Enums.Fuel_Types.MEH_Fuel;
-                newShuttle.OnGround = Earth;
+                newShuttle.OnGround = Ground;
                 newShuttle.Pilot = null;
                 newShuttle.PlanetLocation = CurrentPlanet.PlanetId;
                 newShuttle.ShipType = Enums.Ship_Types.Shuttle;
@@ -203,6 +212,8 @@ namespace Deuteros.Code.Platform.Screens
                 newIOS.Pilot = null;
                 newIOS.PlanetLocation = CurrentPlanet.PlanetId;
                 newIOS.ShipType = Enums.Ship_Types.Shuttle;
+                newIOS.PlanetDestination = CurrentPlanet.PlanetId;
+                newIOS.StarDestination = CurrentPlanet.ParentStar;
 
                 GameCore.SingletonInstance.GameData.Ships.Add(newIOS);
 
@@ -227,6 +238,8 @@ namespace Deuteros.Code.Platform.Screens
                 newSCG.Pilot = null;
                 newSCG.PlanetLocation = CurrentPlanet.PlanetId;
                 newSCG.ShipType = Enums.Ship_Types.Shuttle;
+                newSCG.PlanetDestination = CurrentPlanet.PlanetId;
+                newSCG.StarDestination = CurrentPlanet.ParentStar;
 
                 GameCore.SingletonInstance.GameData.Ships.Add(newSCG);
 
@@ -602,6 +615,8 @@ namespace Deuteros.Code.Platform.Screens
             }
             else if (currentModule.ModuleType == Enums.Module_Types.Tool)
             {
+                UpdateEquipmentStock();
+
                 EquipmentStock.Visible = true;
 
                 rect = EquipmentStock.GetGlobalRect();
@@ -623,12 +638,85 @@ namespace Deuteros.Code.Platform.Screens
             Ship.Engine = true;
         }
 
+        #region EquipmentStock
+
+        private void UpdateEquipmentStock()
+        {
+            var equipmentList = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
+
+            for (int i = 0; i < 11; i++)
+            {
+                if (equipmentList.Count() > i)
+                {
+                    EquipmentStockNameLabels[i].Visible = true;
+                    EquipmentStockCountLabels[i].Visible = true;
+                    EquipmentStockButtons[i].Visible = true;
+
+                    EquipmentStockNameLabels[i].Text = equipmentList[i].ItemType.ToScreenString();
+                    EquipmentStockCountLabels[i].Text = resourceList.Stores[equipmentList[i].ItemType].ToString();
+                }
+                else
+                {
+                    EquipmentStockNameLabels[i].Visible = false;
+                    EquipmentStockCountLabels[i].Visible = false;
+                    EquipmentStockButtons[i].Visible = false;
+
+                    EquipmentStockNameLabels[i].Text = "";
+                    EquipmentStockCountLabels[i].Text = "";
+                }
+            }
+
+            if (Ship.Modules[ScreenState - 1].ItemCount > 0)
+            {
+                var itemIndex = Array.FindIndex<Item>(equipmentList, T => T.ItemType == Ship.Modules[ScreenState - 1].ItemStored);
+                
+                EquipmentStockNameLabels[itemIndex].AddThemeColorOverride("font_color", SelectedItemColor);
+                EquipmentStockCountLabels[itemIndex].AddThemeColorOverride("font_color", SelectedItemColor);
+            }
+        }
+
+        private void SelectEquipment(int itemIndex)
+        {
+            var equipmentList = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
+
+            var itemType = equipmentList[itemIndex].ItemType;
+
+            if (Ship.Modules[ScreenState - 1].ItemCount > 0)
+            {
+                var storedItemIndex = Array.FindIndex<Item>(equipmentList, T => T.ItemType == Ship.Modules[ScreenState - 1].ItemStored);
+
+                resourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
+
+                EquipmentStockNameLabels[storedItemIndex].RemoveThemeColorOverride("font_color");
+                EquipmentStockCountLabels[storedItemIndex].RemoveThemeColorOverride("font_color");
+            }
+
+            if (Ship.Modules[ScreenState - 1].ItemStored == itemType)
+            {
+                Ship.Modules[ScreenState - 1].ItemStored = ItemTypes.none;
+                Ship.Modules[ScreenState - 1].ItemCount = 0;
+            }
+            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && resourceList.Stores[itemType] > 0)
+            {
+                Ship.Modules[ScreenState - 1].ItemStored = itemType;
+                Ship.Modules[ScreenState - 1].ItemCount = resourceList.Stores[itemType];
+
+                resourceList.Stores[itemType] = 0;
+            }
+
+            TorsoInstances[ScreenState - 1].UpdateState();
+
+            UpdateEquipmentStock();
+        }
+
+        #endregion
+
         #region CargoService
 
         private void UpdateCargoService()
         {
             if (Ship.Modules[ScreenState - 1].ItemCount > 0)
-                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", SelectedCargoColor);
+                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", SelectedItemColor);
 
             foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
             {
@@ -638,7 +726,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void SelectMineral(ItemTypes itemType)
         {
-            if (Ship.Modules[ScreenState - 1].ItemStored != ItemTypes.none && Ship.Modules[ScreenState - 1].ItemCount > 0)
+            if (Ship.Modules[ScreenState - 1].ItemCount > 0)
             {
                 resourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
                 GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).RemoveThemeColorOverride("font_color");

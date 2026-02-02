@@ -22,18 +22,18 @@ namespace Deuteros.Code.Platform.Screens
 			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay);
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
+
+            if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
+            {
+                Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
+            }
         }
 
-		public override void _Process(double delta)
+        public override void _Process(double delta)
 		{
 			if (Deuteros.Code.GameCore.HoverText != HoverInfo.Text)
 			{
 				HoverInfo.Text = Deuteros.Code.GameCore.HoverText;
-			}
-
-			if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
-			{
-				Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
 			}
 		}
 

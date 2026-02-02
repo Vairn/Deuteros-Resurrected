@@ -4,6 +4,7 @@ using Godot;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -76,14 +77,15 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
                     Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_ToolPod.png", Component);
                     Contents.Text = "";
                 }
-                else if (GameCore.SingletonInstance.GameData.GetItem(Module.ItemStored).ItemCategory == Enums.ItemCategory.resource)
-                { 
-                    Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_Generic.png", Component);
-                    Contents.Text = Module.ItemStored.ToScreenString();
-                }
                 else if (GameCore.SingletonInstance.GameData.GetItem(Module.ItemStored).ItemCategory == Enums.ItemCategory.item)
-                { 
-                    Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_" + Module.ItemStored.ToScreenString().Replace(".", "") + ".png", Component);
+                {
+                    var spritePath = ComponentSpriteBasePath + "Component_" + Module.ItemStored.ToScreenString().Replace(".", "") + ".png";
+
+                    if (ResourceLoader.Exists(spritePath))
+                        Component = SpriteManager.LoadImageToTextureRect(spritePath, Component);
+                    else
+                        Component = SpriteManager.LoadImageToTextureRect(ComponentSpriteBasePath + "Component_Generic.png", Component);
+
                     Contents.Text = Module.ItemStored.ToScreenString();
                 }
             }
@@ -94,7 +96,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
                 Contents.RemoveThemeColorOverride("font_color");
 
                 if (Module.ItemCount > 0)
-                    Contents.Text = Module.ItemCount.ToString() + " " + Module.ItemStored.ToScreenString();
+                    Contents.Text = Module.ItemCount.ToString() + "\n" + Module.ItemStored.ToScreenString();
                 else
                     Contents.Text = "";
             }

@@ -15,6 +15,8 @@ namespace Deuteros.Code.Objects
         public PlanetResource(List<Objects.Material> materials)
         {
             Materials = materials;
+
+            Stores = new Store();
         }
     }
 }

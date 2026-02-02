@@ -1,0 +1,222 @@
+[gd_scene load_steps=8 format=3 uid="uid://dcsu0xl0k6uem"]
+
+[ext_resource type="Script" path="res://Code/Platform/Screens/ShipBay.cs" id="1_w5l20"]
+[ext_resource type="Texture2D" uid="uid://bm3474tr7j814" path="res://Sprites/Scenes/ShipInterior.png" id="2_x7crv"]
+[ext_resource type="Texture2D" uid="uid://cibtqti6vkcsa" path="res://Sprites/Scenes/Ship_View_Planet.png" id="3_mfoco"]
+[ext_resource type="Texture2D" uid="uid://bqjgclrbca7pd" path="res://Sprites/Scenes/Ship_View_Station.png" id="4_e36ky"]
+[ext_resource type="Texture2D" uid="uid://cf46fkuydtkbo" path="res://Sprites/Scenes/Ship_Component_ACC.png" id="4_ux0vr"]
+[ext_resource type="Texture2D" uid="uid://b25ok105tkwn4" path="res://Sprites/Scenes/Ship_Component_EngineControls.png" id="5_e4hgs"]
+[ext_resource type="Texture2D" uid="uid://2uavijelv31e" path="res://Sprites/Scenes/Ship_Component_SetCourse.png" id="6_m6blu"]
+
+[node name="ShipInterior" type="Node2D"]
+script = ExtResource("1_w5l20")
+
+[node name="Location" type="TextureRect" parent="."]
+offset_left = 70.0
+offset_top = 22.0
+offset_right = 302.0
+offset_bottom = 154.0
+mouse_filter = 2
+texture = ExtResource("4_e36ky")
+
+[node name="TextLayout" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 81.0
+offset_top = 21.0
+offset_right = 304.0
+offset_bottom = 151.0
+
+[node name="ShipName" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 9.0
+offset_right = 107.0
+offset_bottom = 18.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "Shuttle Craft
+"
+
+[node name="Status" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 17.0
+offset_right = 104.0
+offset_bottom = 34.0
+text = "In Ground Bay
+Earth"
+
+[node name="FuelName" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 37.0
+offset_right = 82.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "Fuel:   T"
+
+[node name="FuelValue" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 37.0
+offset_right = 57.0
+offset_bottom = 47.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "93"
+horizontal_alignment = 2
+
+[node name="PilotName" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 48.0
+offset_right = 56.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0.6, 0.666667, 0.466667, 1)
+text = "Admiral
+Raines"
+
+[node name="PilotCount" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 64.0
+offset_right = 66.0
+offset_bottom = 74.0
+theme_override_colors/font_color = Color(0.6, 0.666667, 0.466667, 1)
+text = "Crew:  0"
+
+[node name="EngineStatusText" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 77.0
+offset_right = 80.0
+offset_bottom = 94.0
+theme_override_colors/font_color = Color(0, 0.533333, 0, 1)
+text = "Engine is"
+
+[node name="EngineStatusValue" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 86.0
+offset_right = 80.0
+offset_bottom = 95.0
+theme_override_colors/font_color = Color(0, 0.533333, 0, 1)
+text = "
+Disengaged
+"
+
+[node name="ACCStatus" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_top = 97.0
+offset_right = 104.0
+offset_bottom = 114.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "A.C.C.
+Is Disengaged"
+
+[node name="CargoText" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 9.0
+offset_right = 154.0
+offset_bottom = 19.0
+text = "Cargo:"
+
+[node name="CargoValue1" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 17.0
+offset_right = 208.0
+offset_bottom = 26.0
+text = "250 Titanium"
+
+[node name="CargoValue2" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 25.0
+offset_right = 208.0
+offset_bottom = 34.0
+text = "250 Titanium"
+
+[node name="CargoValue3" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 33.0
+offset_right = 208.0
+offset_bottom = 42.0
+text = "250 Titanium"
+
+[node name="CourseText" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 65.0
+offset_right = 194.0
+offset_bottom = 75.0
+theme_override_colors/font_color = Color(0.333333, 0.4, 0.2, 1)
+text = "Course Set:"
+
+[node name="CourseValue" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 73.0
+offset_right = 184.0
+offset_bottom = 90.0
+text = "Uranus To
+Titania"
+
+[node name="ETA" type="Label" parent="TextLayout"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 89.0
+offset_right = 200.0
+offset_bottom = 107.0
+theme_override_colors/font_color = Color(0.333333, 0.4, 0.2, 1)
+text = "ETA :
+3193 696.49"
+
+[node name="Background" type="TextureRect" parent="."]
+offset_left = 48.0
+offset_top = 16.0
+offset_right = 320.0
+offset_bottom = 184.0
+mouse_filter = 2
+texture = ExtResource("2_x7crv")
+
+[node name="EngineControls" type="TextureRect" parent="."]
+offset_left = 280.0
+offset_top = 112.0
+offset_right = 320.0
+offset_bottom = 152.0
+mouse_filter = 2
+texture = ExtResource("5_e4hgs")
+
+[node name="EngageEngine" type="Button" parent="EngineControls"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 6.0
+offset_right = 39.0
+offset_bottom = 21.0
+flat = true
+
+[node name="DisengageEngine" type="Button" parent="EngineControls"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 21.0
+offset_right = 26.0
+offset_bottom = 37.0
+flat = true
+
+[node name="SmallLocation" type="TextureButton" parent="."]
+offset_left = 66.0
+offset_top = 154.0
+offset_right = 116.0
+offset_bottom = 184.0
+texture_normal = ExtResource("3_mfoco")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="ACC" type="TextureButton" parent="."]
+offset_left = 72.0
+offset_top = 16.0
+offset_right = 88.0
+offset_bottom = 40.0
+texture_normal = ExtResource("4_ux0vr")
+
+[node name="SetCourse" type="TextureButton" parent="."]
+offset_left = 128.0
+offset_top = 168.0
+offset_right = 160.0
+offset_bottom = 192.0
+texture_normal = ExtResource("6_m6blu")

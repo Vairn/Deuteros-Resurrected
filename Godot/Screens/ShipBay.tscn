@@ -113,7 +113,7 @@ offset_bottom = 168.0
 layout_mode = 0
 offset_right = 224.0
 offset_bottom = 116.0
-scroll_horizontal = 224
+scroll_horizontal = 100
 horizontal_scroll_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ShipContainer/ScrollContainer2"]
@@ -471,48 +471,56 @@ offset_bottom = 26.0
 flat = true
 
 [node name="Titanium" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 26.0
 offset_right = 122.0
 offset_bottom = 34.0
 flat = true
 
 [node name="Aluminium" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 34.0
 offset_right = 122.0
 offset_bottom = 42.0
 flat = true
 
 [node name="Carbon" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 42.0
 offset_right = 122.0
 offset_bottom = 50.0
 flat = true
 
 [node name="Copper" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 50.0
 offset_right = 122.0
 offset_bottom = 58.0
 flat = true
 
 [node name="Hydrogen" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 58.0
 offset_right = 122.0
 offset_bottom = 66.0
 flat = true
 
 [node name="Deuterium" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 66.0
 offset_right = 122.0
 offset_bottom = 74.0
 flat = true
 
 [node name="Methane" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_top = 74.0
 offset_right = 122.0
 offset_bottom = 82.0
 flat = true
 
 [node name="Helium" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 18.0
 offset_right = 240.0
@@ -520,6 +528,7 @@ offset_bottom = 26.0
 flat = true
 
 [node name="Paladium" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 129.0
 offset_top = 26.0
 offset_right = 241.0
@@ -527,6 +536,7 @@ offset_bottom = 34.0
 flat = true
 
 [node name="Platinum" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 34.0
 offset_right = 240.0
@@ -534,6 +544,7 @@ offset_bottom = 42.0
 flat = true
 
 [node name="Silver" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 42.0
 offset_right = 240.0
@@ -541,6 +552,7 @@ offset_bottom = 50.0
 flat = true
 
 [node name="Gold" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 50.0
 offset_right = 240.0
@@ -548,6 +560,7 @@ offset_bottom = 58.0
 flat = true
 
 [node name="Silica" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 58.0
 offset_right = 240.0
@@ -555,6 +568,7 @@ offset_bottom = 66.0
 flat = true
 
 [node name="MehFuel" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 66.0
 offset_right = 240.0
@@ -562,6 +576,7 @@ offset_bottom = 74.0
 flat = true
 
 [node name="HedFuel" type="Button" parent="CargoService/Buttons"]
+layout_mode = 0
 offset_left = 128.0
 offset_top = 74.0
 offset_right = 240.0
@@ -569,7 +584,6 @@ offset_bottom = 82.0
 flat = true
 
 [node name="EquipmentStock" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 96.0
@@ -580,7 +594,7 @@ offset_bottom = 148.0
 [node name="BackgroundBox" type="VBoxContainer" parent="EquipmentStock"]
 layout_mode = 0
 offset_right = 192.0
-offset_bottom = 92.0
+offset_bottom = 108.0
 theme_override_constants/separation = 0
 
 [node name="Top" type="TextureRect" parent="EquipmentStock/BackgroundBox"]
@@ -601,103 +615,110 @@ custom_minimum_size = Vector2(25, 0)
 layout_mode = 2
 theme_override_constants/separation = -1
 
-[node name="EquipmentCount1" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="00" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+layout_mode = 2
+text = "3"
+horizontal_alignment = 2
+
+[node name="01" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "5"
 horizontal_alignment = 2
 
-[node name="EquipmentCount2" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="02" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount3" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="03" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount4" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="04" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount5" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="05" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount6" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="06" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount7" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="07" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount8" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="08" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount9" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
+[node name="09" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="EquipmentCount10" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
-visible = false
+[node name="10" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/CountColumn"]
 layout_mode = 2
 text = "3"
 horizontal_alignment = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer"]
+[node name="SpacerColumn" type="VBoxContainer" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer"]
 layout_mode = 2
 
-[node name="NameContainer" type="VBoxContainer" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer"]
+[node name="NameColumn" type="VBoxContainer" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer"]
 layout_mode = 2
 theme_override_constants/separation = -1
 
-[node name="EquipmentName1" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="00" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
+layout_mode = 2
+text = "R Frame"
+
+[node name="01" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "Derrick"
 
-[node name="EquipmentName2" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="02" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName3" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="03" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName4" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="04" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName5" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="05" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName6" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="06" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName7" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="07" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName8" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="08" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
-[node name="EquipmentName9" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
+[node name="09" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 theme_override_constants/line_spacing = 0
 text = "R Frame"
 
-[node name="EquipmentName10" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameContainer"]
-visible = false
+[node name="10" type="Label" parent="EquipmentStock/BackgroundBox/PanelContainer/GridContainer/NameColumn"]
 layout_mode = 2
 text = "R Frame"
 
@@ -705,6 +726,79 @@ text = "R Frame"
 layout_mode = 2
 texture = ExtResource("15_taq42")
 stretch_mode = 2
+
+[node name="Buttons" type="Control" parent="EquipmentStock"]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 108.0
+offset_right = 192.0
+offset_bottom = 108.0
+
+[node name="00" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -92.0
+offset_right = 122.0
+offset_bottom = -84.0
+flat = true
+
+[node name="01" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -84.0
+offset_right = 122.0
+offset_bottom = -76.0
+flat = true
+
+[node name="02" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -76.0
+offset_right = 122.0
+offset_bottom = -68.0
+flat = true
+
+[node name="03" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -68.0
+offset_right = 122.0
+offset_bottom = -60.0
+flat = true
+
+[node name="04" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -60.0
+offset_right = 122.0
+offset_bottom = -52.0
+flat = true
+
+[node name="05" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -52.0
+offset_right = 122.0
+offset_bottom = -44.0
+flat = true
+
+[node name="06" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -44.0
+offset_right = 122.0
+offset_bottom = -36.0
+flat = true
+
+[node name="07" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -36.0
+offset_right = 122.0
+offset_bottom = -28.0
+flat = true
+
+[node name="08" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -28.0
+offset_right = 122.0
+offset_bottom = -20.0
+flat = true
+
+[node name="09" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -20.0
+offset_right = 122.0
+offset_bottom = -12.0
+flat = true
+
+[node name="10" type="Button" parent="EquipmentStock/Buttons"]
+offset_top = -12.0
+offset_right = 122.0
+offset_bottom = -4.0
+flat = true
 
 [node name="StaffList" parent="." instance=ExtResource("16_87g0b")]
 visible = false

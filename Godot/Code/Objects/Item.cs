@@ -22,6 +22,7 @@ namespace Deuteros.Code.Objects
         public int Index { get; set; }
         public bool Locked { get; set; }
         public bool Production { get; set; }
+        public bool ToolPod { get; set; }
 
         public Item()
         {

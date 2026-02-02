@@ -1,11 +1,13 @@
-using Godot;
+﻿using Deuteros.Code.Objects.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Deuteros.Code.Objects.Interfaces
+namespace Deuteros.Code.Objects
 {
-    public interface IShip
+    public class Ship : IShip
     {
         public Guid ShipID { get; set; }
         public Enums.Planetoids PlanetLocation { get; set; }
