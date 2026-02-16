@@ -165,7 +165,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
             GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && T.Research != null && T.Research.Researched
-            && (CurrentPlanet.PlanetId != Enums.Planetoids.earth || !T.OrbitOnly)
+            && (CurrentPlanet.PlanetId != Enums.StellarBodies.earth || !T.OrbitOnly)
             && !T.AutoProduce
             ).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
             this,
@@ -233,7 +233,7 @@ namespace Deuteros.Code.Platform.Screens
                 var currentPlanet = (Planet)planet.Value;
                 Code.Objects.Factory currentFactory = null;
 
-                if (currentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)currentPlanet).GroundSelected)
+                if (currentPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)currentPlanet).GroundSelected)
                     currentFactory = ((Earth)currentPlanet).Factory;
                 else if (currentPlanet.Station.Built)
                     currentFactory = currentPlanet.Station.Factory;
@@ -301,7 +301,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
@@ -319,7 +319,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
@@ -332,7 +332,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;

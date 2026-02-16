@@ -18,11 +18,6 @@ namespace Deuteros.Code.Platform.Screens
     {
         public const string NavSpriteBasePath = "res://Sprites//Buttons//Shipbay//";
 
-        public Color Red { get; set; } = new Color(255, 0, 0, 255);
-        public Color Green { get; set; } = new Color(0, 136, 0, 255);
-        public Color Bland { get; set; } = new Color(153, 170, 119, 255);
-        public Color Yellow { get; set; } = new Color(255, 255, 0, 255);
-
         public IShip Ship { get; set; }
         public IPlanet CurrentPlanet { get; set; }
         TextureRect Location { get; set; }
@@ -133,25 +128,25 @@ namespace Deuteros.Code.Platform.Screens
             if (!Ship.Engine)
             {
                 EngineStatusValue.Text = "Not Installed";
-                EngineStatusValue.AddThemeColorOverride("font_color", Red);
+                EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
             }
             else if (Ship.Docked)
             {
                 EngineStatusValue.Text = "Disengaged";
-                EngineStatusValue.AddThemeColorOverride("font_color", Red);
+                EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
             } 
             else if (Ship.Docking || Ship.Launching || 
                 (Ship.GetType() == typeof(InterStellarShip) && ((InterStellarShip)Ship).InTransit)
                 )
             {
                 EngineStatusValue.Text = "Engaged";
-                EngineStatusValue.AddThemeColorOverride("font_color", Red);
+                EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
             }
             else if (Ship.GetType() == typeof(Shuttle) && 
                 (((Shuttle)Ship).Climbing || ((Shuttle)Ship).Landing))
             {
                 EngineStatusValue.Text = "Engaged";
-                EngineStatusValue.AddThemeColorOverride("font_color", Red);
+                EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
             }
 
             if (Ship.ACC && Ship.ACCEnabled)
@@ -165,12 +160,12 @@ namespace Deuteros.Code.Platform.Screens
             {
                 if (Ship.Modules[i].ModuleType == Module_Types.None)
                 {
-                    CargoValues[i].AddThemeColorOverride("font_color", Green);
+                    CargoValues[i].AddThemeColorOverride("font_color", CoreData.Green);
                     CargoValues[i].Text = "free";
                 }
                 else if (Ship.Modules[i].ModuleType == Module_Types.Supply)
                 {
-                    CargoValues[i].AddThemeColorOverride("font_color", Bland);
+                    CargoValues[i].AddThemeColorOverride("font_color", CoreData.Beige);
                     if (Ship.Modules[i].ItemCount > 0)
                         CargoValues[i].Text = Ship.Modules[i].ItemCount + " " + Ship.Modules[i].ItemStored.ToScreenString();
                     else
@@ -178,7 +173,7 @@ namespace Deuteros.Code.Platform.Screens
                 }
                 else if (Ship.Modules[i].ModuleType == Module_Types.Tool)
                 {
-                    CargoValues[i].AddThemeColorOverride("font_color", Green);
+                    CargoValues[i].AddThemeColorOverride("font_color", CoreData.Green);
                     
                     if (Ship.Modules[i].ItemStored != ItemTypes.none)
                         CargoValues[i].Text = Ship.Modules[i].ItemStored.ToScreenString();
@@ -187,7 +182,7 @@ namespace Deuteros.Code.Platform.Screens
                 }
                 else if (Ship.Modules[i].ModuleType == Module_Types.Cryo)
                 {
-                    CargoValues[i].AddThemeColorOverride("font_color", Yellow);
+                    CargoValues[i].AddThemeColorOverride("font_color", CoreData.Yellow);
                     
                     if (Ship.Modules[i].StaffStored != null)
                         CargoValues[i].Text = Ship.Modules[i].StaffStored.Type.ToScreenString();

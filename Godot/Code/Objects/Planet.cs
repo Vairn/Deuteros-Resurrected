@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Deuteros.Code.Objects
@@ -11,27 +12,36 @@ namespace Deuteros.Code.Objects
         public bool ActivePlayer { get; set; }
         public bool IsMoon { get; set; }
         public bool ActiveMethanoid { get; set; }
+        public bool Segment { get; set; }
         public SpaceStation Station { get; set; }
-        public Enums.Planetoids PlanetId { get; set; }
-        public Enums.Planetoids MoonParentPlanetId { get; set; }
-        public Enums.Stars ParentStar { get; set; }
+        public Enums.StellarBodies PlanetId { get; set; }
+        public Enums.StellarBodies MoonParentPlanetId { get; set; }
+        public Enums.StellarBodies ParentStar { get; set; }
+        public Enums.PlanetColor PlanetColor { get; set; }
+        public Enums.PlanetStyle PlanetStyle { get; set; }
         public int ShuttleState { get; set; }
         public int StarShipState { get; set; }
         public int Order { get; set; }
+        public List<int> MoonList { get; set; }
 
-        public Planet(Enums.Planetoids planetId, int order)
+        public Planet(Enums.StellarBodies planetId, int order)
         {
             PlanetId = planetId;
             Order = order;
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
             Station = new SpaceStation();
             ActiveMethanoid = false;
-            MoonParentPlanetId = Enums.Planetoids.none;
+            MoonParentPlanetId = Enums.StellarBodies.none;
         }
 
         public virtual void AddItems(Enums.ItemTypes itemToAdd, int count)
         {
             Station.Resources.Stores[itemToAdd] += count;
+        }
+
+        public string PlanetImageName()
+        {
+            return PlanetColor.ToString().ToPascalCase() + "_" + PlanetStyle.ToString().ToPascalCase();
         }
 
         //Triggered from gamecore
@@ -40,7 +50,7 @@ namespace Deuteros.Code.Objects
             int daysDifference = (int)Math.Floor((decimal)(nextDay - currentDay));
 
             //TODO This isn't right - We need to mine every other day, but mining can start on any day - Or can it?
-            if (PlanetId == Enums.Planetoids.earth && nextDay % 2 != 0)
+            if (PlanetId == Enums.StellarBodies.earth && nextDay % 2 != 0)
             {
                 return;
             }

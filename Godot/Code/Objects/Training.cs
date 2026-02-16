@@ -41,17 +41,17 @@ namespace Deuteros.Code.Objects
         //Called from Earth
         public void ChildDayTick(uint currentDay, uint nextDay)
         {
-            var earth = GameCore.SingletonInstance.GetPlanet<Earth>(Enums.Planetoids.earth);
+            var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
 
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.ResearcherLocked && GameCore.Earth.TrainingData.ResearcherTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked = true;
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherDayStart = currentDay;
+                GameCore.Earth.TrainingData.ResearcherLocked = true;
+                GameCore.Earth.TrainingData.ResearcherDayStart = currentDay;
 
             }
-            else if (GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && (currentDay - GameCore.SingletonInstance.Earth.TrainingData.ResearcherDayStart) > GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingTime)
+            else if (GameCore.Earth.TrainingData.ResearcherLocked && (currentDay - GameCore.Earth.TrainingData.ResearcherDayStart) > GameCore.Earth.TrainingData.ResearcherTrainingTime)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked = false;
+                GameCore.Earth.TrainingData.ResearcherLocked = false;
 
                 if (earth.ResearchStaff == null)
                 {
@@ -63,61 +63,61 @@ namespace Deuteros.Code.Objects
                     earth.ResearchStaff = newResearcher;
                 }
 
-                earth.ResearchStaff.Count += GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount;
-                GameCore.SingletonInstance.Earth.TrainingData.AvailableTrainees -= GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount;
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount = 0;
+                earth.ResearchStaff.Count += GameCore.Earth.TrainingData.ResearcherTrainingCount;
+                GameCore.Earth.TrainingData.AvailableTrainees -= GameCore.Earth.TrainingData.ResearcherTrainingCount;
+                GameCore.Earth.TrainingData.ResearcherTrainingCount = 0;
 
             }
 
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked && GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.ProductionLocked && GameCore.Earth.TrainingData.ProductionTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked = true;
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionDayStart = currentDay;
+                GameCore.Earth.TrainingData.ProductionLocked = true;
+                GameCore.Earth.TrainingData.ProductionDayStart = currentDay;
             }
-            else if (GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked && (currentDay - GameCore.SingletonInstance.Earth.TrainingData.ProductionDayStart) > GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingTime)
+            else if (GameCore.Earth.TrainingData.ProductionLocked && (currentDay - GameCore.Earth.TrainingData.ProductionDayStart) > GameCore.Earth.TrainingData.ProductionTrainingTime)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked = false;
+                GameCore.Earth.TrainingData.ProductionLocked = false;
 
                 if (earth.Factory.Builder == null)
                 {
                     var newProduction = new Staff();
                     //TODO - Generate proper names
                     newProduction.Leader = "Roger";
-                    newProduction.Count = GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount;
+                    newProduction.Count = GameCore.Earth.TrainingData.ProductionTrainingCount;
                     newProduction.Type = Enums.StaffType.Production;
                     earth.Factory.Builder = newProduction;
                 }
                 else
                 {
-                    earth.Factory.Builder.Count += GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount;
+                    earth.Factory.Builder.Count += GameCore.Earth.TrainingData.ProductionTrainingCount;
                 }
 
-                GameCore.SingletonInstance.Earth.TrainingData.AvailableTrainees -= GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount;
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount = 0;
+                GameCore.Earth.TrainingData.AvailableTrainees -= GameCore.Earth.TrainingData.ProductionTrainingCount;
+                GameCore.Earth.TrainingData.ProductionTrainingCount = 0;
             }
 
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.MarinesLocked && GameCore.Earth.TrainingData.MarinesTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked = true;
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesDayStart = currentDay;
+                GameCore.Earth.TrainingData.MarinesLocked = true;
+                GameCore.Earth.TrainingData.MarinesDayStart = currentDay;
             }
-            else if (GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && (currentDay - GameCore.SingletonInstance.Earth.TrainingData.MarinesDayStart) > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingTime)
+            else if (GameCore.Earth.TrainingData.MarinesLocked && (currentDay - GameCore.Earth.TrainingData.MarinesDayStart) > GameCore.Earth.TrainingData.MarinesTrainingTime)
             {
                 //Only produce marines if we have space for them
-                if (GameCore.SingletonInstance.Earth.PlanetResources.Staff.Any(T => T == null))
+                if (GameCore.Earth.PlanetResources.Staff.Any(T => T == null))
                 {
-                    GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked = false;
+                    GameCore.Earth.TrainingData.MarinesLocked = false;
 
                     var newMarine = new Staff();
                     //TODO - Generate proper names
                     newMarine.Leader = "Roger" + Random.Shared.Next(0, 100).ToString();
-                    newMarine.Count = GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount;
+                    newMarine.Count = GameCore.Earth.TrainingData.MarinesTrainingCount;
                     newMarine.Type = Enums.StaffType.Marines;
 
                     earth.PlanetResources.AddStaff(newMarine);
 
-                    GameCore.SingletonInstance.Earth.TrainingData.AvailableTrainees -= GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount;
-                    GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount = 0;
+                    GameCore.Earth.TrainingData.AvailableTrainees -= GameCore.Earth.TrainingData.MarinesTrainingCount;
+                    GameCore.Earth.TrainingData.MarinesTrainingCount = 0;
                 }
             }
         }

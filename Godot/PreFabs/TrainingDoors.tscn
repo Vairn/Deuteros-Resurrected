@@ -66,6 +66,9 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": ExtResource("1_4mujw")
+}, {
+"duration": 1.0,
+"texture": null
 }],
 "loop": false,
 "name": &"opening",
@@ -76,5 +79,5 @@ animations = [{
 
 [node name="DoorAnimation" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_tnxpv")
-animation = &"opening"
+animation = &"close"
 centered = false

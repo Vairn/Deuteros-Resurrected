@@ -17,7 +17,6 @@ namespace Deuteros.Code.Platform.Screens
     public partial class ShipBay : BaseSubScene
     {
         public const string NavSpriteBasePath = "res://Sprites//Buttons//Shipbay//";
-        public Color SelectedItemColor { get; set; } = new Color(255, 0, 0, 255);
         public bool Ground { get; set; }
         public bool Earth { get; set; }
         public bool Shuttle { get; set; }
@@ -59,7 +58,7 @@ namespace Deuteros.Code.Platform.Screens
 
             //Setup some flags to make our lives easier
             CurrentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
-            Earth = CurrentPlanet.PlanetId == Enums.Planetoids.earth;
+            Earth = CurrentPlanet.PlanetId == Enums.StellarBodies.earth;
             Ground = SceneVariables.Contains(Enums.SceneVariables.Ground);
             Shuttle = SceneVariables.Contains(Enums.SceneVariables.Shuttle);
 
@@ -513,7 +512,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private Staff[] CockpitInstance_ProductionChanged(Staff staff)
         {
-            if (Ground && CurrentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)CurrentPlanet).Factory.Builder == null)
+            if (Ground && CurrentPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)CurrentPlanet).Factory.Builder == null)
             {
                 ((Earth)CurrentPlanet).Factory.Builder = staff;
                 ((Earth)CurrentPlanet).PlanetResources.RemoveStaff(staff);
@@ -670,8 +669,8 @@ namespace Deuteros.Code.Platform.Screens
             {
                 var itemIndex = Array.FindIndex<Item>(equipmentList, T => T.ItemType == Ship.Modules[ScreenState - 1].ItemStored);
                 
-                EquipmentStockNameLabels[itemIndex].AddThemeColorOverride("font_color", SelectedItemColor);
-                EquipmentStockCountLabels[itemIndex].AddThemeColorOverride("font_color", SelectedItemColor);
+                EquipmentStockNameLabels[itemIndex].AddThemeColorOverride("font_color", CoreData.Red);
+                EquipmentStockCountLabels[itemIndex].AddThemeColorOverride("font_color", CoreData.Red);
             }
         }
 
@@ -716,7 +715,7 @@ namespace Deuteros.Code.Platform.Screens
         private void UpdateCargoService()
         {
             if (Ship.Modules[ScreenState - 1].ItemCount > 0)
-                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", SelectedItemColor);
+                GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", CoreData.Red);
 
             foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
             {

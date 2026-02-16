@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public static class Extensions
 {
-    public static string ToScreenString(this Enum value)
+    public static string ToScreenString(this Enum value, string spaceChar = "")
     {
         var raw = value.ToString();
 
@@ -24,6 +24,7 @@ public static class Extensions
             }
             else if (raw[i] == '_')
             {
+                sb.Append(spaceChar);
                 capitalizeNext = true;
                 i += 1;
             }

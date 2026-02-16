@@ -8,8 +8,8 @@ namespace Deuteros.Code.Objects.Interfaces
     public interface IShip
     {
         public Guid ShipID { get; set; }
-        public Enums.Planetoids PlanetLocation { get; set; }
-        public Enums.Stars StarLocation { get; set; }
+        public Enums.StellarBodies PlanetLocation { get; set; }
+        public Enums.StellarBodies StarLocation { get; set; }
         public int StartTravelDay { get; set; }
         public Enums.Ship_Types ShipType { get; set; }
         public bool Docked { get; set; }
@@ -25,8 +25,8 @@ namespace Deuteros.Code.Objects.Interfaces
         #region ACC
         public bool ACC { get; set; }
         public bool ACCEnabled { get; set; }
-        public Enums.Planetoids ACCFrom { get; set; }
-        public Enums.Planetoids ACCTo { get; set; }
+        public Enums.StellarBodies ACCFrom { get; set; }
+        public Enums.StellarBodies ACCTo { get; set; }
         public List<Enums.ItemTypes> ACCSend { get; set; }
         public List<Enums.ItemTypes> ACCReceive { get; set; }
         #endregion

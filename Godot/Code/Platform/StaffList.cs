@@ -26,9 +26,6 @@ namespace Deuteros.Code.Platform
         public Button Staff4Button { get; set; }
         public bool ShipPresent { get; set; }
 
-        public Color ProductionStaffColor { get; set; } = new Color("#002288");
-        public Color MarineStaffColor { get; set; } = new Color(255, 0, 0, 255);
-
         public delegate Staff[] ChangePilotDelegate(Staff staff);
         public event ChangePilotDelegate PilotChanged;
 
@@ -111,9 +108,9 @@ namespace Deuteros.Code.Platform
                     staffName.Text = CurrentStaff[i].Leader;
                     staffCount.Text = CurrentStaff[i].Count.ToString();
                     if (CurrentStaff[i].Type == StaffType.Marines)
-                        staffBackground.Color = MarineStaffColor;
+                        staffBackground.Color = CoreData.Red;
                     else if (CurrentStaff[i].Type == StaffType.Production)
-                        staffBackground.Color = ProductionStaffColor;
+                        staffBackground.Color = CoreData.Blue;
                 }
                 else
                 {

@@ -68,15 +68,50 @@ namespace Deuteros.Code.Platform.Screens
 
             MarinesDoorAnimation = GetNode<Node2D>("Doors/Marines/TrainingDoors").GetNode<AnimatedSprite2D>("DoorAnimation");
 
-            ResearchDoorAnimation.Play(Closed_Animation_Name);
-            ProductionDoorAnimation.Play(Closed_Animation_Name);
-            MarinesDoorAnimation.Play(Closed_Animation_Name);
+            ResearchDoorAnimation.AnimationFinished += DoorAnimation_AnimationFinished;
+            ProductionDoorAnimation.AnimationFinished += DoorAnimation_AnimationFinished;
+            MarinesDoorAnimation.AnimationFinished += DoorAnimation_AnimationFinished;
+
+            if (GameCore.Earth.TrainingData.ResearcherLocked)
+                ResearchDoorAnimation.Play(Closed_Animation_Name);
+            else
+                ResearchDoorAnimation.Play(Open_Animation_Name);
+
+            if (GameCore.Earth.TrainingData.ProductionLocked)
+                ProductionDoorAnimation.Play(Closed_Animation_Name);
+            else
+                ProductionDoorAnimation.Play(Open_Animation_Name);
+
+            if (GameCore.Earth.TrainingData.MarinesLocked)
+                MarinesDoorAnimation.Play(Closed_Animation_Name);
+            else
+                MarinesDoorAnimation.Play(Open_Animation_Name);
 
             ButtonSound = (AudioStream)ResourceLoader.Load("res://Sounds/Button/sTrainingRoom_Button.wav");
             DoorSound = (AudioStream)ResourceLoader.Load("res://Sounds/Button/sTrainingRoom_Door.wav");
 
             DoorButtonSound = this.GetNode<AudioStreamPlayer>("SoundPlayer");
             DoorButtonSound.Stream = ButtonSound;
+        }
+
+        private void DoorAnimation_AnimationFinished()
+        {
+            if (ResearchDoorAnimation.Animation == Close_Animation_Name)
+                ResearchDoorAnimation.Animation = Closed_Animation_Name;
+            else if (ResearchDoorAnimation.Animation == Opening_Animation_Name)
+                ResearchDoorAnimation.Animation = Open_Animation_Name;
+
+            if (ProductionDoorAnimation.Animation == Close_Animation_Name)
+                ProductionDoorAnimation.Animation = Closed_Animation_Name;
+            else if (ProductionDoorAnimation.Animation == Opening_Animation_Name)
+                ProductionDoorAnimation.Animation = Open_Animation_Name;
+
+            if (MarinesDoorAnimation.Animation == Close_Animation_Name)
+                MarinesDoorAnimation.Animation = Closed_Animation_Name;
+            else if (MarinesDoorAnimation.Animation == Opening_Animation_Name)
+                MarinesDoorAnimation.Animation = Open_Animation_Name;
+
+            GameCore.UnLockScreen();
         }
 
         // Called every update.
@@ -88,77 +123,59 @@ namespace Deuteros.Code.Platform.Screens
         //Triggered from gamecore
         protected override async void DayTick(uint currentDay, uint nextDay)
         {
-            if (GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && ResearchDoorAnimation.Animation == Open_Animation_Name)
-            {
-                ResearchDoorAnimation.Play(Close_Animation_Name);
-            }
-            if (GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked && ProductionDoorAnimation.Animation == Open_Animation_Name)
-            {
-                ProductionDoorAnimation.Play(Close_Animation_Name);
-            }
-            if (GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && MarinesDoorAnimation.Animation == Open_Animation_Name)
-            {
-                MarinesDoorAnimation.Play(Close_Animation_Name);
-            }
-
-            if (ResearchDoorAnimation.IsPlaying())
-                await ToSignal(ResearchDoorAnimation, "animation_finished");
-            if (ProductionDoorAnimation.IsPlaying())
-                await ToSignal(ProductionDoorAnimation, "animation_finished");
-            if (MarinesDoorAnimation.IsPlaying())
-                await ToSignal(MarinesDoorAnimation, "animation_finished");
-
             QueueRedraw();
         }
 
         public async void DrawData()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && ResearchDoorAnimation.Animation == Closed_Animation_Name)
+            if (!GameCore.Earth.TrainingData.ResearcherLocked && ResearchDoorAnimation.Animation == Closed_Animation_Name)
+            {
+                GameCore.LockScreen();
                 ResearchDoorAnimation.Play(Opening_Animation_Name);
-            
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked && ProductionDoorAnimation.Animation == Closed_Animation_Name)
+            }
+            else if (GameCore.Earth.TrainingData.ResearcherLocked && ResearchDoorAnimation.Animation == Open_Animation_Name)
+            {
+                GameCore.LockScreen();
+                ResearchDoorAnimation.Play(Close_Animation_Name);
+            }
+
+            if (!GameCore.Earth.TrainingData.ProductionLocked && ProductionDoorAnimation.Animation == Closed_Animation_Name)
+            {
+                GameCore.LockScreen();
                 ProductionDoorAnimation.Play(Opening_Animation_Name);
+            }
+            else if (GameCore.Earth.TrainingData.ProductionLocked && ProductionDoorAnimation.Animation == Open_Animation_Name)
+            {
+                GameCore.LockScreen();
+                ProductionDoorAnimation.Play(Close_Animation_Name);
+            }
 
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && MarinesDoorAnimation.Animation == Closed_Animation_Name)
+            if (!GameCore.Earth.TrainingData.MarinesLocked && MarinesDoorAnimation.Animation == Closed_Animation_Name)
+            {
+                GameCore.LockScreen();
                 MarinesDoorAnimation.Play(Opening_Animation_Name);
+            }
+            else if (GameCore.Earth.TrainingData.MarinesLocked && MarinesDoorAnimation.Animation == Open_Animation_Name)
+            {
+                GameCore.LockScreen();
+                MarinesDoorAnimation.Play(Close_Animation_Name);
+            }
 
-            if (ResearchDoorAnimation.IsPlaying())
-                await ToSignal(ResearchDoorAnimation, "animation_finished");
-            if (ProductionDoorAnimation.IsPlaying())
-                await ToSignal(ProductionDoorAnimation, "animation_finished");
-            if (MarinesDoorAnimation.IsPlaying())
-                await ToSignal(MarinesDoorAnimation, "animation_finished");
+            ProductionButtons.ForEach(T => T.Disabled = GameCore.Earth.TrainingData.ProductionLocked);
+            MarinesButtons.ForEach(T => T.Disabled = GameCore.Earth.TrainingData.MarinesLocked);
+            ResearchButtons.ForEach(T => T.Disabled = GameCore.Earth.TrainingData.ResearcherLocked);
 
-            if (GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked)
-                ResearchDoorAnimation.Play(Closed_Animation_Name);
-            else
-                ResearchDoorAnimation.Play(Open_Animation_Name);
-
-            if (GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked)
-                ProductionDoorAnimation.Play(Closed_Animation_Name);
-            else
-                ProductionDoorAnimation.Play(Open_Animation_Name);
-
-            if (GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked)
-                MarinesDoorAnimation.Play(Closed_Animation_Name);
-            else
-                MarinesDoorAnimation.Play(Open_Animation_Name);
-
-            ProductionButtons.ForEach(T => T.Disabled = GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked);
-            MarinesButtons.ForEach(T => T.Disabled = GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked);
-            ResearchButtons.ForEach(T => T.Disabled = GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked);
-
-            GetNode<Label>("TraineeCountLabel").Text = (GameCore.SingletonInstance.Earth.TrainingData.AvailableTrainees - (GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount + GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount + GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount)).ToString();
-            GetNode<Label>("Doors/Research/ResearchTrainingCountLabel").Text = GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount.ToString();
-            GetNode<Label>("Doors/Production/ProductionTrainingCountLabel").Text = GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount.ToString();
-            GetNode<Label>("Doors/Marines/MarinesTrainingCountLabel").Text = GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount.ToString();
+            GetNode<Label>("TraineeCountLabel").Text = (GameCore.Earth.TrainingData.AvailableTrainees - (GameCore.Earth.TrainingData.ResearcherTrainingCount + GameCore.Earth.TrainingData.ProductionTrainingCount + GameCore.Earth.TrainingData.MarinesTrainingCount)).ToString();
+            GetNode<Label>("Doors/Research/ResearchTrainingCountLabel").Text = GameCore.Earth.TrainingData.ResearcherTrainingCount.ToString();
+            GetNode<Label>("Doors/Production/ProductionTrainingCountLabel").Text = GameCore.Earth.TrainingData.ProductionTrainingCount.ToString();
+            GetNode<Label>("Doors/Marines/MarinesTrainingCountLabel").Text = GameCore.Earth.TrainingData.MarinesTrainingCount.ToString();
         }
 
         public void ResearchMinusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.ResearcherLocked && GameCore.Earth.TrainingData.ResearcherTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount--;
+                GameCore.Earth.TrainingData.ResearcherTrainingCount--;
             }
 
             if (!ResearchButtons.Any(T => T.IsRepeating))
@@ -169,16 +186,16 @@ namespace Deuteros.Code.Platform.Screens
 
         public void ResearchPlusButton_Pressed()
         {
-            var earth = GameCore.SingletonInstance.GetPlanet<Earth>(Enums.Planetoids.earth);
+            var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
 
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ResearcherLocked && GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount &&
+            if (!GameCore.Earth.TrainingData.ResearcherLocked && GameCore.Earth.TrainingData.ResearcherTrainingMax > GameCore.Earth.TrainingData.ResearcherTrainingCount &&
             (
                 earth.ResearchStaff == null
                 ||
-                (earth.ResearchStaff.Count + GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount) < GameCore.SingletonInstance.Earth.TrainingData.ResearcherMaxCount)
+                (earth.ResearchStaff.Count + GameCore.Earth.TrainingData.ResearcherTrainingCount) < GameCore.Earth.TrainingData.ResearcherMaxCount)
                 )
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ResearcherTrainingCount++;
+                GameCore.Earth.TrainingData.ResearcherTrainingCount++;
             }
 
             if (!ResearchButtons.Any(T => T.IsRepeating))
@@ -189,9 +206,9 @@ namespace Deuteros.Code.Platform.Screens
 
         public void ProductionMinusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked && GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.ProductionLocked && GameCore.Earth.TrainingData.ProductionTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount--;
+                GameCore.Earth.TrainingData.ProductionTrainingCount--;
             }
 
             if (!ProductionButtons.Any(T => T.IsRepeating))
@@ -202,11 +219,11 @@ namespace Deuteros.Code.Platform.Screens
 
         public void ProductionPlusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.ProductionLocked &&
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount < GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingMax &&
-                (GameCore.SingletonInstance.Earth.Factory.Builder == null ? 0 : GameCore.SingletonInstance.Earth.Factory.Builder.Count) + GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount < GameCore.SingletonInstance.Earth.TrainingData.ProductionMaxCount)
+            if (!GameCore.Earth.TrainingData.ProductionLocked &&
+                GameCore.Earth.TrainingData.ProductionTrainingCount < GameCore.Earth.TrainingData.ProductionTrainingMax &&
+                (GameCore.Earth.Factory.Builder == null ? 0 : GameCore.Earth.Factory.Builder.Count) + GameCore.Earth.TrainingData.ProductionTrainingCount < GameCore.Earth.TrainingData.ProductionMaxCount)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.ProductionTrainingCount++;
+                GameCore.Earth.TrainingData.ProductionTrainingCount++;
             }
 
             if (!ProductionButtons.Any(T => T.IsRepeating))
@@ -217,10 +234,10 @@ namespace Deuteros.Code.Platform.Screens
 
         public void MarinesMinusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && 
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount > 0)
+            if (!GameCore.Earth.TrainingData.MarinesLocked &&
+                GameCore.Earth.TrainingData.MarinesTrainingCount > 0)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount--;
+                GameCore.Earth.TrainingData.MarinesTrainingCount--;
             }
 
             if (!MarinesButtons.Any(T => T.IsRepeating))
@@ -231,10 +248,10 @@ namespace Deuteros.Code.Platform.Screens
 
         public void MarinesPlusButton_Pressed()
         {
-            if (!GameCore.SingletonInstance.Earth.TrainingData.MarinesLocked && 
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingMax > GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount)
+            if (!GameCore.Earth.TrainingData.MarinesLocked &&
+                GameCore.Earth.TrainingData.MarinesTrainingMax > GameCore.Earth.TrainingData.MarinesTrainingCount)
             {
-                GameCore.SingletonInstance.Earth.TrainingData.MarinesTrainingCount++;
+                GameCore.Earth.TrainingData.MarinesTrainingCount++;
             }
 
             if (!MarinesButtons.Any(T => T.IsRepeating))

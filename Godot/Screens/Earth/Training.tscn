@@ -43,7 +43,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Marines"]
@@ -62,7 +61,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="MarinesTrainingCountLabel" type="Label" parent="Doors/Marines"]
@@ -97,7 +95,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Production"]
@@ -116,7 +113,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="ProductionTrainingCountLabel" type="Label" parent="Doors/Production"]
@@ -151,7 +147,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="PlusButton" type="TextureRect" parent="Doors/Research"]
@@ -170,7 +165,6 @@ offset_top = 2.0
 offset_right = 13.0
 offset_bottom = 14.0
 keep_pressed_outside = true
-RepeatDelay = null
 RepeatRate = 0.005
 
 [node name="ResearchTrainingCountLabel" type="Label" parent="Doors/Research"]

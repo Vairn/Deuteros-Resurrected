@@ -17,7 +17,6 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
     {
         public const string ComponentSpriteBasePath = "res://Sprites//SceneSprites//Ships//";
         public Color ProductionStaffColor { get; set; } = new Color("#002288");
-        public Color MarineStaffColor { get; set; } = new Color(255, 0, 0, 255);
         public Control SpriteHolder { get; set; }
         public TextureRect Component { get; set; }
         public Control Cargo { get; set; }
@@ -110,9 +109,9 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
                     Contents.Text = Module.StaffStored.Leader + "\n" + Module.StaffStored.Count;
 
                     if (Module.StaffStored.Type == StaffType.Production)
-                        Contents.AddThemeColorOverride("font_color", ProductionStaffColor);
+                        Contents.AddThemeColorOverride("font_color", CoreData.Blue);
                     else if (Module.StaffStored.Type == StaffType.Marines)
-                        Contents.AddThemeColorOverride("font_color", MarineStaffColor);
+                        Contents.AddThemeColorOverride("font_color", CoreData.Red);
                 }
                 else
                 {

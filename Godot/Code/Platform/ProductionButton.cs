@@ -21,7 +21,7 @@ namespace Deuteros.Code.Platform
                 var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
                 Code.Objects.Factory currentFactory;
 
-                if (currentPlanet.PlanetId == Enums.Planetoids.earth && ((Earth)currentPlanet).GroundSelected)
+                if (currentPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)currentPlanet).GroundSelected)
                     currentFactory = ((Earth)currentPlanet).Factory;
                 else
                     currentFactory = currentPlanet.Station.Factory;

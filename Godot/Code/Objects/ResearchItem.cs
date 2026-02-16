@@ -39,7 +39,7 @@ namespace Deuteros.Code.Objects
             if (Researched)
                 return;
 
-            var earth = GameCore.SingletonInstance.GetPlanet<Earth>(Enums.Planetoids.earth);
+            var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
 
             //If the researchstaff is null, then the game has just started, do nothing
             if (earth.ResearchStaff == null)

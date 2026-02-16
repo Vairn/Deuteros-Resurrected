@@ -66,9 +66,9 @@ namespace Deuteros.Code.Platform.Screens
                 "/Code/Platform/ResearchButton.cs",
                 "ResearchButton");
 
-            if (GameCore.SingletonInstance.Earth.CurrentResearchItem != null)
+            if (GameCore.Earth.CurrentResearchItem != null)
             {
-                SelectedButton = Buttons.Single(T => T.ObjectData != null && T.ObjectData.Index == GameCore.SingletonInstance.Earth.CurrentResearchItem.Index);
+                SelectedButton = Buttons.Single(T => T.ObjectData != null && T.ObjectData.Index == GameCore.Earth.CurrentResearchItem.Index);
                 DrawData(true);
             }
             else
@@ -89,7 +89,7 @@ namespace Deuteros.Code.Platform.Screens
                 SelectedButton = clickedButton;
                 SelectedButton.Selected = true;
 
-                var earth = GameCore.SingletonInstance.GetPlanet<Earth>(Enums.Planetoids.earth);
+                var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
                 earth.CurrentResearchItem = SelectedButton.ObjectData;
 
                 DrawData(false);
@@ -137,7 +137,7 @@ namespace Deuteros.Code.Platform.Screens
             InProgressNode.Visible = false;
             ResearchedNode.Visible = false;
 
-            if (GameCore.SingletonInstance.Earth.ResearchStaff == null)
+            if (GameCore.Earth.ResearchStaff == null)
             {
                 StaffCountLabel.Text = "";
                 RankLabel.Text = "";
@@ -145,8 +145,8 @@ namespace Deuteros.Code.Platform.Screens
             }
             else
             {
-                StaffCountLabel.Text = GameCore.SingletonInstance.Earth.ResearchStaff.Count.ToString();
-                RankLabel.Text = ((Enums.StaffLevel_Researcher)GameCore.SingletonInstance.Earth.ResearchStaff.GetLevel()).ToString();
+                StaffCountLabel.Text = GameCore.Earth.ResearchStaff.Count.ToString();
+                RankLabel.Text = ((Enums.StaffLevel_Researcher)GameCore.Earth.ResearchStaff.GetLevel()).ToString();
                 LeaderNameLabel.Text = "Seth";
             }
 
@@ -173,7 +173,7 @@ namespace Deuteros.Code.Platform.Screens
                     ItemNotesLabel.Text = "This item may\nbe produced";
                     ItemNotesDataLabel.Text = researchItem.OrbitOnly ? "In Orbit Only" : "by any factory";
                 }
-                else if (GameCore.SingletonInstance.Earth.ResearchStaff != null && researchItem.Research.ResearchPercentageComplete > 0 && dayPassed)
+                else if (GameCore.Earth.ResearchStaff != null && researchItem.Research.ResearchPercentageComplete > 0 && dayPassed)
                 {
                     InProgressNode.Visible = true;
 

@@ -10,8 +10,8 @@ namespace Deuteros.Code.Objects
 {
     public class InterStellarShip : Ship, IShip
     {
-        public Enums.Planetoids PlanetDestination { get; set; }
-        public Enums.Stars StarDestination { get; set; }
+        public Enums.StellarBodies PlanetDestination { get; set; }
+        public Enums.StellarBodies StarDestination { get; set; }
         public bool InTransit { get; set; }
 
         public int TravelTimeRemain()
@@ -21,10 +21,10 @@ namespace Deuteros.Code.Objects
             var startPlanet = GameCore.SingletonInstance.GameData.Planets[PlanetLocation];
             var destinationPlanet = GameCore.SingletonInstance.GameData.Planets[PlanetDestination];
 
-            if (startPlanet.MoonParentPlanetId != Enums.Planetoids.none)
+            if (startPlanet.MoonParentPlanetId != Enums.StellarBodies.none)
                 startPlanet = GameCore.SingletonInstance.GameData.Planets[startPlanet.MoonParentPlanetId];
 
-            if (destinationPlanet.MoonParentPlanetId != Enums.Planetoids.none)
+            if (destinationPlanet.MoonParentPlanetId != Enums.StellarBodies.none)
                 destinationPlanet = GameCore.SingletonInstance.GameData.Planets[destinationPlanet.MoonParentPlanetId];
 
             //Travelling within the same planetary system

@@ -4,6 +4,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code
@@ -11,7 +12,8 @@ namespace Deuteros.Code
     [Serializable]
     public partial class CoreData
     {
-        public Dictionary<Enums.Planetoids, Deuteros.Code.Objects.Interfaces.IPlanet> Planets { get; set; }
+        public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Interfaces.IPlanet> Planets { get; set; }
+        public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Star> Stars { get; set; }
 
         public List<Item> ItemList { get; set; }
 
@@ -27,8 +29,16 @@ namespace Deuteros.Code
 
         public List<IShip> Ships { get; set; }
 
-        public Enums.Planetoids CurrentPlanet { get; set; }
-        public List<Enums.Game_Stages> CompleteStages { get; set; }
+        public Enums.StellarBodies CurrentPlanet { get; set; }
+        public List<Enums.Game_Unlocks> Unlocks { get; set; }
+
+        public static Color Red { get; set; } = new Color(255, 0, 0, 255);
+        public static Color Green { get; set; } = new Color(0, 136, 0, 255);
+        public static Color Blue { get; set; } = new Color(0, 34, 136, 255);
+        public static Color Beige { get; set; } = new Color(153, 170, 119, 255);
+        public static Color Dark_Beige { get; set; } = new Color(85, 102, 51, 255);
+        public static Color Yellow { get; set; } = new Color(255, 255, 0, 255);
+
 
         public Item GetItem(Enums.ItemTypes itemType)
         {
@@ -48,11 +58,12 @@ namespace Deuteros.Code
 
                 var newGameData = new CoreData();
 
-                newGameData.CurrentPlanet = Enums.Planetoids.earth;
-                newGameData.Planets = new Dictionary<Enums.Planetoids, Objects.Interfaces.IPlanet>();
+                newGameData.CurrentPlanet = Enums.StellarBodies.earth;
+                newGameData.Planets = new Dictionary<Enums.StellarBodies, Objects.Interfaces.IPlanet>();
+                newGameData.Stars = new Dictionary<StellarBodies, Star>();
                 newGameData.ResourceLevels_Survey_Multiplier = new Dictionary<Enums.ItemTypes, int>();
                 newGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
-                newGameData.CompleteStages = new List<Enums.Game_Stages>();
+                newGameData.Unlocks = new List<Enums.Game_Unlocks>();
                 newGameData.Ships = new List<IShip>();
 
                 #region ItemList
@@ -758,10 +769,93 @@ namespace Deuteros.Code
 
                 #endregion
 
-                newGameData.Planets.Add(Enums.Planetoids.earth, new Objects.Earth(Enums.Planetoids.earth, 0)
+
+                newGameData.Stars.Add(Enums.StellarBodies.the_sun, new Objects.Star(Enums.StellarBodies.the_sun)
+                {
+                    PlanetDistanceList = new List<int> { 37, 41, 53, 59, 68, 76, 85, 91, 98, 108, 112, 128, 128, 141, 146, 158, 162, 174, 181, 185, 197, 201 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.proxima, new Objects.Star(Enums.StellarBodies.proxima)
+                {
+                    PlanetDistanceList = new List<int> { 49, 63, 146, 158 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.centauri, new Objects.Star(Enums.StellarBodies.centauri)
+                {
+                    PlanetDistanceList = new List<int> { 37, 43, 82, 94, 132, 140, 162, 174 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.barnard, new Objects.Star(Enums.StellarBodies.barnard)
+                {
+                    PlanetDistanceList = new List<int> { 37, 41, 53, 59, 68, 76, 114, 126, 133, 139, 144, 160, 196, 204 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.lalande, new Objects.Star(Enums.StellarBodies.lalande)
+                {
+                    PlanetDistanceList = new List<int> { 50, 62, 81, 95 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.sirius, new Objects.Star(Enums.StellarBodies.sirius)
+                {
+                    PlanetDistanceList = new List<int> { 52, 60, 68, 76 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.cygni, new Objects.Star(Enums.StellarBodies.cygni)
+                {
+                    PlanetDistanceList = new List<int> { 37, 41, 53, 59, 67, 77, 84, 92, 114, 126, 128, 144, 146, 158, 179, 189 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.procyon, new Objects.Star(Enums.StellarBodies.procyon)
+                {
+                    PlanetDistanceList = new List<int> { 53, 59, 129, 143, 160, 173 }
+                });
+
+                newGameData.Stars.Add(Enums.StellarBodies.tau_ceti, new Objects.Star(Enums.StellarBodies.tau_ceti)
+                {
+                    PlanetDistanceList = new List<int> { 53, 57, 68, 76, 85, 91, 113, 127, 146, 158 }
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.mercury, new Objects.Planet(Enums.StellarBodies.mercury, 0)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1)
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.venus, new Objects.Planet(Enums.StellarBodies.venus, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.the_sun,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1)
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.earth, new Objects.Earth(Enums.StellarBodies.earth, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -773,11 +867,14 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.deuterium, 1),
                             new Objects.Material(Enums.ItemTypes.methane, 1)
                         }
-                )
+                    ),
+                    MoonList = new List<int> { 2 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets[Planetoids.earth].PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
-                newGameData.Planets[Planetoids.earth].PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
+                newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
+                newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
 
                 var trainingData = new Objects.Training();
 
@@ -809,44 +906,13 @@ namespace Deuteros.Code
                 trainingData.ReferenceLevelMultiplier = 1.0;
                 trainingData.ReferenceDuration = 58.0;
 
-                ((Earth)newGameData.Planets[Planetoids.earth]).TrainingData = trainingData;
+                ((Earth)newGameData.Planets[StellarBodies.earth]).TrainingData = trainingData;
 
-                newGameData.Planets.Add(Enums.Planetoids.mercury, new Objects.Planet(Enums.Planetoids.mercury, 1)
-                {
-                    IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
-                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
-                        {
-                            new Objects.Material(Enums.ItemTypes.iron, 1),
-                            new Objects.Material(Enums.ItemTypes.titanium, 1),
-                            new Objects.Material(Enums.ItemTypes.carbon, 1),
-                            new Objects.Material(Enums.ItemTypes.paladium, 1),
-                            new Objects.Material(Enums.ItemTypes.silica, 1)
-                        }
-                )
-                });
-
-                newGameData.Planets.Add(Enums.Planetoids.venus, new Objects.Planet(Enums.Planetoids.venus, 2)
-                {
-                    IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
-                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
-                        {
-                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
-                            new Objects.Material(Enums.ItemTypes.carbon, 1),
-                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
-                            new Objects.Material(Enums.ItemTypes.methane, 1),
-                            new Objects.Material(Enums.ItemTypes.platinum, 1),
-                            new Objects.Material(Enums.ItemTypes.silica, 1)
-                        }
-                )
-                });
-
-                newGameData.Planets.Add(Enums.Planetoids.the_moon, new Objects.Planet(Enums.Planetoids.the_moon, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.the_moon, new Objects.Planet(Enums.StellarBodies.the_moon, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.earth,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.earth,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                         new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -860,10 +926,10 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.mars, new Objects.Planet(Enums.Planetoids.mars, 3)
+                newGameData.Planets.Add(Enums.StellarBodies.mars, new Objects.Planet(Enums.StellarBodies.mars, 3)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -871,14 +937,17 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.hydrogen, 1),
                             new Objects.Material(Enums.ItemTypes.silver, 1)
                         }
-                    )
+                    ),
+                    MoonList = new List<int> { 1, 8 },
+                    PlanetColor = PlanetColor.red,
+                    PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.phobos, new Objects.Planet(Enums.Planetoids.phobos, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.phobos, new Objects.Planet(Enums.StellarBodies.phobos, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.mars,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.mars,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                         new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -887,11 +956,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.deimos, new Objects.Planet(Enums.Planetoids.deimos, 1)
+                newGameData.Planets.Add(Enums.StellarBodies.deimos, new Objects.Planet(Enums.StellarBodies.deimos, 1)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.mars,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.mars,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                         new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -900,10 +969,10 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.asteroids, new Objects.Planet(Enums.Planetoids.asteroids, 4)
+                newGameData.Planets.Add(Enums.StellarBodies.asteroids, new Objects.Planet(Enums.StellarBodies.asteroids, 4)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                         new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -915,26 +984,32 @@ namespace Deuteros.Code
                         new Objects.Material(Enums.ItemTypes.silver, 1),
                         new Objects.Material(Enums.ItemTypes.silica, 1)
                         }
-                    )
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.asteroid,
+                    PlanetStyle = PlanetStyle.asteroid
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.jupiter, new Objects.Planet(Enums.Planetoids.jupiter, 5)
+                newGameData.Planets.Add(Enums.StellarBodies.jupiter, new Objects.Planet(Enums.StellarBodies.jupiter, 5)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.hydrogen, 1),
                             new Objects.Material(Enums.ItemTypes.helium, 1)
                         }
-                    )
+                    ),
+                    MoonList = new List<int> { 1, 2, 3, 4, 6, 7, 8, 9, 10 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.giant
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.amalthea, new Objects.Planet(Enums.Planetoids.amalthea, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.amalthea, new Objects.Planet(Enums.StellarBodies.amalthea, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -943,11 +1018,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.io, new Objects.Planet(Enums.Planetoids.io, 1)
+                newGameData.Planets.Add(Enums.StellarBodies.io, new Objects.Planet(Enums.StellarBodies.io, 1)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -957,11 +1032,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.europa, new Objects.Planet(Enums.Planetoids.europa, 2)
+                newGameData.Planets.Add(Enums.StellarBodies.europa, new Objects.Planet(Enums.StellarBodies.europa, 2)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -971,11 +1046,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.ganymede, new Objects.Planet(Enums.Planetoids.ganymede, 3)
+                newGameData.Planets.Add(Enums.StellarBodies.ganymede, new Objects.Planet(Enums.StellarBodies.ganymede, 3)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -989,11 +1064,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.callisto, new Objects.Planet(Enums.Planetoids.callisto, 4)
+                newGameData.Planets.Add(Enums.StellarBodies.callisto, new Objects.Planet(Enums.StellarBodies.callisto, 4)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1007,11 +1082,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.leda, new Objects.Planet(Enums.Planetoids.leda, 5)
+                newGameData.Planets.Add(Enums.StellarBodies.leda, new Objects.Planet(Enums.StellarBodies.leda, 5)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1026,11 +1101,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.himalia, new Objects.Planet(Enums.Planetoids.himalia, 6)
+                newGameData.Planets.Add(Enums.StellarBodies.himalia, new Objects.Planet(Enums.StellarBodies.himalia, 6)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1040,11 +1115,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.elara, new Objects.Planet(Enums.Planetoids.elara, 7)
+                newGameData.Planets.Add(Enums.StellarBodies.elara, new Objects.Planet(Enums.StellarBodies.elara, 7)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1053,11 +1128,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.pasiphae, new Objects.Planet(Enums.Planetoids.pasiphae, 8)
+                newGameData.Planets.Add(Enums.StellarBodies.pasiphae, new Objects.Planet(Enums.StellarBodies.pasiphae, 8)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.jupiter,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.jupiter,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1066,22 +1141,25 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.saturn, new Objects.Planet(Enums.Planetoids.saturn, 6)
+                newGameData.Planets.Add(Enums.StellarBodies.saturn, new Objects.Planet(Enums.StellarBodies.saturn, 6)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.hydrogen, 1)
                         }
-                    )
+                    ),
+                    MoonList = new List<int> { 0, 1, 3, 5, 6, 7, 8, 9, 10 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.rings
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.mimas, new Objects.Planet(Enums.Planetoids.mimas, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.mimas, new Objects.Planet(Enums.StellarBodies.mimas, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1090,11 +1168,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.encaladus, new Objects.Planet(Enums.Planetoids.encaladus, 1)
+                newGameData.Planets.Add(Enums.StellarBodies.encaladus, new Objects.Planet(Enums.StellarBodies.encaladus, 1)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1107,11 +1185,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.tethys, new Objects.Planet(Enums.Planetoids.tethys, 2)
+                newGameData.Planets.Add(Enums.StellarBodies.tethys, new Objects.Planet(Enums.StellarBodies.tethys, 2)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1126,11 +1204,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.dione, new Objects.Planet(Enums.Planetoids.dione, 3)
+                newGameData.Planets.Add(Enums.StellarBodies.dione, new Objects.Planet(Enums.StellarBodies.dione, 3)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1139,11 +1217,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.rhea, new Objects.Planet(Enums.Planetoids.rhea, 4)
+                newGameData.Planets.Add(Enums.StellarBodies.rhea, new Objects.Planet(Enums.StellarBodies.rhea, 4)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1156,11 +1234,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.titan, new Objects.Planet(Enums.Planetoids.titan, 5)
+                newGameData.Planets.Add(Enums.StellarBodies.titan, new Objects.Planet(Enums.StellarBodies.titan, 5)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1174,11 +1252,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.hyperion, new Objects.Planet(Enums.Planetoids.hyperion, 6)
+                newGameData.Planets.Add(Enums.StellarBodies.hyperion, new Objects.Planet(Enums.StellarBodies.hyperion, 6)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.aluminium, 1),
@@ -1191,11 +1269,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.iapetus, new Objects.Planet(Enums.Planetoids.iapetus, 7)
+                newGameData.Planets.Add(Enums.StellarBodies.iapetus, new Objects.Planet(Enums.StellarBodies.iapetus, 7)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1204,11 +1282,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.phoebe, new Objects.Planet(Enums.Planetoids.phoebe, 8)
+                newGameData.Planets.Add(Enums.StellarBodies.phoebe, new Objects.Planet(Enums.StellarBodies.phoebe, 8)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.saturn,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.saturn,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1223,10 +1301,10 @@ namespace Deuteros.Code
 )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.uranus, new Objects.Planet(Enums.Planetoids.uranus, 7)
+                newGameData.Planets.Add(Enums.StellarBodies.uranus, new Objects.Planet(Enums.StellarBodies.uranus, 7)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1238,14 +1316,17 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.helium, 1),
                             new Objects.Material(Enums.ItemTypes.silica, 1)
                         }
-                    )
+                    ),
+                    MoonList = new List<int> { 1, 5, 6, 10 },
+                    PlanetColor = PlanetColor.green,
+                    PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.miranda, new Objects.Planet(Enums.Planetoids.miranda, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.miranda, new Objects.Planet(Enums.StellarBodies.miranda, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.uranus,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.uranus,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1258,11 +1339,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.ariel, new Objects.Planet(Enums.Planetoids.ariel, 1)
+                newGameData.Planets.Add(Enums.StellarBodies.ariel, new Objects.Planet(Enums.StellarBodies.ariel, 1)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.uranus,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.uranus,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.aluminium, 1),
@@ -1275,11 +1356,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.umbriel, new Objects.Planet(Enums.Planetoids.umbriel, 2)
+                newGameData.Planets.Add(Enums.StellarBodies.umbriel, new Objects.Planet(Enums.StellarBodies.umbriel, 2)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.uranus,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.uranus,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1289,11 +1370,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.titania, new Objects.Planet(Enums.Planetoids.titania, 3)
+                newGameData.Planets.Add(Enums.StellarBodies.titania, new Objects.Planet(Enums.StellarBodies.titania, 3)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.uranus,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.uranus,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1308,11 +1389,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.oberon, new Objects.Planet(Enums.Planetoids.oberon, 4)
+                newGameData.Planets.Add(Enums.StellarBodies.oberon, new Objects.Planet(Enums.StellarBodies.oberon, 4)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.uranus,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.uranus,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1327,10 +1408,10 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.neptune, new Objects.Planet(Enums.Planetoids.neptune, 8)
+                newGameData.Planets.Add(Enums.StellarBodies.neptune, new Objects.Planet(Enums.StellarBodies.neptune, 8)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1342,14 +1423,17 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.paladium, 1),
                             new Objects.Material(Enums.ItemTypes.platinum, 1)
                         }
-    )
+                    ),
+                    MoonList = new List<int> { 1, 4, 6, 9 },
+                    PlanetColor = PlanetColor.blue,
+                    PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.triton, new Objects.Planet(Enums.Planetoids.triton, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.triton, new Objects.Planet(Enums.StellarBodies.triton, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.neptune,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.neptune,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1364,11 +1448,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.neried, new Objects.Planet(Enums.Planetoids.neried, 1)
+                newGameData.Planets.Add(Enums.StellarBodies.neried, new Objects.Planet(Enums.StellarBodies.neried, 1)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.neptune,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.neptune,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1378,11 +1462,11 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.nthree, new Objects.Planet(Enums.Planetoids.nthree, 2)
+                newGameData.Planets.Add(Enums.StellarBodies.nthree, new Objects.Planet(Enums.StellarBodies.nthree, 2)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.neptune,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.neptune,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1391,11 +1475,11 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.nfour, new Objects.Planet(Enums.Planetoids.nfour, 3)
+                newGameData.Planets.Add(Enums.StellarBodies.nfour, new Objects.Planet(Enums.StellarBodies.nfour, 3)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.neptune,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.neptune,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.silica, 1)
@@ -1403,10 +1487,10 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.pluto, new Objects.Planet(Enums.Planetoids.pluto, 9)
+                newGameData.Planets.Add(Enums.StellarBodies.pluto, new Objects.Planet(Enums.StellarBodies.pluto, 9)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1417,14 +1501,17 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.gold, 1),
                             new Objects.Material(Enums.ItemTypes.silica, 1)
                         }
-    )
+                    ),
+                    MoonList = new List<int> { 2 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.charon, new Objects.Planet(Enums.Planetoids.charon, 0)
+                newGameData.Planets.Add(Enums.StellarBodies.charon, new Objects.Planet(Enums.StellarBodies.charon, 0)
                 {
                     IsMoon = true,
-                    MoonParentPlanetId = Enums.Planetoids.pluto,
-                    ParentStar = Enums.Stars.the_sun,
+                    MoonParentPlanetId = Enums.StellarBodies.pluto,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -1433,10 +1520,10 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.Planetoids.decuria, new Objects.Planet(Enums.Planetoids.decuria, 10)
+                newGameData.Planets.Add(Enums.StellarBodies.decuria, new Objects.Planet(Enums.StellarBodies.decuria, 10)
                 {
                     IsMoon = false,
-                    ParentStar = Enums.Stars.the_sun,
+                    ParentStar = Enums.StellarBodies.the_sun,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1444,8 +1531,2042 @@ namespace Deuteros.Code
                             new Objects.Material(Enums.ItemTypes.silver, 1),
                             new Objects.Material(Enums.ItemTypes.silica, 1)
                         }
-    )
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
                 });
+
+                newGameData.Planets.Add(Enums.StellarBodies.atlantic, new Objects.Planet(Enums.StellarBodies.atlantic, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.proxima,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1)
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.blue,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.pacific, new Objects.Planet(Enums.StellarBodies.pacific, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.proxima,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1)
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 6 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.barent, new Objects.Planet(Enums.StellarBodies.barent, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.pacific,
+                    ParentStar = Enums.StellarBodies.proxima,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1)
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.baltic, new Objects.Planet(Enums.StellarBodies.baltic, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.pacific,
+                    ParentStar = Enums.StellarBodies.proxima,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1)
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chiron, new Objects.Planet(Enums.StellarBodies.chiron, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cercops, new Objects.Planet(Enums.StellarBodies.cercops, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 3 },
+                    PlanetColor = PlanetColor.red,
+                    PlanetStyle = PlanetStyle.massive_rings
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.circe, new Objects.Planet(Enums.StellarBodies.circe, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cercops,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chimaera, new Objects.Planet(Enums.StellarBodies.chimaera, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cercops,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cerberus, new Objects.Planet(Enums.StellarBodies.cerberus, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 2, 4, 5, 8 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cronus, new Objects.Planet(Enums.StellarBodies.cronus, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cerberus,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chloe, new Objects.Planet(Enums.StellarBodies.chloe, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cerberus,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.calchas, new Objects.Planet(Enums.StellarBodies.calchas, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cerberus,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cadmus, new Objects.Planet(Enums.StellarBodies.cadmus, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cerberus,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.creon, new Objects.Planet(Enums.StellarBodies.creon, 3)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 9 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.massive
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cybele, new Objects.Planet(Enums.StellarBodies.cybele, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.creon,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cupid, new Objects.Planet(Enums.StellarBodies.cupid, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.creon,
+                    ParentStar = Enums.StellarBodies.centauri,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.mycenae, new Objects.Planet(Enums.StellarBodies.mycenae, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.green,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.tyre, new Objects.Planet(Enums.StellarBodies.tyre, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 2 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.ur, new Objects.Planet(Enums.StellarBodies.ur, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.tyre,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.thebes, new Objects.Planet(Enums.StellarBodies.thebes, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 2, 3, 4, 5, 7, 8, 10 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.tanis, new Objects.Planet(Enums.StellarBodies.tanis, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.memphis, new Objects.Planet(Enums.StellarBodies.memphis, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.karnak, new Objects.Planet(Enums.StellarBodies.karnak, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.gizeh, new Objects.Planet(Enums.StellarBodies.gizeh, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.calah, new Objects.Planet(Enums.StellarBodies.calah, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.noria, new Objects.Planet(Enums.StellarBodies.noria, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.abydos, new Objects.Planet(Enums.StellarBodies.abydos, 6)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.saqqara, new Objects.Planet(Enums.StellarBodies.saqqara, 7)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.thebes,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.pompeii, new Objects.Planet(Enums.StellarBodies.pompeii, 3)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 9 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.petra, new Objects.Planet(Enums.StellarBodies.petra, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.pompeii,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.palmyra, new Objects.Planet(Enums.StellarBodies.palmyra, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.pompeii,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.jericho, new Objects.Planet(Enums.StellarBodies.jericho, 4)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 3, 6, 10 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.babylon, new Objects.Planet(Enums.StellarBodies.babylon, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.jericho,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.troy, new Objects.Planet(Enums.StellarBodies.troy, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.jericho,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.carthage, new Objects.Planet(Enums.StellarBodies.carthage, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.jericho,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.crete, new Objects.Planet(Enums.StellarBodies.crete, 5)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 2, 4, 5, 8, 9 },
+                    PlanetColor = PlanetColor.green,
+                    PlanetStyle = PlanetStyle.massive
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.knossos, new Objects.Planet(Enums.StellarBodies.knossos, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.delphi, new Objects.Planet(Enums.StellarBodies.delphi, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.ephesus, new Objects.Planet(Enums.StellarBodies.ephesus, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.corinth, new Objects.Planet(Enums.StellarBodies.corinth, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.athens, new Objects.Planet(Enums.StellarBodies.athens, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.olympia, new Objects.Planet(Enums.StellarBodies.olympia, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.crete,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.mari, new Objects.Planet(Enums.StellarBodies.mari, 6)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 3 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cuzco, new Objects.Planet(Enums.StellarBodies.cuzco, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.mari,
+                    ParentStar = Enums.StellarBodies.barnard,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+
+                newGameData.Planets.Add(Enums.StellarBodies.nero, new Objects.Planet(Enums.StellarBodies.nero, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.julius, new Objects.Planet(Enums.StellarBodies.julius, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 4, 5, 9 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.moon
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.septimus, new Objects.Planet(Enums.StellarBodies.septimus, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.julius,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.augustus, new Objects.Planet(Enums.StellarBodies.augustus, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.julius,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.claudius, new Objects.Planet(Enums.StellarBodies.claudius, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.julius,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.hadrian, new Objects.Planet(Enums.StellarBodies.hadrian, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.julius,
+                    ParentStar = Enums.StellarBodies.lalande,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.romulus, new Objects.Planet(Enums.StellarBodies.romulus, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.sirius,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.remus, new Objects.Planet(Enums.StellarBodies.remus, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.sirius,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+
+                newGameData.Planets.Add(Enums.StellarBodies.helios, new Objects.Planet(Enums.StellarBodies.helios, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white_green,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.lithos, new Objects.Planet(Enums.StellarBodies.lithos, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.burah, new Objects.Planet(Enums.StellarBodies.burah, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 8 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.alumen, new Objects.Planet(Enums.StellarBodies.alumen, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.burah,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.silex, new Objects.Planet(Enums.StellarBodies.silex, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.burah,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.sulfurum, new Objects.Planet(Enums.StellarBodies.sulfurum, 3)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 2, 7, 10 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chloros, new Objects.Planet(Enums.StellarBodies.chloros, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.sulfurum,
+                    ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.argos, new Objects.Planet(Enums.StellarBodies.argos, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.sulfurum,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.calx, new Objects.Planet(Enums.StellarBodies.calx, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.sulfurum,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.titanes, new Objects.Planet(Enums.StellarBodies.titanes, 4)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 3, 4, 5, 7, 9 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.moon
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.vanadis, new Objects.Planet(Enums.StellarBodies.vanadis, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chronos, new Objects.Planet(Enums.StellarBodies.chronos, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.selene, new Objects.Planet(Enums.StellarBodies.selene, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.bromos, new Objects.Planet(Enums.StellarBodies.bromos, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.kryptos, new Objects.Planet(Enums.StellarBodies.kryptos, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.rubidos, new Objects.Planet(Enums.StellarBodies.rubidos, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.titanes,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.zargun, new Objects.Planet(Enums.StellarBodies.zargun, 5)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 2, 4, 5, 7, 8, 10 },
+                    PlanetColor = PlanetColor.green,
+                    PlanetStyle = PlanetStyle.giant
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.niobe, new Objects.Planet(Enums.StellarBodies.niobe, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.kadmeia, new Objects.Planet(Enums.StellarBodies.kadmeia, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.tellus, new Objects.Planet(Enums.StellarBodies.tellus, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.iodes, new Objects.Planet(Enums.StellarBodies.iodes, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.xenos, new Objects.Planet(Enums.StellarBodies.xenos, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.caesius, new Objects.Planet(Enums.StellarBodies.caesius, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.rhenus, new Objects.Planet(Enums.StellarBodies.rhenus, 6)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zargun,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.osme, new Objects.Planet(Enums.StellarBodies.osme, 6)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 2, 4, 6, 8 },
+                    PlanetColor = PlanetColor.white,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.iris, new Objects.Planet(Enums.StellarBodies.iris, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.osme,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.platina, new Objects.Planet(Enums.StellarBodies.platina, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.osme,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.aurum, new Objects.Planet(Enums.StellarBodies.aurum, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.osme,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.thallos, new Objects.Planet(Enums.StellarBodies.thallos, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.osme,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.astatos, new Objects.Planet(Enums.StellarBodies.astatos, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.osme,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.radius, new Objects.Planet(Enums.StellarBodies.radius, 7)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 3, 10 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.aktis, new Objects.Planet(Enums.StellarBodies.aktis, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.radius,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.protos, new Objects.Planet(Enums.StellarBodies.protos, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.radius,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.prasios, new Objects.Planet(Enums.StellarBodies.prasios, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.radius,
+                    ParentStar = Enums.StellarBodies.cygni,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+
+                newGameData.Planets.Add(Enums.StellarBodies.cambrian, new Objects.Planet(Enums.StellarBodies.cambrian, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.cainozoic, new Objects.Planet(Enums.StellarBodies.cainozoic, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 3, 4, 6, 7, 10 },
+                    PlanetColor = PlanetColor.blue,
+                    PlanetStyle = PlanetStyle.massive
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.tertiary, new Objects.Planet(Enums.StellarBodies.tertiary, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.paleocene, new Objects.Planet(Enums.StellarBodies.paleocene, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.eocene, new Objects.Planet(Enums.StellarBodies.eocene, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.oligocene, new Objects.Planet(Enums.StellarBodies.oligocene, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.miocene, new Objects.Planet(Enums.StellarBodies.miocene, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.pliocene, new Objects.Planet(Enums.StellarBodies.pliocene, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.cainozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.paleozoic, new Objects.Planet(Enums.StellarBodies.paleozoic, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 6 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.massive_rings
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.silurian, new Objects.Planet(Enums.StellarBodies.silurian, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.paleozoic,
+                    ParentStar = Enums.StellarBodies.procyon,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.alpha, new Objects.Planet(Enums.StellarBodies.alpha, 0)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    Segment = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { },
+                    PlanetColor = PlanetColor.white_green,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.beta, new Objects.Planet(Enums.StellarBodies.beta, 1)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 2 },
+                    PlanetColor = PlanetColor.white_blue,
+                    PlanetStyle = PlanetStyle.whirl
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.delta, new Objects.Planet(Enums.StellarBodies.delta, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.beta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.gamma, new Objects.Planet(Enums.StellarBodies.gamma, 2)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 1, 4, 9 },
+                    PlanetColor = PlanetColor.yellow,
+                    PlanetStyle = PlanetStyle.lines
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.theta, new Objects.Planet(Enums.StellarBodies.theta, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.gamma,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.iota, new Objects.Planet(Enums.StellarBodies.iota, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.gamma,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.kappa, new Objects.Planet(Enums.StellarBodies.kappa, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.gamma,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new (Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.epsilon, new Objects.Planet(Enums.StellarBodies.epsilon, 3)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 3, 4, 5, 7, 8, 10 },
+                    PlanetColor = PlanetColor.red,
+                    PlanetStyle = PlanetStyle.giant
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.lambda, new Objects.Planet(Enums.StellarBodies.lambda, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.mu, new Objects.Planet(Enums.StellarBodies.mu, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.nu, new Objects.Planet(Enums.StellarBodies.nu, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.xi, new Objects.Planet(Enums.StellarBodies.xi, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.omicron, new Objects.Planet(Enums.StellarBodies.omicron, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.pi, new Objects.Planet(Enums.StellarBodies.pi, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.epsilon,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.zeta, new Objects.Planet(Enums.StellarBodies.zeta, 4)
+                {
+                    IsMoon = false,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.silver, 1),
+                        }
+                    ),
+                    MoonList = new List<int> { 0, 2, 3, 4, 6, 7, 9 },
+                    PlanetColor = PlanetColor.green,
+                    PlanetStyle = PlanetStyle.massive_rings
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.rho, new Objects.Planet(Enums.StellarBodies.rho, 0)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                            new Objects.Material(Enums.ItemTypes.silica, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.sigma, new Objects.Planet(Enums.StellarBodies.sigma, 1)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.upsilon, new Objects.Planet(Enums.StellarBodies.upsilon, 2)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.aluminium, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.deuterium, 1),
+                            new Objects.Material(Enums.ItemTypes.methane, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.phi, new Objects.Planet(Enums.StellarBodies.phi, 3)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.carbon, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.platinum, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.chi, new Objects.Planet(Enums.StellarBodies.chi, 4)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.psi, new Objects.Planet(Enums.StellarBodies.psi, 5)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.copper, 1),
+                            new Objects.Material(Enums.ItemTypes.helium, 1),
+                            new Objects.Material(Enums.ItemTypes.gold, 1),
+                        }
+                    )
+                });
+
+                newGameData.Planets.Add(Enums.StellarBodies.omega, new Objects.Planet(Enums.StellarBodies.omega, 6)
+                {
+                    IsMoon = true,
+                    MoonParentPlanetId = Enums.StellarBodies.zeta,
+                    ParentStar = Enums.StellarBodies.tau_ceti,
+                    ActiveMethanoid = true,
+                    PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
+                        {
+                            new Objects.Material(Enums.ItemTypes.iron, 1),
+                            new Objects.Material(Enums.ItemTypes.titanium, 1),
+                            new Objects.Material(Enums.ItemTypes.hydrogen, 1),
+                            new Objects.Material(Enums.ItemTypes.paladium, 1),
+                        }
+                    )
+                });
+
 
                 newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.iron] = 1;
                 newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.titanium] = 1;
@@ -1476,7 +3597,6 @@ namespace Deuteros.Code
                 newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silver] = 1;
                 newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.gold] = 1;
                 newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silica] = 2;
-
 
                 var saveData = Utility.Serialization.WriteObject<Deuteros.Code.CoreData>(newGameData);
                 System.IO.File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "Data\\GameData.dat", saveData);

@@ -14,7 +14,7 @@ namespace Deuteros.Code.Objects
         public bool GroundSelected { get; set; }
         public ResearchItem CurrentResearchItem { get; set; }
 
-        public Earth(Enums.Planetoids planetId, int order) : base(planetId, order)
+        public Earth(Enums.StellarBodies planetId, int order) : base(planetId, order)
         {
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
             GroundSelected = true;

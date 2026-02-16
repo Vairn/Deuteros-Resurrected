@@ -27,6 +27,8 @@ namespace Deuteros.Code.Platform.Screens
             {
                 Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
             }
+
+            base._Ready();
         }
 
         public override void _Process(double delta)
