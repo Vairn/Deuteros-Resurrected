@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxnn3psm12hx7"
-path="res://.godot/imported/Ship_Component_Fighters.png-f3b980d8a653c7f3efedb8fc06d2a582.ctex"
+uid="uid://e7efwo4tonyw"
+path="res://.godot/imported/SmallLocation_Planet_Green.png-ca1bc3aef9858eb22bfcb76fe485bb03.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Scenes/Ship_Component_Fighters.png"
-dest_files=["res://.godot/imported/Ship_Component_Fighters.png-f3b980d8a653c7f3efedb8fc06d2a582.ctex"]
+source_file="res://Sprites/SceneSprites/Ships/Interior/SmallLocation_Planet_Green.png"
+dest_files=["res://.godot/imported/SmallLocation_Planet_Green.png-ca1bc3aef9858eb22bfcb76fe485bb03.ctex"]
 
 [params]
 

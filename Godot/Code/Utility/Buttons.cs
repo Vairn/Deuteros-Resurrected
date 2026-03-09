@@ -66,14 +66,16 @@ namespace Deuteros.Code.Utility
 
         public static void ClearPressedConnections(BaseButton button)
         {
-            var list = button.GetSignalConnectionList(BaseButton.SignalName.Pressed);
+            var connectionList = button.GetSignalConnectionList(BaseButton.SignalName.Pressed);
 
-            foreach (var obj in list)
+            foreach (var obj in connectionList)
             {
-                var dict = (Godot.Collections.Dictionary)obj;
-                if (!dict.ContainsKey("callable")) continue;
+                var objectDictionary = (Godot.Collections.Dictionary)obj;
 
-                var callable = (Callable)dict["callable"];
+                if (!objectDictionary.ContainsKey("callable")) continue;
+
+                var callable = (Callable)objectDictionary["callable"];
+
                 if (button.IsConnected(BaseButton.SignalName.Pressed, callable))
                     button.Disconnect(BaseButton.SignalName.Pressed, callable);
             }

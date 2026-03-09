@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsb6dm4ck0qvk"]
+
+[ext_resource type="Script" path="res://Code/Platform/Screens/ModuleScenes/OFFrameDeploy.cs" id="1_8m1sl"]
+[ext_resource type="PackedScene" uid="uid://dfxcpnk8y4m45" path="res://PreFabs/UI/Window.tscn" id="1_clv0d"]
+[ext_resource type="AudioStream" uid="uid://c5vjyvse1fcx1" path="res://Sounds/Typing.wav" id="2_0es70"]
+[ext_resource type="Theme" uid="uid://d3ky76lin6gp4" path="res://Themes/GreenFont5.tres" id="4_vftlv"]
+
+[node name="OfFrameDeploy" type="Node2D" node_paths=PackedStringArray("TypeSound")]
+script = ExtResource("1_8m1sl")
+TypeSound = NodePath("AudioStreamPlayer")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_0es70")
+
+[node name="Window" parent="." instance=ExtResource("1_clv0d")]
+
+[node name="Text01" type="Label" parent="Window"]
+offset_left = 73.0
+offset_top = 36.0
+offset_right = 273.0
+offset_bottom = 45.0
+text = "Equipment Pod Activating."
+
+[node name="Text02" type="Label" parent="Window"]
+offset_left = 73.0
+offset_top = 52.0
+offset_right = 297.0
+offset_bottom = 69.0
+text = "Positioning Orbital
+Factory Section No. XXX of 8"
+
+[node name="Text03" type="Label" parent="Window"]
+offset_left = 73.0
+offset_top = 76.0
+offset_right = 281.0
+offset_bottom = 93.0
+text = "Sequence Complete."
+
+[node name="Text04" type="Label" parent="Window"]
+offset_left = 73.0
+offset_top = 91.0
+offset_right = 281.0
+offset_bottom = 108.0
+theme = ExtResource("4_vftlv")
+text = "Factory Is Now Operational."

@@ -299,8 +299,8 @@ namespace Deuteros.Code
             Store,
             StoreMTX,
             ShipBay,
-            Shuttle,
-            StarMap,
+            ShipInterior,
+            ResourceMap,
             None
         }
 
@@ -309,10 +309,10 @@ namespace Deuteros.Code
         [Serializable]
         public enum SceneVariables
         {
-            Ground,
-            Orbit,
-            Shuttle,
-            Ship
+            Ground = 100,
+            Orbit = 200,
+            Shuttle = 300,
+            Ship = 400
         }
 
         [Serializable]
@@ -373,18 +373,23 @@ namespace Deuteros.Code
             SCG = 300
         }
 
+        public enum Ship_States
+        {
+            Docking = 100,
+            InTransit = 200,
+            Landing = 300,
+            TakingOff = 400,
+            Launching = 500,
+            Docked = 600,
+            UnDocked = 700
+        }
+
         public enum Module_Types
         {
             None = 0,
             Tool = 100,
             Supply = 200,
             Cryo = 300
-        }
-
-        public enum Fuel_Types
-        {
-            MEH_Fuel = 100,
-            HED_Fuel = 200
         }
 
         public enum Menu_Buttons

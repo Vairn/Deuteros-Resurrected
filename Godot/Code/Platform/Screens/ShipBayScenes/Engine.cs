@@ -13,6 +13,9 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
         public Control EngineHolder { get; set; }
         public TextureButton InstallEngineButton { get; set; }
         public bool Installed { get; set; }
+        public Enums.Ship_Types Shiptype { get; set; }
+        public bool Ground { get; set; }
+        public Enums.ItemTypes EngineType { get; set; }
 
         public delegate void EngineInstalledDelegate();
         public event EngineInstalledDelegate EngineInstalled;
@@ -33,7 +36,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
 
         public void InstallEngine()
         {
-            if (!Installed)
+            if (!Installed && ((Ground && GameCore.SingletonInstance.GetCurrentPlanet().PlanetResources.Stores[EngineType] > 0) || (!Ground && GameCore.SingletonInstance.GetCurrentPlanet().Station.Resources.Stores[EngineType] > 0)))
             {
                 Installed = true;
                 EngineInstalled.Invoke();

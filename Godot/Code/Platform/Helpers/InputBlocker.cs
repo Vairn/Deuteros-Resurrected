@@ -9,10 +9,7 @@ namespace Deuteros.Code.Platform.Helpers
 
         public override void _Ready()
         {
-            // Debug tint so you can SEE it
-            Color = new Color(0, 0, 0, 0f);
-
-            MouseFilter = MouseFilterEnum.Stop; // blocks mouse/touch for UI
+            MouseFilter = MouseFilterEnum.Stop;
             Visible = Blocked;
 
             // Force correct size now + on resize
@@ -40,6 +37,7 @@ namespace Deuteros.Code.Platform.Helpers
             // This does NOT depend on anchors/containers/inspector settings.
             Position = Vector2.Zero;
             Size = GetViewportRect().Size;
+            Color = Colors.Transparent;
         }
 
         public override void _GuiInput(InputEvent @event)

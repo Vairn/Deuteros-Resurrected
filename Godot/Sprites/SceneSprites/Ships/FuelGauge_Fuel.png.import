@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b25ok105tkwn4"
-path="res://.godot/imported/Ship_Component_EngineControls.png-63cb1d8e39ae77d4fa589db8f90f47c4.ctex"
+uid="uid://cv4w8nrw5w4oc"
+path="res://.godot/imported/FuelGauge_Fuel.png-c2de44cf308f511283e4f6736211788d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Scenes/Ship_Component_EngineControls.png"
-dest_files=["res://.godot/imported/Ship_Component_EngineControls.png-63cb1d8e39ae77d4fa589db8f90f47c4.ctex"]
+source_file="res://Sprites/SceneSprites/Ships/FuelGauge_Fuel.png"
+dest_files=["res://.godot/imported/FuelGauge_Fuel.png-c2de44cf308f511283e4f6736211788d.ctex"]
 
 [params]
 

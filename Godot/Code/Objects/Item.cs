@@ -12,6 +12,7 @@ namespace Deuteros.Code.Objects
         public Enums.ItemCategory ItemCategory { get; set; }
         public ResearchItem Research { get; set; }
         public string FullName { get; set; }
+        public string ShortName { get; set; }
         public List<BuildRequirement> BuildRequirements { get; set; }
         public bool OrbitOnly { get; set; }
         public bool UniqueItem { get; set; }
@@ -23,6 +24,7 @@ namespace Deuteros.Code.Objects
         public bool Locked { get; set; }
         public bool Production { get; set; }
         public bool ToolPod { get; set; }
+        public bool ToolPodSingular { get; set; }
 
         public Item()
         {

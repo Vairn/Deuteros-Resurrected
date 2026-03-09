@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf46fkuydtkbo"
-path="res://.godot/imported/Ship_Component_ACC.png-daf9e36140d3825efcc36da16de9e12b.ctex"
+uid="uid://2uavijelv31e"
+path="res://.godot/imported/Ship_Component_SetCourse.png-9b88491a18c30468ad33a9d633e46373.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Sprites/Scenes/Ship_Component_ACC.png"
-dest_files=["res://.godot/imported/Ship_Component_ACC.png-daf9e36140d3825efcc36da16de9e12b.ctex"]
+source_file="res://Sprites/SceneSprites/Ships/Interior/Ship_Component_SetCourse.png"
+dest_files=["res://.godot/imported/Ship_Component_SetCourse.png-9b88491a18c30468ad33a9d633e46373.ctex"]
 
 [params]
 

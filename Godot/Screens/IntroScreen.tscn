@@ -17,3 +17,4 @@ expand_mode = 1
 [node name="Button" parent="." instance=ExtResource("2_dynyq")]
 offset_right = 320.0
 offset_bottom = 200.0
+SceneVariables = [100]

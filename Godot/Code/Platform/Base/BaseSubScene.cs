@@ -13,7 +13,6 @@ namespace Deuteros.Code.Platform.Base
         private PackedScene _SettingsScreen;
         public bool SettingsShown { get; set; }
         public List<Enums.SceneVariables> SceneVariables { get; set; }
-        public List<Objects.MenuButton> MenuButtons { get; set; }
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()

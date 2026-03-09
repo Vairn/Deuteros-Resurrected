@@ -19,6 +19,8 @@ namespace Deuteros.Code.Platform.Screens
 			Location = GetNode<Label>("Location/LocationBox/Location");
 			Time = GetNode<Label>("Time/TimeBox/Time");
 
+            GameCore.SingletonInstance.UnlockAdded += SingletonInstance_UnlockAdded;
+
 			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay);
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
@@ -29,6 +31,11 @@ namespace Deuteros.Code.Platform.Screens
             }
 
             base._Ready();
+        }
+
+        private void SingletonInstance_UnlockAdded(Enums.Game_Unlocks addedUnlock)
+        {
+			SetupMenus();
         }
 
         public override void _Process(double delta)
@@ -47,7 +54,7 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void UpdateTime(uint currentDay, uint nextDay)
 		{
-			var curDay = (nextDay % 1000).ToString().PadLeft(3, '0');
+			var curDay = (currentDay % 1000).ToString().PadLeft(3, '0');
 			var outputYear = (3100 + Math.Floor((decimal)(nextDay / 1000))) + " " + curDay + ".00";
 
 			Time.Text = outputYear;
@@ -64,10 +71,10 @@ namespace Deuteros.Code.Platform.Screens
 
 				var currentButton = GetNode<MenuButton>("MainButtons/" + column + row.ToString() + "/");
 
-                if (menuButton == null)
+                if (menuButton == null || !menuButton.Enabled())
 				{
 					currentButton.SetButtonType(Enums.Menu_Buttons.Empty);
-					currentButton.SceneVariables = null;
+					currentButton.SceneVariables = new Godot.Collections.Array<Enums.SceneVariables>();
                     currentButton.TargetScene = Enums.Scenes.None;
                 }
 				else
@@ -75,6 +82,7 @@ namespace Deuteros.Code.Platform.Screens
                     currentButton.SetButtonType(menuButton.ButtonType);
                     currentButton.SceneVariables = menuButton.SceneVariables;
                     currentButton.TargetScene = menuButton.SceneToLoad;
+                    currentButton.ClickActions = menuButton.ClickActions;
                 }
 
                 row++;
@@ -86,5 +94,5 @@ namespace Deuteros.Code.Platform.Screens
 				}
 			}
 		}
-	}
+    }
 }

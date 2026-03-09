@@ -25,6 +25,8 @@ namespace Deuteros.Code.Platform.Helpers
             if (_overlayRoot != null)
                 return; // Already showing something
 
+            Input.MouseMode = Input.MouseModeEnum.Visible;
+
             _overlayRoot = new Control
             {
                 Name = "GlobalOverlay",
@@ -81,6 +83,8 @@ namespace Deuteros.Code.Platform.Helpers
         {
             if (_overlayRoot == null)
                 return;
+
+            Input.MouseMode = Input.MouseModeEnum.Hidden;
 
             if (_contentInstance != null && IsInstanceValid(_contentInstance))
                 _contentInstance.QueueFree();

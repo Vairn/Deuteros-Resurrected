@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,8 +9,9 @@ namespace Deuteros.Code.Platform
     {
         [Export]
         public Enums.Scenes TargetScene;
-
-        public List<Enums.SceneVariables> SceneVariables { get; set; }
+        public List<Action> ClickActions { get; set; }
+        [Export]
+        public Godot.Collections.Array<Enums.SceneVariables> SceneVariables { get; set; } = new Godot.Collections.Array<Enums.SceneVariables>();
 
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
@@ -27,7 +29,7 @@ namespace Deuteros.Code.Platform
                 var sceneNameSplit = TargetScene.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
 
                 //Underscores in scene names represent a folder
-                Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", SceneVariables);
+                Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", SceneVariables.ToList());
             }
         }
     }

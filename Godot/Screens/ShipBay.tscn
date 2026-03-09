@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://du6cxq2xabkyu"]
+[gd_scene load_steps=21 format=3 uid="uid://du6cxq2xabkyu"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/ShipBay.cs" id="1_ka4jh"]
 [ext_resource type="Texture2D" uid="uid://c75qloyqqj1ad" path="res://Sprites/Scenes/ShipBay.png" id="2_2703a"]
@@ -16,6 +16,9 @@
 [ext_resource type="Texture2D" uid="uid://dis887kcb3p7w" path="res://Sprites/SceneSprites/Ships/EquipmentStocks_Top.png" id="14_mpc43"]
 [ext_resource type="Texture2D" uid="uid://b6kv4igciednj" path="res://Sprites/SceneSprites/Ships/EquipmentStocks_Bottom.png" id="15_taq42"]
 [ext_resource type="PackedScene" uid="uid://cqjq2ikj5kdfx" path="res://PreFabs/StaffList.tscn" id="16_87g0b"]
+[ext_resource type="Texture2D" uid="uid://b8c5qo11ls550" path="res://Sprites/SceneSprites/Ships/FuelGauge_Minus.png" id="17_jaqr8"]
+[ext_resource type="Texture2D" uid="uid://dkyqkrw1tcabb" path="res://Sprites/SceneSprites/Ships/FuelGauge_Middle.png" id="18_dvytx"]
+[ext_resource type="Texture2D" uid="uid://yt7ht1f0rxff" path="res://Sprites/SceneSprites/Ships/FuelGauge_Plus.png" id="19_iifyq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10r56"]
 bg_color = Color(0, 0, 0, 1)
@@ -584,6 +587,7 @@ offset_bottom = 82.0
 flat = true
 
 [node name="EquipmentStock" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 96.0
@@ -735,66 +739,77 @@ offset_right = 192.0
 offset_bottom = 108.0
 
 [node name="00" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -92.0
 offset_right = 122.0
 offset_bottom = -84.0
 flat = true
 
 [node name="01" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -84.0
 offset_right = 122.0
 offset_bottom = -76.0
 flat = true
 
 [node name="02" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -76.0
 offset_right = 122.0
 offset_bottom = -68.0
 flat = true
 
 [node name="03" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -68.0
 offset_right = 122.0
 offset_bottom = -60.0
 flat = true
 
 [node name="04" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -60.0
 offset_right = 122.0
 offset_bottom = -52.0
 flat = true
 
 [node name="05" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -52.0
 offset_right = 122.0
 offset_bottom = -44.0
 flat = true
 
 [node name="06" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -44.0
 offset_right = 122.0
 offset_bottom = -36.0
 flat = true
 
 [node name="07" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -36.0
 offset_right = 122.0
 offset_bottom = -28.0
 flat = true
 
 [node name="08" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -28.0
 offset_right = 122.0
 offset_bottom = -20.0
 flat = true
 
 [node name="09" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -20.0
 offset_right = 122.0
 offset_bottom = -12.0
 flat = true
 
 [node name="10" type="Button" parent="EquipmentStock/Buttons"]
+layout_mode = 0
 offset_top = -12.0
 offset_right = 122.0
 offset_bottom = -4.0
@@ -808,3 +823,60 @@ offset_right = 240.0
 offset_bottom = 168.0
 ShowDividers = false
 ShowBackground = true
+
+[node name="Fuel" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 80.0
+offset_top = 168.0
+offset_right = 306.0
+offset_bottom = 182.0
+
+[node name="Type" type="Label" parent="Fuel"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 3.0
+offset_right = 32.0
+offset_bottom = 12.0
+text = "MeH"
+
+[node name="InStock" type="Label" parent="Fuel"]
+layout_mode = 0
+offset_left = 33.0
+offset_top = 3.0
+offset_right = 82.0
+offset_bottom = 12.0
+text = "16544"
+horizontal_alignment = 2
+
+[node name="InShip" type="Label" parent="Fuel"]
+layout_mode = 0
+offset_left = 161.0
+offset_top = 3.0
+offset_right = 201.0
+offset_bottom = 12.0
+text = "121"
+horizontal_alignment = 2
+
+[node name="FuelGauge" type="HBoxContainer" parent="Fuel"]
+layout_mode = 0
+offset_left = 86.0
+offset_top = 2.0
+offset_right = 170.0
+offset_bottom = 14.0
+theme_override_constants/separation = 0
+
+[node name="Minus" type="TextureButton" parent="Fuel/FuelGauge"]
+layout_mode = 2
+texture_normal = ExtResource("17_jaqr8")
+
+[node name="Middle" type="TextureRect" parent="Fuel/FuelGauge"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("18_dvytx")
+expand_mode = 2
+stretch_mode = 1
+
+[node name="Plus" type="TextureButton" parent="Fuel/FuelGauge"]
+layout_mode = 2
+texture_normal = ExtResource("19_iifyq")

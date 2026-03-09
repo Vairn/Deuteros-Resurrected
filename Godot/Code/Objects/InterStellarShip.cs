@@ -14,7 +14,7 @@ namespace Deuteros.Code.Objects
         public Enums.StellarBodies StarDestination { get; set; }
         public bool InTransit { get; set; }
 
-        public int TravelTimeRemain()
+        public override int TravelTimeRemain()
         {
             int totalJourneyTime = 0;
 

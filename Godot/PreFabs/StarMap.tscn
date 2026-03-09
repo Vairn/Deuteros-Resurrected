@@ -1,43 +1,41 @@
-[gd_scene load_steps=13 format=3 uid="uid://jydroeh7c62e"]
+[gd_scene load_steps=13 format=3 uid="uid://dmltsahr8lu51"]
 
-[ext_resource type="Script" path="res://Code/Platform/Screens/StarMap.cs" id="1_gr2fo"]
-[ext_resource type="Texture2D" uid="uid://k2xebxfubg52" path="res://Sprites/SceneSprites/Map/Background.png" id="2_u0k10"]
-[ext_resource type="Texture2D" uid="uid://cqkccloqi8xvo" path="res://Sprites/SceneSprites/Map/Planet_Red_Rings.png" id="3_ctuml"]
-[ext_resource type="Texture2D" uid="uid://b0eo6jyb0mwrc" path="res://Sprites/SceneSprites/Map/Satellite_Chart.png" id="4_wfeak"]
-[ext_resource type="Texture2D" uid="uid://bu3lddq6gtgov" path="res://Sprites/SceneSprites/Map/Moon_Small.png" id="5_2hfx2"]
-[ext_resource type="Texture2D" uid="uid://yqihukdu5pnf" path="res://Sprites/SceneSprites/Map/Moon_Medium.png" id="6_ohwe2"]
-[ext_resource type="Texture2D" uid="uid://cb32dxq0kj3po" path="res://Sprites/SceneSprites/Map/Moon_Large.png" id="7_2pij8"]
-[ext_resource type="Texture2D" uid="uid://dhu7sj703cmtf" path="res://Sprites/SceneSprites/Map/Star_The_Sun.png" id="8_sw8er"]
-[ext_resource type="Texture2D" uid="uid://dlqs5mjawe82l" path="res://Sprites/SceneSprites/Map/Stars.png" id="9_mah07"]
-[ext_resource type="Theme" uid="uid://bbq2svf2lcuqk" path="res://Themes/YellowFont5.tres" id="10_f5dyk"]
-[ext_resource type="Theme" uid="uid://bag2vb6bnxnrx" path="res://Themes/DarkBiegeFont5.tres" id="11_7fdqh"]
-[ext_resource type="Theme" uid="uid://befke7oqkcv3j" path="res://Themes/BiegeFont5.tres" id="12_cpjyl"]
+[ext_resource type="Script" path="res://Code/Platform/Screens/StarMap.cs" id="1_y2pv4"]
+[ext_resource type="Texture2D" uid="uid://k2xebxfubg52" path="res://Sprites/SceneSprites/Map/Background.png" id="2_ee6i1"]
+[ext_resource type="Texture2D" uid="uid://cqkccloqi8xvo" path="res://Sprites/SceneSprites/Map/Planet_Red_Rings.png" id="3_gpnbd"]
+[ext_resource type="Texture2D" uid="uid://b0eo6jyb0mwrc" path="res://Sprites/SceneSprites/Map/Satellite_Chart.png" id="4_k80nc"]
+[ext_resource type="Texture2D" uid="uid://bu3lddq6gtgov" path="res://Sprites/SceneSprites/Map/Moon_Small.png" id="5_2pcc7"]
+[ext_resource type="Texture2D" uid="uid://yqihukdu5pnf" path="res://Sprites/SceneSprites/Map/Moon_Medium.png" id="6_b5rvd"]
+[ext_resource type="Texture2D" uid="uid://cb32dxq0kj3po" path="res://Sprites/SceneSprites/Map/Moon_Large.png" id="7_qn2om"]
+[ext_resource type="Texture2D" uid="uid://dhu7sj703cmtf" path="res://Sprites/SceneSprites/Map/Star_The_Sun.png" id="8_0npm3"]
+[ext_resource type="Texture2D" uid="uid://dlqs5mjawe82l" path="res://Sprites/SceneSprites/Map/Stars.png" id="9_lf5h4"]
+[ext_resource type="Theme" uid="uid://bbq2svf2lcuqk" path="res://Themes/YellowFont5.tres" id="10_xyw0q"]
+[ext_resource type="Theme" uid="uid://bag2vb6bnxnrx" path="res://Themes/DarkBiegeFont5.tres" id="11_wv0dr"]
+[ext_resource type="Theme" uid="uid://befke7oqkcv3j" path="res://Themes/BiegeFont5.tres" id="12_j8rs2"]
 
 [node name="StarMap" type="Node2D"]
-script = ExtResource("1_gr2fo")
+script = ExtResource("1_y2pv4")
 
 [node name="Background" type="TextureRect" parent="."]
-offset_left = 64.0
-offset_top = 28.0
-offset_right = 304.0
-offset_bottom = 130.0
-texture = ExtResource("2_u0k10")
+offset_right = 240.0
+offset_bottom = 102.0
+texture = ExtResource("2_ee6i1")
 
 [node name="PlanetHolder" type="Control" parent="."]
 visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_left = 69.0
-offset_top = 48.0
-offset_right = 299.0
-offset_bottom = 127.0
+offset_left = 5.0
+offset_top = 20.0
+offset_right = 235.0
+offset_bottom = 99.0
 
 [node name="Planet" type="TextureRect" parent="PlanetHolder"]
 layout_mode = 0
 offset_left = 11.0
 offset_right = 59.0
 offset_bottom = 79.0
-texture = ExtResource("3_ctuml")
+texture = ExtResource("3_gpnbd")
 
 [node name="SatelliteChart" type="TextureRect" parent="PlanetHolder"]
 layout_mode = 0
@@ -46,7 +44,7 @@ offset_top = 73.0
 offset_right = 214.0
 offset_bottom = 78.0
 pivot_offset = Vector2(73, 5)
-texture = ExtResource("4_wfeak")
+texture = ExtResource("4_k80nc")
 stretch_mode = 2
 
 [node name="GoBack" type="Button" parent="PlanetHolder"]
@@ -67,7 +65,7 @@ layout_mode = 0
 offset_top = 4.0
 offset_right = 6.0
 offset_bottom = 9.0
-texture_normal = ExtResource("5_2hfx2")
+texture_normal = ExtResource("5_2pcc7")
 
 [node name="Moon01" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -75,7 +73,7 @@ offset_left = 16.0
 offset_top = 2.0
 offset_right = 22.0
 offset_bottom = 7.0
-texture_normal = ExtResource("5_2hfx2")
+texture_normal = ExtResource("5_2pcc7")
 
 [node name="Moon02" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -83,14 +81,14 @@ offset_left = 30.0
 offset_top = 5.0
 offset_right = 40.0
 offset_bottom = 14.0
-texture_normal = ExtResource("6_ohwe2")
+texture_normal = ExtResource("6_b5rvd")
 
 [node name="Moon03" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
 offset_left = 44.0
 offset_right = 56.0
 offset_bottom = 11.0
-texture_normal = ExtResource("7_2pij8")
+texture_normal = ExtResource("7_qn2om")
 
 [node name="Moon04" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -98,7 +96,7 @@ offset_left = 62.0
 offset_top = 6.0
 offset_right = 72.0
 offset_bottom = 15.0
-texture_normal = ExtResource("6_ohwe2")
+texture_normal = ExtResource("6_b5rvd")
 
 [node name="Moon05" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -106,7 +104,7 @@ offset_left = 76.0
 offset_top = 1.0
 offset_right = 88.0
 offset_bottom = 12.0
-texture_normal = ExtResource("7_2pij8")
+texture_normal = ExtResource("7_qn2om")
 
 [node name="Moon06" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -114,7 +112,7 @@ offset_left = 94.0
 offset_top = 4.0
 offset_right = 104.0
 offset_bottom = 13.0
-texture_normal = ExtResource("6_ohwe2")
+texture_normal = ExtResource("6_b5rvd")
 
 [node name="Moon07" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -122,7 +120,7 @@ offset_left = 108.0
 offset_top = 6.0
 offset_right = 120.0
 offset_bottom = 17.0
-texture_normal = ExtResource("7_2pij8")
+texture_normal = ExtResource("7_qn2om")
 
 [node name="Moon08" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -130,14 +128,14 @@ offset_left = 126.0
 offset_top = 3.0
 offset_right = 136.0
 offset_bottom = 12.0
-texture_normal = ExtResource("6_ohwe2")
+texture_normal = ExtResource("6_b5rvd")
 
 [node name="Moon09" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
 offset_left = 142.0
 offset_right = 152.0
 offset_bottom = 9.0
-texture_normal = ExtResource("6_ohwe2")
+texture_normal = ExtResource("6_b5rvd")
 
 [node name="Moon10" type="TextureButton" parent="PlanetHolder/Moons"]
 layout_mode = 0
@@ -145,21 +143,21 @@ offset_left = 160.0
 offset_top = 3.0
 offset_right = 166.0
 offset_bottom = 8.0
-texture_normal = ExtResource("5_2hfx2")
+texture_normal = ExtResource("5_2pcc7")
 
 [node name="StarSystemHolder" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 69.0
-offset_top = 48.0
-offset_right = 299.0
-offset_bottom = 127.0
+offset_left = 5.0
+offset_top = 20.0
+offset_right = 235.0
+offset_bottom = 99.0
 
 [node name="StarSystem" type="TextureRect" parent="StarSystemHolder"]
 layout_mode = 0
 offset_right = 208.0
 offset_bottom = 79.0
-texture = ExtResource("8_sw8er")
+texture = ExtResource("8_0npm3")
 
 [node name="GoBack" type="Button" parent="StarSystemHolder"]
 layout_mode = 0
@@ -254,17 +252,17 @@ flat = true
 visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_left = 69.0
-offset_top = 48.0
-offset_right = 299.0
-offset_bottom = 127.0
+offset_left = 5.0
+offset_top = 20.0
+offset_right = 235.0
+offset_bottom = 99.0
 
 [node name="StarMap" type="TextureRect" parent="StarMapHolder"]
 layout_mode = 0
 offset_left = 11.0
 offset_right = 219.0
 offset_bottom = 79.0
-texture = ExtResource("9_mah07")
+texture = ExtResource("9_lf5h4")
 stretch_mode = 2
 
 [node name="Buttons" type="Control" parent="StarMapHolder"]
@@ -347,10 +345,8 @@ flat = true
 [node name="Labels" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 64.0
-offset_top = 28.0
-offset_right = 304.0
-offset_bottom = 177.0
+offset_right = 240.0
+offset_bottom = 149.0
 mouse_filter = 2
 
 [node name="Sun" type="Label" parent="Labels"]
@@ -359,7 +355,7 @@ offset_left = 9.0
 offset_top = 7.0
 offset_right = 65.0
 offset_bottom = 16.0
-theme = ExtResource("10_f5dyk")
+theme = ExtResource("10_xyw0q")
 text = "The Sun"
 
 [node name="SelectedLocation" type="Label" parent="Labels"]
@@ -384,7 +380,7 @@ offset_left = 25.0
 offset_top = 119.0
 offset_right = 169.0
 offset_bottom = 128.0
-theme = ExtResource("11_7fdqh")
+theme = ExtResource("11_wv0dr")
 text = "Planetary Systems."
 
 [node name="Planet" type="Label" parent="Labels"]
@@ -401,7 +397,7 @@ offset_left = 161.0
 offset_top = 7.0
 offset_right = 225.0
 offset_bottom = 16.0
-theme = ExtResource("11_7fdqh")
+theme = ExtResource("11_wv0dr")
 text = "The Moon"
 
 [node name="Deposits" type="Label" parent="Labels"]
@@ -410,7 +406,7 @@ offset_left = 97.0
 offset_top = 103.0
 offset_right = 161.0
 offset_bottom = 112.0
-theme = ExtResource("12_cpjyl")
+theme = ExtResource("12_j8rs2")
 text = "Deposits"
 
 [node name="Deposit00" type="Label" parent="Labels"]

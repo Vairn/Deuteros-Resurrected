@@ -23,7 +23,9 @@ namespace Deuteros.Code.Objects
             Production_Complete = 1;
         }
 
-        public bool Complete { get 
+        public bool Complete 
+        { 
+            get 
             {
                 return Production_Complete == 4;
             } 

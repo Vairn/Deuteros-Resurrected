@@ -19,6 +19,8 @@ namespace Deuteros.Code
 
         //The number of days since day 0
         public uint CurrentDay { get; set; }
+        public int IOSCount { get; set; }
+        public int SCGCount { get; set; }
 
         public Dictionary<Enums.ItemTypes, int> ResourceLevels_Survey_Multiplier { get; set; }
         public Dictionary<Enums.ItemTypes, int> ResourceRate_Per_Derrick { get; set; }
@@ -65,6 +67,9 @@ namespace Deuteros.Code
                 newGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
                 newGameData.Unlocks = new List<Enums.Game_Unlocks>();
                 newGameData.Ships = new List<IShip>();
+                newGameData.CurrentDay = 1;
+                newGameData.SCGCount = 0;
+                newGameData.IOSCount = 0;
 
                 #region ItemList
 
@@ -140,6 +145,7 @@ namespace Deuteros.Code
                 ofFrame.ItemType = Enums.ItemTypes.of_frame;
                 ofFrame.Mass = 250;
                 ofFrame.ToolPod = true;
+                ofFrame.ToolPodSingular = true;
 
                 ofFrame.Research = new ResearchItem(Enums.ItemTypes.of_frame, 6, 1);
                 ofFrame.Research.ResearchPercentageComplete = 1;
@@ -730,6 +736,7 @@ namespace Deuteros.Code
 
                 var mehFuel = new Item();
                 mehFuel.FullName = "MeH Fuel";
+                mehFuel.ShortName = "MeH";
                 mehFuel.ItemCategory = Enums.ItemCategory.resource;
                 mehFuel.ItemType = Enums.ItemTypes.meh_fuel;
                 mehFuel.Mass = 3;
@@ -749,6 +756,7 @@ namespace Deuteros.Code
 
                 var hedFuel = new Item();
                 hedFuel.FullName = "Helium Deuterium Fuel";
+                hedFuel.ShortName = "HeD";
                 hedFuel.ItemCategory = Enums.ItemCategory.resource;
                 hedFuel.ItemType = Enums.ItemTypes.hed_fuel;
                 hedFuel.Mass = 3;
@@ -874,7 +882,6 @@ namespace Deuteros.Code
                 });
 
                 newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
-                newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
 
                 var trainingData = new Objects.Training();
 

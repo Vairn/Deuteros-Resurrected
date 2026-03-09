@@ -103,7 +103,6 @@ offset_right = 175.0
 offset_bottom = 36.0
 theme = ExtResource("7_o4ukq")
 text = "Item Name Label"
-horizontal_alignment = 2
 
 [node name="TechLevelDataLabel" type="Label" parent="Labels"]
 anchors_preset = -1

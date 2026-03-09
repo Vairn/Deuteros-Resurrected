@@ -49,5 +49,38 @@ namespace Deuteros.Code.Objects
 
             return 0;
         }
+
+        public string GetLevelString()
+        {
+            if (Type == Enums.StaffType.Research)
+            {
+                if (ActionsTaken >= 6 && ActionsTaken < 9)
+                    return Enums.StaffLevel_Researcher.Doctor.ToScreenString();
+                else if (ActionsTaken >= 9)
+                    return Enums.StaffLevel_Researcher.Professor.ToScreenString();
+                else
+                    return Enums.StaffLevel_Researcher.Technician.ToScreenString();
+            }
+            else if (Type == Enums.StaffType.Production)
+            {
+                if (ActionsTaken >= 6 && ActionsTaken < 12)
+                    return Enums.StaffLevel_Production.Engineer.ToScreenString();
+                else if (ActionsTaken >= 12)
+                    return Enums.StaffLevel_Production.Expert.ToScreenString();
+                else
+                    return Enums.StaffLevel_Production.Apprentice.ToScreenString();
+            }
+            else if (Type == Enums.StaffType.Marines)
+            {
+                if (ActionsTaken >= 10 && ActionsTaken < 30)
+                    return Enums.StaffLevel_Marines.Captain.ToScreenString();
+                else if (ActionsTaken >= 30)
+                    return Enums.StaffLevel_Marines.Admiral.ToScreenString();
+                else
+                    return Enums.StaffLevel_Marines.Pilot.ToScreenString();
+            }
+
+            return "";
+        }
     }
 }

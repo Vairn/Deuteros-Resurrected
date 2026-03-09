@@ -18,5 +18,14 @@ namespace Deuteros.Code.Platform
             var MenuButtonImageTextureRect = GetNode<TextureRect>("Sprite");
             MenuButtonImageTextureRect = SpriteManager.LoadImageToTextureRect("Sprites/Buttons/MainMenu/" + buttonType.ToString() + ".png", MenuButtonImageTextureRect);
         }
+
+        public override void _Pressed()
+        {
+            if (ClickActions != null && ClickActions.Count > 0)
+                foreach (var item in ClickActions)
+                    item.Invoke();
+
+            base._Pressed();
+        }
     }
 }

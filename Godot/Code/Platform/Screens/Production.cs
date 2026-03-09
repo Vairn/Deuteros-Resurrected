@@ -78,6 +78,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void ProductionButton_Clicked(int index)
         {
+            //TODO Clicking a product you cannot build still somehow builds it - Not sure this is correct
             var clickedButton = Buttons.Single(T => T.ObjectData != null && T.ObjectData.Research.ResearchOrder == index);
 
             if (SelectedButton != null)
@@ -230,66 +231,67 @@ namespace Deuteros.Code.Platform.Screens
         {
             foreach (var planet in GameCore.SingletonInstance.GameData.Planets)
             {
+                var currentFactories = new List<Factory>() { planet.Value.Station.Factory };
                 var currentPlanet = (Planet)planet.Value;
-                Code.Objects.Factory currentFactory = null;
 
-                if (currentPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)currentPlanet).GroundSelected)
-                    currentFactory = ((Earth)currentPlanet).Factory;
-                else if (currentPlanet.Station.Built)
-                    currentFactory = currentPlanet.Station.Factory;
+                if (planet.Value.PlanetId == Enums.StellarBodies.earth)
+                    currentFactories.Add(((Earth)planet.Value).Factory);
 
-                if (currentFactory != null)
+                foreach (var currentFactory in currentFactories)
                 {
-                    currentFactory.IncrementCurrentProd();
-
-                    if (currentFactory.CurrentProductionItem() != null)
+                    if (currentFactory != null)
                     {
-                        //Production complete
-                        if (currentFactory.CurrentProductionItem().Complete)
+                        currentFactory.IncrementCurrentProd();
+
+                        if (currentFactory.CurrentProductionItem() != null)
                         {
-                            currentPlanet.AddItems(currentFactory.CurrentProductionItem().Product.ItemType, 1);
-
-                            currentFactory.Builder.ActionsTaken++;
-
-                            GameCore.SingletonInstance.TriggerProductionFinished(currentFactory);
-
-                            if (!currentFactory.AOC)
+                            //Production complete
+                            if (currentFactory.CurrentProductionItem().Complete)
                             {
-                                currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
-                            }
-                            else if (currentFactory.ProductionQueue.Any(T => T.AOCRepeat))
-                            {
-                                var currentResearchOrder = currentFactory.CurrentProductionItem().Product.Research.ResearchOrder;
+                                currentPlanet.AddItems(currentFactory.CurrentProductionItem().Product.ItemType, 1);
 
-                                if (currentFactory.CurrentProductionItem().AOCOneTime)
-                                    currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
+                                currentFactory.Builder.ActionsTaken++;
 
-                                if (currentFactory.ProductionQueue.Where(T => CheckResourceAvailable(currentPlanet, T.Product)).Count() > 0)
+                                GameCore.SingletonInstance.TriggerProductionFinished(currentFactory);
+
+                                if (!currentFactory.AOC)
                                 {
-                                    if (currentFactory.ProductionQueue.Any(T => T.Product.Research.ResearchOrder > currentResearchOrder))
-                                        currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product) && T.Product.Research.ResearchOrder > currentResearchOrder).First().Active = true;
-                                    else
-                                        currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product)).First().Active = true;
+                                    currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
+                                }
+                                else if (currentFactory.ProductionQueue.Any(T => T.AOCRepeat))
+                                {
+                                    var currentResearchOrder = currentFactory.CurrentProductionItem().Product.Research.ResearchOrder;
 
-                                    RemoveResourceByItem(currentPlanet, currentFactory.CurrentProductionItem().Product);
+                                    if (currentFactory.CurrentProductionItem().AOCOneTime)
+                                        currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
+
+                                    if (currentFactory.ProductionQueue.Where(T => CheckResourceAvailable(currentPlanet, T.Product)).Count() > 0)
+                                    {
+                                        if (currentFactory.ProductionQueue.Any(T => T.Product.Research.ResearchOrder > currentResearchOrder))
+                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product) && T.Product.Research.ResearchOrder > currentResearchOrder).First().Active = true;
+                                        else
+                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product)).First().Active = true;
+
+                                        RemoveResourceByItem(currentPlanet, currentFactory.CurrentProductionItem().Product);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    foreach (var autoProduced in GameCore.SingletonInstance.GameData.GetAllActiveItems().Where(T => T.AutoProduce))
-                    {
-                        if (CheckResourceAvailable(currentPlanet, autoProduced))
+                        foreach (var autoProduced in GameCore.SingletonInstance.GameData.GetAllActiveItems().Where(T => T.AutoProduce))
                         {
-                            if (autoProduced.AutoProduceFlip)
+                            if (CheckResourceAvailable(currentPlanet, autoProduced))
                             {
-                                autoProduced.AutoProduceFlip = false;
-                            }
-                            else
-                            {
-                                autoProduced.AutoProduceFlip = true;
-                                RemoveResourceByItem(currentPlanet, autoProduced);
-                                currentPlanet.AddItems(autoProduced.ItemType, 3);
+                                if (autoProduced.AutoProduceFlip)
+                                {
+                                    autoProduced.AutoProduceFlip = false;
+                                }
+                                else
+                                {
+                                    autoProduced.AutoProduceFlip = true;
+                                    RemoveResourceByItem(currentPlanet, autoProduced);
+                                    currentPlanet.AddItems(autoProduced.ItemType, 3);
+                                }
                             }
                         }
                     }

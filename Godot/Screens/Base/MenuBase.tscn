@@ -713,7 +713,7 @@ offset_left = 24.0
 offset_top = 0.0
 offset_right = 48.0
 offset_bottom = 16.0
-HoverText = "Advance Time"
+HoverText = "Master Control"
 
 [node name="MasterControlAnimation" type="AnimatedSprite2D" parent="Top/MasterControl"]
 z_index = 1
@@ -742,6 +742,7 @@ offset_bottom = 32.0
 flat = true
 script = ExtResource("20_b3go3")
 TargetScene = 11
+HoverText = "Deposit Analysis"
 
 [node name="DepositAnalysisAnimation" type="AnimatedSprite2D" parent="Top/DepositAnalysis"]
 z_index = 1

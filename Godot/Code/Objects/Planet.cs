@@ -77,7 +77,8 @@ namespace Deuteros.Code.Objects
                         int amountRemoved = (PlanetResources.Derricks * GameCore.SingletonInstance.GameData.ResourceRate_Per_Derrick[material.MaterialType]) * daysDifference;
                         material.GroundAmount -= amountRemoved;
 
-                        PlanetResources.Stores[material.MaterialType] += amountRemoved;
+                        if (PlanetResources.Stores[material.MaterialType] < 50000)
+                            PlanetResources.Stores[material.MaterialType] += amountRemoved;
                     }
                 }
             }

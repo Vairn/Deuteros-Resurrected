@@ -15,6 +15,9 @@ namespace Deuteros.Code.Platform.Screens
     {
         public const string StarMapSpriteBasePath = "res://Sprites//SceneSprites//Map//";
 
+        [Export]
+        public bool ShowResources { get; set; }
+
         public Control PlanetHolder { get; set; }
         public Control StarSystemHolder { get; set; }
         public Control StarMapHolder { get; set; }
@@ -22,6 +25,7 @@ namespace Deuteros.Code.Platform.Screens
         public TextureButton[] MoonButtons { get; set; } = new TextureButton[11];
         public Button[] PlanetButtons { get; set; } = new Button[11];
         public Button PlanetGoBack { get; set; }
+        public Button StarSystemGoBack { get; set; }
 
         public TextureRect Planet { get; set; }
         public TextureRect StarSystem { get; set; }
@@ -40,12 +44,6 @@ namespace Deuteros.Code.Platform.Screens
         public Enums.StellarBodies SelectedPlanet { get; set; }
         public Enums.StellarBodies SelectedMoon { get; set; }
 
-        public delegate void LocationChangedDelegate();
-        public event LocationChangedDelegate LocationChanged;
-
-        public delegate void MapClosedDelegate();
-        public event MapClosedDelegate MapClose;
-
         public Action PlanetGoBackAction { get; set; }
 
         public override void _Ready()
@@ -58,7 +56,9 @@ namespace Deuteros.Code.Platform.Screens
             StarSystem = GetNode<TextureRect>("StarSystemHolder/StarSystem");
 
             PlanetGoBack = GetNode<Button>("PlanetHolder/GoBack");
-            GetNode<Button>("StarSystemHolder/GoBack").Pressed += SelectStarGoBack_Pressed;
+            StarSystemGoBack = GetNode<Button>("StarSystemHolder/GoBack");
+
+            StarSystemGoBack.Pressed += SelectStarGoBack_Pressed;
 
             (GetNode<Button>("StarMapHolder/Buttons/The Sun")).Pressed += () => SelectStar_Pressed(Enums.StellarBodies.the_sun);
             (GetNode<Button>("StarMapHolder/Buttons/Proxima")).Pressed += () => SelectStar_Pressed(Enums.StellarBodies.proxima);
@@ -93,6 +93,15 @@ namespace Deuteros.Code.Platform.Screens
             for (int i = 0; i < PlanetButtons.Length; i++)
             {
                 PlanetButtons[i] = GetNode<Button>("StarSystemHolder/Planets/Planet" + i.ToString().PadLeft(2, '0'));
+            }
+
+            if (!ShowResources)
+            {
+                SelectedLocationLabel.Visible = false;
+                StarCountLabel.Visible = false;
+                StarSummaryLabel.Visible = false;
+                DepositLabels.ForEach(x => x.Visible = false);
+                DepositsLabel.Visible = false;
             }
 
             LoadMap(Enums.StellarBodies.none);
@@ -214,6 +223,8 @@ namespace Deuteros.Code.Platform.Screens
                 DepositLabels[i].Text = "";
             }
 
+            StarSystemGoBack.Visible = GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel);
+
             if (SelectedMoon != Enums.StellarBodies.none)
                 SelectedLocationLabel.Text = SelectedMoon.ToScreenString();
             else if (SelectedPlanet != Enums.StellarBodies.none)
@@ -232,7 +243,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 var starData = GameCore.SingletonInstance.GameData.Stars[SelectedStar];
 
-                StarCountLabel.Text = starData.PlanetDistanceList.Count.ToString();
+                StarCountLabel.Text = (starData.PlanetDistanceList.Count / 2).ToString();
                 StarSummaryLabel.Text = "Planetary Systems";
             }
             //This is a star
@@ -276,7 +287,7 @@ namespace Deuteros.Code.Platform.Screens
                 }
                 else
                 {
-                    StarCountLabel.Text = starData.PlanetDistanceList.Count.ToString();
+                    StarCountLabel.Text = (starData.PlanetDistanceList.Count / 2).ToString();
                     StarSummaryLabel.Text = "Planetary Systems";
                 }
             }
