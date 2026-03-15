@@ -27,11 +27,21 @@ texture = ExtResource("2_r8doo")
 expand_mode = 2
 stretch_mode = 1
 
+[node name="OpenShipInterior" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
+
 [node name="SpriteHolder" type="Control" parent="."]
 anchors_preset = 0
 offset_top = -4.0
 offset_right = 40.0
 offset_bottom = 36.0
+mouse_filter = 2
 
 [node name="Cockpit" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 0
@@ -39,6 +49,7 @@ offset_left = 96.0
 offset_top = 8.0
 offset_right = 192.0
 offset_bottom = 88.0
+mouse_filter = 2
 texture = ExtResource("1_jwcn5")
 
 [node name="CockpitNeck" type="TextureRect" parent="SpriteHolder"]
@@ -47,6 +58,7 @@ offset_left = 192.0
 offset_top = 30.0
 offset_right = 224.0
 offset_bottom = 78.0
+mouse_filter = 2
 texture = ExtResource("2_jpv4a")
 
 [node name="Support" type="TextureRect" parent="SpriteHolder"]
@@ -55,6 +67,7 @@ offset_left = 96.0
 offset_top = 88.0
 offset_right = 192.0
 offset_bottom = 120.0
+mouse_filter = 2
 texture = ExtResource("3_4kjy6")
 
 [node name="Labels" type="Control" parent="."]
@@ -62,6 +75,7 @@ anchors_preset = 0
 offset_top = -4.0
 offset_right = 40.0
 offset_bottom = 36.0
+mouse_filter = 2
 
 [node name="PilotName" type="Label" parent="Labels"]
 layout_mode = 0
@@ -76,6 +90,7 @@ Name"
 anchors_preset = 0
 offset_top = -4.0
 offset_bottom = -4.0
+mouse_filter = 2
 
 [node name="AddACC" type="TextureButton" parent="Buttons"]
 layout_mode = 0

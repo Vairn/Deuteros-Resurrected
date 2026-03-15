@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://c7hf45yhv86cn"]
+[gd_scene load_steps=7 format=3 uid="uid://c7hf45yhv86cn"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/Store.cs" id="1_arae6"]
 [ext_resource type="Texture2D" uid="uid://25ugvew1mldy" path="res://Sprites/Scenes/Store_Research.png" id="2_nu7uy"]
 [ext_resource type="Texture2D" uid="uid://c7knvkf0f66yw" path="res://Sprites/SceneSprites/Buttons.png" id="3_b2ash"]
 [ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont5.tres" id="3_jtic2"]
+[ext_resource type="PackedScene" uid="uid://oi1xywbqhsbj" path="res://PreFabs/Buttons/ProductionButton.tscn" id="4_60fa7"]
 [ext_resource type="Texture2D" uid="uid://dkbw3cav4cx2x" path="res://Sprites/Buttons/TypeSwitch.png" id="4_h5mjg"]
 
 [node name="Node2D" type="Node2D"]
@@ -26,21 +27,23 @@ offset_bottom = 157.0
 texture = ExtResource("3_b2ash")
 stretch_mode = 2
 
-[node name="StoreButtons" type="GridContainer" parent="ButtonsImage"]
-layout_mode = 0
-offset_left = 3.0
-offset_top = 3.0
-offset_right = 37.0
-offset_bottom = 131.0
+[node name="StoreButtons" type="GridContainer" parent="."]
+offset_left = 275.0
+offset_top = 27.0
+offset_right = 309.0
+offset_bottom = 155.0
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 columns = 2
 
+[node name="Button" parent="StoreButtons" instance=ExtResource("4_60fa7")]
+layout_mode = 2
+
 [node name="ResourceList" type="Label" parent="."]
 offset_left = 64.0
-offset_top = 29.0
+offset_top = 23.0
 offset_right = 155.0
-offset_bottom = 130.0
+offset_bottom = 124.0
 theme = ExtResource("3_jtic2")
 
 [node name="Recipe" type="Label" parent="."]

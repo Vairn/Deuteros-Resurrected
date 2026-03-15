@@ -72,19 +72,19 @@ namespace Deuteros.Code.Platform.Screens
             ProductionDoorAnimation.AnimationFinished += DoorAnimation_AnimationFinished;
             MarinesDoorAnimation.AnimationFinished += DoorAnimation_AnimationFinished;
 
-            if (GameCore.Earth.TrainingData.ResearcherLocked)
+            if (GameCore.Earth.TrainingData.ResearcherLocked && ResearchDoorAnimation.Animation != Closed_Animation_Name)
                 ResearchDoorAnimation.Play(Closed_Animation_Name);
-            else
+            else if (ResearchDoorAnimation.Animation != Open_Animation_Name)
                 ResearchDoorAnimation.Play(Open_Animation_Name);
 
-            if (GameCore.Earth.TrainingData.ProductionLocked)
+            if (GameCore.Earth.TrainingData.ProductionLocked && ProductionDoorAnimation.Animation != Closed_Animation_Name)
                 ProductionDoorAnimation.Play(Closed_Animation_Name);
-            else
+            else if (ProductionDoorAnimation.Animation != Open_Animation_Name)
                 ProductionDoorAnimation.Play(Open_Animation_Name);
 
-            if (GameCore.Earth.TrainingData.MarinesLocked)
+            if (GameCore.Earth.TrainingData.MarinesLocked && MarinesDoorAnimation.Animation != Closed_Animation_Name)
                 MarinesDoorAnimation.Play(Closed_Animation_Name);
-            else
+            else if (MarinesDoorAnimation.Animation != Open_Animation_Name)
                 MarinesDoorAnimation.Play(Open_Animation_Name);
 
             ButtonSound = (AudioStream)ResourceLoader.Load("res://Sounds/Button/sTrainingRoom_Button.wav");
@@ -92,6 +92,8 @@ namespace Deuteros.Code.Platform.Screens
 
             DoorButtonSound = this.GetNode<AudioStreamPlayer>("SoundPlayer");
             DoorButtonSound.Stream = ButtonSound;
+
+            DrawData();
         }
 
         private void DoorAnimation_AnimationFinished()
@@ -117,13 +119,12 @@ namespace Deuteros.Code.Platform.Screens
         // Called every update.
         public override void _Draw()
         {
-            DrawData();
         }
 
         //Triggered from gamecore
         protected override async void DayTick(uint currentDay, uint nextDay)
         {
-            QueueRedraw();
+            DrawData();
         }
 
         public async void DrawData()
@@ -181,7 +182,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!ResearchButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
 
         public void ResearchPlusButton_Pressed()
@@ -201,7 +202,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!ResearchButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
 
         public void ProductionMinusButton_Pressed()
@@ -214,7 +215,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!ProductionButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
 
         public void ProductionPlusButton_Pressed()
@@ -229,7 +230,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!ProductionButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
 
         public void MarinesMinusButton_Pressed()
@@ -243,7 +244,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!MarinesButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
 
         public void MarinesPlusButton_Pressed()
@@ -257,7 +258,7 @@ namespace Deuteros.Code.Platform.Screens
             if (!MarinesButtons.Any(T => T.IsRepeating))
                 DoorButtonSound.Play();
 
-            QueueRedraw();
+            DrawData();
         }
     }
 }

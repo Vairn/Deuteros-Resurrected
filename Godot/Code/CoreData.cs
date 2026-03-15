@@ -82,11 +82,11 @@ namespace Deuteros.Code
                 derrick.ItemCategory = Enums.ItemCategory.item;
                 derrick.ItemType = Enums.ItemTypes.derrick;
                 derrick.Mass = 8;
-                derrick.Locked = false;
                 derrick.ToolPod = true;
 
                 derrick.Research = new ResearchItem(Enums.ItemTypes.derrick, 2, 1);
                 derrick.Research.Researched = true;
+                derrick.Research.Locked = false;
                 derrick.Research.ResearchPercentageComplete = 100;
                 derrick.Research.ResearchOrder = 1;
 
@@ -106,7 +106,7 @@ namespace Deuteros.Code
                 shuttlechas.Mass = 130;
 
                 shuttlechas.Research = new ResearchItem(Enums.ItemTypes.s_chassis, 3, 1);
-                shuttlechas.Research.ResearchPercentageComplete = 1;
+                shuttlechas.Research.Locked = false;
 
                 shuttlechas.Locked = true;
                 shuttlechas.OrbitOnly = false;
@@ -126,7 +126,7 @@ namespace Deuteros.Code
                 shuttledrive.Mass = 20;
 
                 shuttledrive.Research = new ResearchItem(Enums.ItemTypes.s_drive, 4, 1);
-                shuttledrive.Research.ResearchPercentageComplete = 1;
+                shuttledrive.Research.Locked = false;
                 shuttledrive.Research.ResearchMultiplier = 32;
                 shuttledrive.Research.ResearchValue = 96;
 
@@ -148,7 +148,7 @@ namespace Deuteros.Code
                 ofFrame.ToolPodSingular = true;
 
                 ofFrame.Research = new ResearchItem(Enums.ItemTypes.of_frame, 6, 1);
-                ofFrame.Research.ResearchPercentageComplete = 1;
+                ofFrame.Research.Locked = false;
 
                 ofFrame.Locked = true;
                 ofFrame.OrbitOnly = false;
@@ -168,7 +168,7 @@ namespace Deuteros.Code
                 toolPod.Mass = 4;
 
                 toolPod.Research = new ResearchItem(Enums.ItemTypes.tool_pod, 7, 1);
-                toolPod.Research.ResearchPercentageComplete = 1;
+                toolPod.Research.Locked = false;
 
                 toolPod.Locked = true;
                 toolPod.OrbitOnly = false;
@@ -186,7 +186,7 @@ namespace Deuteros.Code
                 supplyPod.Mass = 4;
 
                 supplyPod.Research = new ResearchItem(Enums.ItemTypes.supply_pod, 8, 1);
-                supplyPod.Research.ResearchPercentageComplete = 1;
+                supplyPod.Research.Locked = false;
 
                 supplyPod.Locked = true;
                 supplyPod.OrbitOnly = false;
@@ -204,7 +204,7 @@ namespace Deuteros.Code
                 cryoPod.Mass = 4;
 
                 cryoPod.Research = new ResearchItem(Enums.ItemTypes.cryo_pod, 9, 1);
-                cryoPod.Research.ResearchPercentageComplete = 1;
+                cryoPod.Research.Locked = false;
 
                 cryoPod.Locked = true;
                 cryoPod.OrbitOnly = false;
@@ -627,6 +627,7 @@ namespace Deuteros.Code
                 Iron.ItemCategory = Enums.ItemCategory.resource;
                 Iron.ItemType = Enums.ItemTypes.iron;
                 Iron.Mass = 1;
+                Iron.Production = false;
 
                 newGameData.ItemList.Add(Iron);
 
@@ -635,6 +636,7 @@ namespace Deuteros.Code
                 Titanium.ItemCategory = Enums.ItemCategory.resource;
                 Titanium.ItemType = Enums.ItemTypes.titanium;
                 Titanium.Mass = 1;
+                Titanium.Production = false;
 
                 newGameData.ItemList.Add(Titanium);
 
@@ -643,6 +645,7 @@ namespace Deuteros.Code
                 Aluminium.ItemCategory = Enums.ItemCategory.resource;
                 Aluminium.ItemType = Enums.ItemTypes.aluminium;
                 Aluminium.Mass = 1;
+                Aluminium.Production = false;
 
                 newGameData.ItemList.Add(Aluminium);
 
@@ -651,6 +654,7 @@ namespace Deuteros.Code
                 Carbon.ItemCategory = Enums.ItemCategory.resource;
                 Carbon.ItemType = Enums.ItemTypes.carbon;
                 Carbon.Mass = 1;
+                Carbon.Production = false;
 
                 newGameData.ItemList.Add(Carbon);
 
@@ -659,6 +663,7 @@ namespace Deuteros.Code
                 Copper.ItemCategory = Enums.ItemCategory.resource;
                 Copper.ItemType = Enums.ItemTypes.copper;
                 Copper.Mass = 1;
+                Copper.Production = false;
 
                 newGameData.ItemList.Add(Copper);
 
@@ -667,6 +672,7 @@ namespace Deuteros.Code
                 Hydrogen.ItemCategory = Enums.ItemCategory.resource;
                 Hydrogen.ItemType = Enums.ItemTypes.hydrogen;
                 Hydrogen.Mass = 1;
+                Hydrogen.Production = false;
 
                 newGameData.ItemList.Add(Hydrogen);
 
@@ -675,6 +681,7 @@ namespace Deuteros.Code
                 Deuterium.ItemCategory = Enums.ItemCategory.resource;
                 Deuterium.ItemType = Enums.ItemTypes.deuterium;
                 Deuterium.Mass = 1;
+                Deuterium.Production = false;
 
                 newGameData.ItemList.Add(Deuterium);
 
@@ -683,6 +690,7 @@ namespace Deuteros.Code
                 Methane.ItemCategory = Enums.ItemCategory.resource;
                 Methane.ItemType = Enums.ItemTypes.methane;
                 Methane.Mass = 1;
+                Methane.Production = false;
 
                 newGameData.ItemList.Add(Methane);
 
@@ -691,6 +699,7 @@ namespace Deuteros.Code
                 Helium.ItemCategory = Enums.ItemCategory.resource;
                 Helium.ItemType = Enums.ItemTypes.helium;
                 Helium.Mass = 1;
+                Helium.Production = false;
 
                 newGameData.ItemList.Add(Helium);
 
@@ -699,6 +708,7 @@ namespace Deuteros.Code
                 Paladium.ItemCategory = Enums.ItemCategory.resource;
                 Paladium.ItemType = Enums.ItemTypes.paladium;
                 Paladium.Mass = 1;
+                Paladium.Production = false;
 
                 newGameData.ItemList.Add(Paladium);
 
@@ -707,6 +717,7 @@ namespace Deuteros.Code
                 Platinum.ItemCategory = Enums.ItemCategory.resource;
                 Platinum.ItemType = Enums.ItemTypes.platinum;
                 Platinum.Mass = 1;
+                Platinum.Production = false;
 
                 newGameData.ItemList.Add(Platinum);
 
@@ -715,6 +726,7 @@ namespace Deuteros.Code
                 Silver.ItemCategory = Enums.ItemCategory.resource;
                 Silver.ItemType = Enums.ItemTypes.silver;
                 Silver.Mass = 1;
+                Silver.Production = false;
 
                 newGameData.ItemList.Add(Silver);
 
@@ -723,6 +735,7 @@ namespace Deuteros.Code
                 Gold.ItemCategory = Enums.ItemCategory.resource;
                 Gold.ItemType = Enums.ItemTypes.gold;
                 Gold.Mass = 1;
+                Gold.Production = false;
 
                 newGameData.ItemList.Add(Gold);
 
@@ -731,6 +744,7 @@ namespace Deuteros.Code
                 Silica.ItemCategory = Enums.ItemCategory.resource;
                 Silica.ItemType = Enums.ItemTypes.silica;
                 Silica.Mass = 1;
+                Silica.Production = false;
 
                 newGameData.ItemList.Add(Silica);
 
@@ -740,11 +754,11 @@ namespace Deuteros.Code
                 mehFuel.ItemCategory = Enums.ItemCategory.resource;
                 mehFuel.ItemType = Enums.ItemTypes.meh_fuel;
                 mehFuel.Mass = 3;
-                mehFuel.Production = true;
+                mehFuel.Production = false;
                 mehFuel.AutoProduce = true;
 
                 mehFuel.Research = new ResearchItem(Enums.ItemTypes.meh_fuel, 5, 1);
-                mehFuel.Research.ResearchPercentageComplete = 1;
+                mehFuel.Research.Locked = false;
 
                 mehFuel.Locked = false;
                 mehFuel.OrbitOnly = false;
@@ -760,7 +774,7 @@ namespace Deuteros.Code
                 hedFuel.ItemCategory = Enums.ItemCategory.resource;
                 hedFuel.ItemType = Enums.ItemTypes.hed_fuel;
                 hedFuel.Mass = 3;
-                hedFuel.Production = true;
+                hedFuel.Production = false;
                 hedFuel.AutoProduce = true;
 
                 hedFuel.Research = new ResearchItem(Enums.ItemTypes.hed_fuel, 15, 3);
@@ -860,6 +874,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
+                //TODO - Earth must be ordered as 0, but the order affects map layout.
                 newGameData.Planets.Add(Enums.StellarBodies.earth, new Objects.Earth(Enums.StellarBodies.earth, 2)
                 {
                     IsMoon = false,
@@ -881,6 +896,8 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
+                //Special Earth setup for a new game
+                ((Earth)newGameData.Planets[StellarBodies.earth]).Factory.Ground = true;
                 newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
 
                 var trainingData = new Objects.Training();

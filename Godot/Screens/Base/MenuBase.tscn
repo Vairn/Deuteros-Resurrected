@@ -687,6 +687,7 @@ offset_left = 1.0
 offset_top = 49.0
 offset_right = 25.0
 offset_bottom = 65.0
+SceneVariables = [100]
 HoverText = "Earth City"
 
 [node name="EarthAnimation" type="AnimatedSprite2D" parent="Top/Earth"]

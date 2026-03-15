@@ -68,7 +68,10 @@ animations = [{
 "name": &"Static_Green",
 "speed": 5.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
 "loop": false,
 "name": &"Static_Locked",
 "speed": 5.0
@@ -127,4 +130,4 @@ script = ExtResource("1_dk6cx")
 [node name="ButtonSpriteAnimation" type="AnimatedSprite2D" parent="."]
 position = Vector2(8, 4)
 sprite_frames = SubResource("SpriteFrames_2se6l")
-animation = &"Static_Red"
+animation = &"Static_Locked"

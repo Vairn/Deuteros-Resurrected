@@ -28,7 +28,10 @@ namespace Deuteros.Code.Utility
             var createdButtons = new List<ButtonType>();
 
             foreach (Node child in researchButtonControl.GetChildren())
+            {
+                researchButtonControl.RemoveChild(child);
                 child.QueueFree();
+            }
 
             for (var i = 1; i <= 16; i++)
             {

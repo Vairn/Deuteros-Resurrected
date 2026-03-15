@@ -33,14 +33,9 @@ namespace Deuteros.Code.Platform.Screens
 
             SelectedButton = null;
 
-            StoreButtonsNode = GetNode<GridContainer>("ButtonsImage/StoreButtons");
+            StoreButtonsNode = GetNode<GridContainer>("StoreButtons");
 
-            Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
-                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
-                this,
-                nameof(StoreButton_Clicked),
-                "/Code/Platform/StoreButton.cs",
-                "StoreButton");
+            RefreshButtons();
 
             DrawData();
 
@@ -66,33 +61,58 @@ namespace Deuteros.Code.Platform.Screens
         private void SwitchStoreType_ButtonUp()
         {
             ViewTypeToggle = !ViewTypeToggle;
-            QueueRedraw();
+
+            DrawData();
+        }
+
+        protected override void ResearchFinished(Objects.ResearchItem researchItem)
+        {
+            Item selectedItem = null;
+
+            if (SelectedButton != null)
+                selectedItem = SelectedButton.ObjectData;
+
+            RefreshButtons();
+
+            if (selectedItem != null)
+            {
+                SelectedButton = Buttons.Single(T => T.ObjectData != null && T.ObjectData.ItemType == selectedItem.ItemType);
+                SelectedButton.Selected = true;
+            }
+
+            DrawData();
+        }
+
+        public void RefreshButtons()
+        {
+            Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
+                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
+                this,
+                nameof(StoreButton_Clicked),
+                "/Code/Platform/StoreButton.cs",
+                "StoreButton");
         }
 
         // Called every update.
         public override void _Draw()
+        {
+        }
+
+        protected override void DayTick(uint currentDay, uint nextDay)
         {
             DrawData();
         }
 
         public void DrawData()
         {
-            if (GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count() > Buttons.Count())
-            {
-                Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
-                    GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
-                    this,
-                    nameof(StoreButton_Clicked),
-                    "/Platform/StoreButton.cs",
-                    "StoreButton");
-            }
-
             var currentPlanet = Deuteros.Code.GameCore.SingletonInstance.GetCurrentPlanet();
 
             ResourceListLabel.Text = "";
 
+            var currentStore = SceneVariables.Contains(Enums.SceneVariables.Ground) ? currentPlanet.PlanetResources.Stores : currentPlanet.Station.Resources.Stores;
+
             foreach (var item in GameCore.SingletonInstance.GameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
-                ResourceListLabel.Text += item.ItemType.ToScreenString() + " " + currentPlanet.PlanetResources.Stores[item.ItemType] + "\n";
+                ResourceListLabel.Text += item.ItemType.ToScreenString() + " " + currentStore[item.ItemType] + "\n";
 
             if (SelectedButton != null)
             {
@@ -102,7 +122,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 foreach (var material in recipeItem.BuildRequirements)
                 {
-                    var maxProd = currentPlanet.PlanetResources.Stores[material.ItemType] / material.ItemCount;
+                    var maxProd = currentStore[material.ItemType] / material.ItemCount;
                     if (maxProd < maxCount)
                         maxCount = maxProd;
                 }

@@ -13,7 +13,7 @@ namespace Deuteros.Code.Objects
         public int ResearchMultiplier { get; set; }
         public bool Researched { get; set; }
         public int Index { get; set; }
-        public bool Locked { get { return ResearchPercentageComplete == 0; }  }
+        public bool Locked { get; set; }
         public int TechLevel { get; set; }
         public int ResearchValue { get; set; }
         public int ResearchPercentageComplete { get; set; }
@@ -30,52 +30,8 @@ namespace Deuteros.Code.Objects
             ResearchMultiplier = 64;
             Researched = false;
             ResearchValue = 64;
-            ResearchPercentageComplete = 0;
-        }
-
-        public void UpdateResearch()
-        {
-            //If the item is researched, return 100
-            if (Researched)
-                return;
-
-            var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
-
-            //If the researchstaff is null, then the game has just started, do nothing
-            if (earth.ResearchStaff == null)
-                return;
-            else
-            {
-                var level = earth.ResearchStaff.GetLevel();
-                var teamSize = earth.ResearchStaff.Count;
-
-                int v = (teamSize << level) * ResearchMultiplier / 801;
-
-                if ((ResearchValue + v) > 255)
-                {
-                    ResearchValue = (ResearchValue + v) & 0xFF; // Overflow wraparound
-                    if (ResearchPercentageComplete < 100)
-                    {
-                        ResearchPercentageComplete += 11;
-                        if (ResearchPercentageComplete > 100)
-                            ResearchPercentageComplete = 100;
-                    }
-                }
-                else
-                {
-                    ResearchValue += v;
-                }
-
-                if (ResearchPercentageComplete == 100)
-                {
-                    Researched = true;
-                    ResearchOrder = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-                    GameCore.SingletonInstance.GameData.GetItem(ItemType).Locked = false;
-                    earth.ResearchStaff.ActionsTaken++;
-
-                    GameCore.SingletonInstance.TriggerResearchFinished(GameCore.SingletonInstance.GameData.GetItem(ItemType).Research);
-                }
-            }
+            ResearchPercentageComplete = 1;
+            Locked = true;
         }
     }
 }

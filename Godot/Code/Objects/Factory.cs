@@ -15,6 +15,7 @@ namespace Deuteros.Code.Objects
         public List<ProductionItem> ProductionQueue { get; set; }
         public Staff Builder { get; set; }
         public bool AOC { get; set; }
+        public bool Ground { get; set; }
 
         public Factory() 
         {

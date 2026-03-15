@@ -161,6 +161,8 @@ namespace Deuteros.Code.Platform.Screens
                 {
                     if (Ship.Modules[modulePressed].ItemStored == ItemTypes.of_frame && CurrentPlanet.Station.Built == false && Ship.Pilot != null)
                     {
+                        GameCore.LockScreen();
+
                         OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
                         Window.AddChild(OfFrameDeployScene);
                         OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
@@ -177,6 +179,10 @@ namespace Deuteros.Code.Platform.Screens
                         {
                             CurrentPlanet.Station.Built = true;
                         }
+
+                        GameCore.SingletonInstance.TriggerStationPiecePlaced(CurrentPlanet.PlanetId);
+
+                        GameCore.UnLockScreen();
 
                         UpdateState();
                     }
@@ -291,7 +297,7 @@ namespace Deuteros.Code.Platform.Screens
                 Status.Text = "Orbitting\n" + Ship.PlanetLocation;
 
             FuelValue.Text = Ship.Fuel.ToString();
-            PilotName.Text = Ship.Pilot == null ? "None" : Ship.Pilot.GetLevelString() + " " + Ship.Pilot.Leader;
+            PilotName.Text = Ship.Pilot == null ? "None" : Ship.Pilot.GetLevelString() + "\n" + Ship.Pilot.Leader;
             PilotCount.Text = Ship.Pilot == null ? "" : Ship.Pilot.Count.ToString();
 
             EngineStatusValue.RemoveThemeColorOverride("font_color");

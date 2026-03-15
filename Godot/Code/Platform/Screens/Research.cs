@@ -60,7 +60,7 @@ namespace Deuteros.Code.Platform.Screens
             SelectedButton = new ResearchButton();
 
             Buttons = Utility.Buttons.CreateButtons<ResearchButton, ResearchItem>(GetNode<GridContainer>("ResearchButtonGrid"),
-                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null).Select(T => T.Research).ToDictionary(obj => obj.Index),
+                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && !T.Research.Locked).Select(T => T.Research).ToDictionary(obj => obj.Index),
                 this,
                 nameof(ResearchButton_Clicked),
                 "/Code/Platform/ResearchButton.cs",
@@ -99,10 +99,10 @@ namespace Deuteros.Code.Platform.Screens
         //Triggered from gamecore
         protected override async void DayTick(uint currentDay, uint nextDay)
         {
-            UpdateResearch(true);
+            UpdateResearchButton(true);
         }
 
-        public void UpdateResearch(bool dayPassed)
+        public void UpdateResearchButton(bool dayPassed)
         {
             if (SelectedButton != null && SelectedButton.ObjectData != null)
             {
@@ -186,6 +186,57 @@ namespace Deuteros.Code.Platform.Screens
                     ProductionMaterialListLabel.Text = "";
                     ItemNotesLabel.Text = "";
                     ItemNotesDataLabel.Text = "";
+                }
+            }
+        }
+
+        public static void UpdateResearch(uint currentDay, uint nextDay)
+        {
+            var currentItem = GameCore.Earth.CurrentResearchItem;
+
+            if (currentItem != null)
+            {
+                //If the item is researched, return 100
+                if (currentItem.Researched)
+                    return;
+
+                var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
+
+                //If the researchstaff is null, then the game has just started, do nothing
+                if (earth.ResearchStaff == null)
+                    return;
+                else
+                {
+                    var level = earth.ResearchStaff.GetLevel();
+                    var teamSize = earth.ResearchStaff.Count;
+
+                    int v = (teamSize << level) * currentItem.ResearchMultiplier / 801;
+
+                    if ((currentItem.ResearchValue + v) > 255)
+                    {
+                        currentItem.ResearchValue = (currentItem.ResearchValue + v) & 0xFF; // Overflow wraparound
+                        if (currentItem.ResearchPercentageComplete < 100)
+                        {
+                            currentItem.ResearchPercentageComplete += 11;
+                            if (currentItem.ResearchPercentageComplete > 100)
+                                currentItem.ResearchPercentageComplete = 100;
+                        }
+                    }
+                    else
+                    {
+                        currentItem.ResearchValue += v;
+                    }
+
+                    if (currentItem.ResearchPercentageComplete == 100)
+                    {
+                        currentItem.Researched = true;
+                        currentItem.ResearchOrder = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+                        earth.ResearchStaff.ActionsTaken++;
+
+                        GameCore.SingletonInstance.GameData.GetItem(currentItem.ItemType).Locked = false;
+
+                        GameCore.SingletonInstance.TriggerResearchFinished(GameCore.SingletonInstance.GameData.GetItem(currentItem.ItemType).Research);
+                    }
                 }
             }
         }

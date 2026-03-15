@@ -116,7 +116,6 @@ offset_bottom = 168.0
 layout_mode = 0
 offset_right = 224.0
 offset_bottom = 116.0
-scroll_horizontal = 100
 horizontal_scroll_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ShipContainer/ScrollContainer2"]

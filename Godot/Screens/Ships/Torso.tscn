@@ -24,27 +24,44 @@ layout_mode = 0
 offset_left = -8.0
 offset_right = 224.0
 offset_bottom = 116.0
+mouse_filter = 2
 texture = ExtResource("2_05hcw")
 expand_mode = 2
 stretch_mode = 1
+
+[node name="OpenShipInterior" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 85.0
+offset_top = 101.0
+offset_right = 85.0
+offset_bottom = 101.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true
 
 [node name="SpriteHolder" type="Control" parent="."]
 anchors_preset = 0
 offset_top = -4.0
 offset_right = 40.0
 offset_bottom = 36.0
+mouse_filter = 2
 
 [node name="TorsoNeck" type="TextureRect" parent="SpriteHolder"]
 layout_mode = 0
 offset_top = 32.0
 offset_right = 224.0
 offset_bottom = 80.0
+mouse_filter = 2
 texture = ExtResource("1_taes7")
 
 [node name="Cargo" type="Control" parent="SpriteHolder"]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 
 [node name="Support" type="TextureRect" parent="SpriteHolder/Cargo"]
 layout_mode = 0
@@ -52,6 +69,7 @@ offset_left = 80.0
 offset_top = 88.0
 offset_right = 176.0
 offset_bottom = 120.0
+mouse_filter = 2
 texture = ExtResource("3_shqx2")
 stretch_mode = 2
 
@@ -61,12 +79,14 @@ offset_left = 80.0
 offset_top = 8.0
 offset_right = 176.0
 offset_bottom = 88.0
+mouse_filter = 2
 texture = ExtResource("5_r2v0k")
 
 [node name="Buttons" type="Control" parent="SpriteHolder"]
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 
 [node name="AddSupplyPod" type="TextureButton" parent="SpriteHolder/Buttons"]
 layout_mode = 0
@@ -103,6 +123,7 @@ flat = true
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 2
 
 [node name="Contents" type="Label" parent="SpriteHolder/Labels"]
 layout_mode = 0

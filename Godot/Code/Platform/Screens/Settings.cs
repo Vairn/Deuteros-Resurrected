@@ -40,6 +40,11 @@ public partial class Settings : Node2D
         var gameData = GameCore.SingletonInstance.GameData;
         var earth = (Earth)gameData.Planets[Enums.StellarBodies.earth];
         earth.Station.BuildParts = 7;
+
+        if (!GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.First_Station_Segment))
+        {
+            SkipToShuttles_Pressed();
+        }
     }
 
     private void SkipToShuttles_Pressed()
@@ -57,19 +62,30 @@ public partial class Settings : Node2D
         gameData.GetItem(Enums.ItemTypes.of_frame).Research.ResearchOrder = 5;
 
         var earth = (Earth)gameData.Planets[Enums.StellarBodies.earth];
-        earth.ResearchStaff = new Staff();
-        earth.ResearchStaff.Leader = "Von Braun";
-        earth.ResearchStaff.Count = 200;
-        earth.ResearchStaff.Type = Enums.StaffType.Research;
 
-        earth.Factory.Builder = new Staff();
-        earth.Factory.Builder.Leader = "Bob";
-        earth.Factory.Builder.Count = 200;
-        earth.Factory.Builder.Type = Enums.StaffType.Production;
+        if (earth.ResearchStaff == null || earth.ResearchStaff.Count == 0)
+        {
+            earth.ResearchStaff = new Staff();
+            earth.ResearchStaff.Leader = "Von Braun";
+            earth.ResearchStaff.Count = 200;
+            earth.ResearchStaff.Type = Enums.StaffType.Research;
+        }
+
+        if (earth.Factory.Builder == null || earth.Factory.Builder.Count == 0)
+        {
+            earth.Factory.Builder = new Staff();
+            earth.Factory.Builder.Leader = "Bob";
+            earth.Factory.Builder.Count = 200;
+            earth.Factory.Builder.Type = Enums.StaffType.Production;
+        }
+
         earth.PlanetResources.Derricks = 8;
         earth.PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
         earth.PlanetResources.Stores[Enums.ItemTypes.s_drive] = 1;
         earth.PlanetResources.Stores[Enums.ItemTypes.of_frame] = 8;
+
+        GameCore.SingletonInstance.TriggerUnlockAdded(Enums.Game_Unlocks.Shuttle_Unlock);
+        GameCore.SingletonInstance.TriggerUnlockAdded(Enums.Game_Unlocks.First_Station_Segment);
     }
 
     private void SoundToggle_ButtonUp()

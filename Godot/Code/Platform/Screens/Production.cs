@@ -66,7 +66,7 @@ namespace Deuteros.Code.Platform.Screens
                 CurrentFactory.Builder = null;
 
                 foreach (var item in CurrentFactory.ProductionQueue.Where(T => T.Active))
-                    AddResourceByItem(CurrentPlanet, item.Product);
+                    AddResourceByItem(CurrentPlanet, item.Product, Ground);
 
                 CurrentFactory.ClearQueue();
 
@@ -106,7 +106,7 @@ namespace Deuteros.Code.Platform.Screens
                 {
                     if (CurrentFactory.CurrentProductionItem() == null || CurrentFactory.CurrentProductionItem().Product.ItemType != addedItem.ItemType)
                     {
-                        if (CheckResourceAvailable(CurrentPlanet, addedItem))
+                        if (CheckResourceAvailable(CurrentPlanet, addedItem, Ground))
                         {
                             if (CurrentFactory.CurrentProductionItem() != null)
                             {
@@ -126,7 +126,7 @@ namespace Deuteros.Code.Platform.Screens
                                 newProdItem.Active = true;
                                 CurrentFactory.ProductionQueue.Add(newProdItem);
 
-                                RemoveResourceByItem(CurrentPlanet, addedItem);
+                                RemoveResourceByItem(CurrentPlanet, addedItem, Ground);
                             }
                         }
                     }
@@ -159,13 +159,26 @@ namespace Deuteros.Code.Platform.Screens
 
         protected override void ResearchFinished(Objects.ResearchItem researchItem)
         {
+            Item selectedItem = null;
+
+            if (SelectedButton != null)
+                selectedItem = SelectedButton.ObjectData;
+
             RefreshButtons();
+
+            if (selectedItem != null)
+            {
+                SelectedButton = Buttons.Single(T => T.ObjectData != null && T.ObjectData.ItemType == selectedItem.ItemType);
+                SelectedButton.Selected = true;
+            }
+
+            DrawData();
         }
 
         private void RefreshButtons()
         {
             Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
-            GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && T.Research != null && T.Research.Researched
+            GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && !T.Locked
             && (CurrentPlanet.PlanetId != Enums.StellarBodies.earth || !T.OrbitOnly)
             && !T.AutoProduce
             ).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
@@ -234,6 +247,7 @@ namespace Deuteros.Code.Platform.Screens
                 var currentFactories = new List<Factory>() { planet.Value.Station.Factory };
                 var currentPlanet = (Planet)planet.Value;
 
+                //TODO This is garbage code, make it better
                 if (planet.Value.PlanetId == Enums.StellarBodies.earth)
                     currentFactories.Add(((Earth)planet.Value).Factory);
 
@@ -265,14 +279,14 @@ namespace Deuteros.Code.Platform.Screens
                                     if (currentFactory.CurrentProductionItem().AOCOneTime)
                                         currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
 
-                                    if (currentFactory.ProductionQueue.Where(T => CheckResourceAvailable(currentPlanet, T.Product)).Count() > 0)
+                                    if (currentFactory.ProductionQueue.Where(T => CheckResourceAvailable(currentPlanet, T.Product, currentFactory.Ground)).Count() > 0)
                                     {
                                         if (currentFactory.ProductionQueue.Any(T => T.Product.Research.ResearchOrder > currentResearchOrder))
-                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product) && T.Product.Research.ResearchOrder > currentResearchOrder).First().Active = true;
+                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product, currentFactory.Ground) && T.Product.Research.ResearchOrder > currentResearchOrder).First().Active = true;
                                         else
-                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product)).First().Active = true;
+                                            currentFactory.ProductionQueue.OrderBy(T => T.Product.Research.ResearchOrder).Where(T => CheckResourceAvailable(currentPlanet, T.Product, currentFactory.Ground)).First().Active = true;
 
-                                        RemoveResourceByItem(currentPlanet, currentFactory.CurrentProductionItem().Product);
+                                        RemoveResourceByItem(currentPlanet, currentFactory.CurrentProductionItem().Product, currentFactory.Ground);
                                     }
                                 }
                             }
@@ -280,7 +294,7 @@ namespace Deuteros.Code.Platform.Screens
 
                         foreach (var autoProduced in GameCore.SingletonInstance.GameData.GetAllActiveItems().Where(T => T.AutoProduce))
                         {
-                            if (CheckResourceAvailable(currentPlanet, autoProduced))
+                            if (CheckResourceAvailable(currentPlanet, autoProduced, currentFactory.Ground))
                             {
                                 if (autoProduced.AutoProduceFlip)
                                 {
@@ -289,7 +303,7 @@ namespace Deuteros.Code.Platform.Screens
                                 else
                                 {
                                     autoProduced.AutoProduceFlip = true;
-                                    RemoveResourceByItem(currentPlanet, autoProduced);
+                                    RemoveResourceByItem(currentPlanet, autoProduced, currentFactory.Ground);
                                     currentPlanet.AddItems(autoProduced.ItemType, 3);
                                 }
                             }
@@ -299,11 +313,11 @@ namespace Deuteros.Code.Platform.Screens
             }
         }
 
-        public static bool CheckResourceAvailable(IPlanet productionPlanet, Item productionItem)
+        public static bool CheckResourceAvailable(IPlanet productionPlanet, Item productionItem, bool ground)
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ground)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
@@ -317,11 +331,11 @@ namespace Deuteros.Code.Platform.Screens
             return prodPossible;
         }
 
-        public static void RemoveResourceByItem(IPlanet productionPlanet, Item productionItem)
+        public static void RemoveResourceByItem(IPlanet productionPlanet, Item productionItem, bool ground)
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ground)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;
@@ -330,11 +344,11 @@ namespace Deuteros.Code.Platform.Screens
                 currentStore[material.ItemType] -= material.ItemCount;
         }
 
-        public static void AddResourceByItem(IPlanet productionPlanet, Item productionItem)
+        public static void AddResourceByItem(IPlanet productionPlanet, Item productionItem, bool ground)
         {
             Objects.Store currentStore;
 
-            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ((Earth)productionPlanet).GroundSelected)
+            if (productionPlanet.PlanetId == Enums.StellarBodies.earth && ground)
                 currentStore = ((Earth)productionPlanet).PlanetResources.Stores;
             else
                 currentStore = productionPlanet.Station.Resources.Stores;

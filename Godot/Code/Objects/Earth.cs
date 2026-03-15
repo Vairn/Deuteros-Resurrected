@@ -33,9 +33,6 @@ namespace Deuteros.Code.Objects
         public new void DayTick(uint currentDay, uint nextDay)
         {
             TrainingData.ChildDayTick(currentDay, nextDay);
-
-            if (CurrentResearchItem  != null)
-                CurrentResearchItem.UpdateResearch();
         }
     }
 }

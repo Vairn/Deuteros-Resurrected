@@ -119,6 +119,13 @@ namespace Deuteros.Code.Platform.Screens
             FuelInStock = GetNode<Label>("Fuel/InStock");
             FuelInShip = GetNode<Label>("Fuel/InShip");
 
+            CockpitInstance.GetNode<Button>("OpenShipInterior").Pressed += OpenShipInterior_Pressed;
+
+            foreach (var navTorso in TorsoInstances)
+                navTorso.GetNode<Button>("OpenShipInterior").Pressed += OpenShipInterior_Pressed;
+
+            EngineInstance.GetNode<Button>("OpenShipInterior").Pressed += OpenShipInterior_Pressed;
+
             CockpitInstance.StaffList.PilotChanged += CockpitInstance_PilotChanged;
             CockpitInstance.StaffList.ProductionChanged += CockpitInstance_ProductionChanged;
 
@@ -172,6 +179,17 @@ namespace Deuteros.Code.Platform.Screens
             RefreshButtons();
 
             base._Ready();
+        }
+
+        private void OpenShipInterior_Pressed()
+        {
+            GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
+
+            //Double underscores in scene names represent a flag to pass to the scene
+            var sceneNameSplit = Enums.Scenes.ShipInterior.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
+
+            //Underscores in scene names represent a folder
+            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", new List<SceneVariables>());
         }
 
         private void FuelGaugePlus_Pressed()
@@ -419,7 +437,11 @@ namespace Deuteros.Code.Platform.Screens
         {
             //Detect if there is a ship present
             ShipPresent = GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
-            ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
+            (
+            (T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle))
+            || (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship))
+            )
+            );
 
             CockpitInstance.UpdateStaff(Ground ? CurrentPlanet.PlanetResources.Staff : CurrentPlanet.Station.Resources.Staff);
             TorsoStaffList.UpdateStaff(Ground ? CurrentPlanet.PlanetResources.Staff : CurrentPlanet.Station.Resources.Staff);
@@ -471,7 +493,12 @@ namespace Deuteros.Code.Platform.Screens
                 EngineInstance.SpriteHolder.Visible = true;
 
                 Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
-                ((T.ShipType == Enums.Ship_Types.Shuttle && Ground) || (T.ShipType != Enums.Ship_Types.Shuttle && !Ground)));
+                (
+                (T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle))
+                || (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship)
+                )
+                )
+                );
 
                 FuelInShip.Text = Ship.Fuel.ToString();
                 FuelInStock.Text = Ground ? CurrentPlanet.PlanetResources.Stores[Ship.FuelType].ToString() : CurrentPlanet.Station.Resources.Stores[Ship.FuelType].ToString();
@@ -667,7 +694,6 @@ namespace Deuteros.Code.Platform.Screens
             var currentModule = Ship.Modules[torsoSection];
 
             var cursor = GetTree().CurrentScene.GetNode<GlobalInput>("VirtualCursorView");
-            Rect2 rect = new Rect2();
 
             if (currentModule.ModuleType == Enums.Module_Types.Supply)
             {
@@ -675,7 +701,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 CargoService.Visible = true;
 
-                rect = CargoService.GetGlobalRect();
+                cursor.LockToRect(CargoService.GetGlobalRect());
             }
             else if (currentModule.ModuleType == Enums.Module_Types.Tool)
             {
@@ -683,7 +709,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 EquipmentStock.Visible = true;
 
-                rect = EquipmentStock.GetGlobalRect();
+                cursor.LockToRect(EquipmentStock.GetGlobalRect());
             }
             else if (currentModule.ModuleType == Enums.Module_Types.Cryo)
             {
@@ -691,10 +717,8 @@ namespace Deuteros.Code.Platform.Screens
 
                 StaffList.Visible = true;
 
-                rect = StaffList.GetGlobalRect();
+                cursor.LockToRect(StaffList.GetGlobalRect());
             }
-
-            cursor.LockToRect(rect);
         }
 
         private void EngineInstance_EngineInstalled()

@@ -79,5 +79,5 @@ animations = [{
 
 [node name="DoorAnimation" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_tnxpv")
-animation = &"close"
+animation = &"open"
 centered = false

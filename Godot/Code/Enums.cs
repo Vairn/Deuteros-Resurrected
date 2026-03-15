@@ -350,6 +350,7 @@ namespace Deuteros.Code
 
         public enum Game_Unlocks
         {
+            First_Station_Segment,
             Shuttle_Unlock,
             Space_Stations,
             Interstellar_Travel

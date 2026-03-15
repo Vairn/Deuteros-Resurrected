@@ -11,6 +11,7 @@ using Deuteros.Code.Platform.Screens;
 using Deuteros.Code.Utility;
 using System.Diagnostics;
 using Deuteros.Code.Objects.Interfaces;
+using Deuteros.Code.Platform;
 
 namespace Deuteros.Code
 {
@@ -68,30 +69,29 @@ namespace Deuteros.Code
                 {
                     new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true,
                     new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground
-                    }, null),
-                    new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground
+                        Enums.SceneVariables.Orbit
                     }, null),
                     new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
                     new Godot.Collections.Array<Enums.SceneVariables>() {
                         Enums.SceneVariables.Orbit,
                         Enums.SceneVariables.Shuttle
                     }, null),
+                    new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
+                        new Godot.Collections.Array<Enums.SceneVariables>() {
+                            Enums.SceneVariables.Orbit
+                        }, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null),
+                    null,
+                    null,
+                    null,
+                    new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
+                    new Godot.Collections.Array<Enums.SceneVariables>() {
+                        Enums.SceneVariables.Orbit
+                    }, null),
                     new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
                     new Godot.Collections.Array<Enums.SceneVariables>() {
                         Enums.SceneVariables.Orbit,
                         Enums.SceneVariables.Ship
                     }, null),
-                    new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
-                        new Godot.Collections.Array<Enums.SceneVariables>() {
-                            Enums.SceneVariables.Ground
-                        }, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
-                        () => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock)),
-                    null,
-                    null,
-                    null,
                     null,
                     null,
                     null,
@@ -141,6 +141,7 @@ namespace Deuteros.Code
         private static GameCore _instance;
         private Node _currentScreen;
         private MainMenu _menuScreen;
+        private Unlocker _unlocker;
         private InputBlocker _screenLocker;
         private int _lockCount;
 
@@ -175,6 +176,9 @@ namespace Deuteros.Code
         public delegate void PlanetChangedDelegate(Objects.Interfaces.IPlanet newPlanet);
         public event PlanetChangedDelegate PlanetChanged;
 
+        public delegate void StationPiecePlacedDelegate(Enums.StellarBodies stellarBody);
+        public event StationPiecePlacedDelegate StationPiecePlaced;
+
         public delegate void ProductionFinishedDelegate(Objects.Factory factory);
         public event ProductionFinishedDelegate ProductionFinished;
 
@@ -202,6 +206,8 @@ namespace Deuteros.Code
             if (_instance == null)
                 _instance = this;
 
+            _unlocker = new Unlocker();
+
             SpriteManager.ImageCache = new Godot.Collections.Dictionary<string, Texture2D>();
 
             GameData = CoreData.CreateNewGameFile();
@@ -210,6 +216,7 @@ namespace Deuteros.Code
 
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ShipInterior.UpdateShips;
+            Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Research.UpdateResearch;
 
             Input.MouseMode = Input.MouseModeEnum.Hidden;
 
@@ -226,6 +233,11 @@ namespace Deuteros.Code
             PlanetChanged?.Invoke(newPlanet);
         }
 
+        public void TriggerStationPiecePlaced(Enums.StellarBodies stellarBody)
+        {
+            StationPiecePlaced?.Invoke(stellarBody);
+        }
+
         public void TriggerProductionFinished(Objects.Factory factory)
         {
             ProductionFinished?.Invoke(factory);
@@ -238,15 +250,6 @@ namespace Deuteros.Code
 
         public void TriggerShipCreated(IShip ship)
         {
-            //TODO remove this, we need an unlock unlock system
-            if (ship.ShipType == Enums.Ship_Types.Shuttle && !GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
-            {
-                GameData.Unlocks.Add(Enums.Game_Unlocks.Shuttle_Unlock);
-
-                TriggerUnlockAdded(Enums.Game_Unlocks.Shuttle_Unlock);
-            }
-                
-
             ShipCreated?.Invoke(ship);
         }
 
