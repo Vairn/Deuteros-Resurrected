@@ -39,17 +39,17 @@ namespace Deuteros.Code.Objects
         public double ReferenceCost { get { return ReferenceTeamSize * ReferenceLevelMultiplier * ReferenceDuration; } }
 
         //Called from Earth
-        public void ChildDayTick(uint currentDay, uint nextDay)
+        public void ChildDayTick(uint previousDay, uint currentDay)
         {
             var earth = GameCore.GetPlanet<Earth>(Enums.StellarBodies.earth);
 
             if (!GameCore.Earth.TrainingData.ResearcherLocked && GameCore.Earth.TrainingData.ResearcherTrainingCount > 0)
             {
                 GameCore.Earth.TrainingData.ResearcherLocked = true;
-                GameCore.Earth.TrainingData.ResearcherDayStart = currentDay;
+                GameCore.Earth.TrainingData.ResearcherDayStart = previousDay;
 
             }
-            else if (GameCore.Earth.TrainingData.ResearcherLocked && (currentDay - GameCore.Earth.TrainingData.ResearcherDayStart) > GameCore.Earth.TrainingData.ResearcherTrainingTime)
+            else if (GameCore.Earth.TrainingData.ResearcherLocked && (currentDay - GameCore.Earth.TrainingData.ResearcherDayStart) >= GameCore.Earth.TrainingData.ResearcherTrainingTime)
             {
                 GameCore.Earth.TrainingData.ResearcherLocked = false;
 
@@ -72,9 +72,9 @@ namespace Deuteros.Code.Objects
             if (!GameCore.Earth.TrainingData.ProductionLocked && GameCore.Earth.TrainingData.ProductionTrainingCount > 0)
             {
                 GameCore.Earth.TrainingData.ProductionLocked = true;
-                GameCore.Earth.TrainingData.ProductionDayStart = currentDay;
+                GameCore.Earth.TrainingData.ProductionDayStart = previousDay;
             }
-            else if (GameCore.Earth.TrainingData.ProductionLocked && (currentDay - GameCore.Earth.TrainingData.ProductionDayStart) > GameCore.Earth.TrainingData.ProductionTrainingTime)
+            else if (GameCore.Earth.TrainingData.ProductionLocked && (currentDay - GameCore.Earth.TrainingData.ProductionDayStart) >= GameCore.Earth.TrainingData.ProductionTrainingTime)
             {
                 GameCore.Earth.TrainingData.ProductionLocked = false;
 
@@ -99,9 +99,9 @@ namespace Deuteros.Code.Objects
             if (!GameCore.Earth.TrainingData.MarinesLocked && GameCore.Earth.TrainingData.MarinesTrainingCount > 0)
             {
                 GameCore.Earth.TrainingData.MarinesLocked = true;
-                GameCore.Earth.TrainingData.MarinesDayStart = currentDay;
+                GameCore.Earth.TrainingData.MarinesDayStart = previousDay;
             }
-            else if (GameCore.Earth.TrainingData.MarinesLocked && (currentDay - GameCore.Earth.TrainingData.MarinesDayStart) > GameCore.Earth.TrainingData.MarinesTrainingTime)
+            else if (GameCore.Earth.TrainingData.MarinesLocked && (currentDay - GameCore.Earth.TrainingData.MarinesDayStart) >= GameCore.Earth.TrainingData.MarinesTrainingTime)
             {
                 //Only produce marines if we have space for them
                 if (GameCore.Earth.PlanetResources.Staff.Any(T => T == null))

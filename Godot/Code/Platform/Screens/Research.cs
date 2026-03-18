@@ -97,7 +97,7 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override async void DayTick(uint currentDay, uint nextDay)
+        protected override async void DayTick(uint previousDay, uint currentDay)
         {
             UpdateResearchButton(true);
         }
@@ -190,7 +190,7 @@ namespace Deuteros.Code.Platform.Screens
             }
         }
 
-        public static void UpdateResearch(uint currentDay, uint nextDay)
+        public static void UpdateResearch(uint previousDay, uint currentDay)
         {
             var currentItem = GameCore.Earth.CurrentResearchItem;
 

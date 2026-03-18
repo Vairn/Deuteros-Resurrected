@@ -19,7 +19,7 @@ namespace Deuteros.Code.Objects
         public ProductionItem(Item product) 
         {
             Product = product;
-            Object_Multiplier = 1;
+            Object_Multiplier = product.Research.ResearchMultiplier;
             Production_Complete = 1;
         }
 

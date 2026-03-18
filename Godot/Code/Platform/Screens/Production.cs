@@ -110,7 +110,7 @@ namespace Deuteros.Code.Platform.Screens
                         {
                             if (CurrentFactory.CurrentProductionItem() != null)
                             {
-                                CurrentFactory.CurrentProductionItem().Production_Value = 1;
+                                CurrentFactory.CurrentProductionItem().Production_Value = CurrentFactory.CurrentProductionItem().Product.Research.ResearchValue;
                                 CurrentFactory.CurrentProductionItem().Active = false;
                             }
 
@@ -124,6 +124,7 @@ namespace Deuteros.Code.Platform.Screens
                                 newProdItem.AOCOneTime = false;
                                 newProdItem.AOCRepeat = false;
                                 newProdItem.Active = true;
+                                newProdItem.Production_Value = addedItem.Research.ResearchValue;
                                 CurrentFactory.ProductionQueue.Add(newProdItem);
 
                                 RemoveResourceByItem(CurrentPlanet, addedItem, Ground);
@@ -140,6 +141,7 @@ namespace Deuteros.Code.Platform.Screens
                         var newProdItem = new ProductionItem(addedItem);
                         newProdItem.AOCOneTime = true;
                         newProdItem.AOCRepeat = false;
+                        newProdItem.Production_Value = addedItem.Research.ResearchValue;
 
                         CurrentFactory.ProductionQueue.Add(newProdItem);
                     }
@@ -195,7 +197,7 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override void DayTick(uint currentDay, uint nextDay)
+        protected override void DayTick(uint previousDay, uint currentDay)
         {
             CheckProductionStart();
 
@@ -214,7 +216,7 @@ namespace Deuteros.Code.Platform.Screens
             {
                 StaffCountLabel.Text = CurrentFactory.Builder.Count.ToString();
                 StaffNameLabel.Text = CurrentFactory.Builder.Leader;
-                StaffRankLabel.Text = CurrentFactory.Builder.ActionsTaken.ToString();
+                StaffRankLabel.Text = ((Enums.StaffLevel_Production)CurrentFactory.Builder.GetLevel()).ToString();
             }
             else
             {
@@ -240,7 +242,7 @@ namespace Deuteros.Code.Platform.Screens
 
         #region Statics
 
-        public static void UpdateProduction(uint currentDay, uint nextDay)
+        public static void UpdateProduction(uint previousDay, uint currentDay)
         {
             foreach (var planet in GameCore.SingletonInstance.GameData.Planets)
             {

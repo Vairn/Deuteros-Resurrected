@@ -45,12 +45,12 @@ namespace Deuteros.Code.Objects
         }
 
         //Triggered from gamecore
-        public void DayTick(uint currentDay, uint nextDay)
+        public void DayTick(uint previousDay, uint currentDay)
         {
-            int daysDifference = (int)Math.Floor((decimal)(nextDay - currentDay));
+            int daysDifference = (int)Math.Floor((decimal)(currentDay - previousDay));
 
             //TODO This isn't right - We need to mine every other day, but mining can start on any day - Or can it?
-            if (PlanetId == Enums.StellarBodies.earth && nextDay % 2 != 0)
+            if (PlanetId == Enums.StellarBodies.earth && currentDay % 2 != 0)
             {
                 return;
             }

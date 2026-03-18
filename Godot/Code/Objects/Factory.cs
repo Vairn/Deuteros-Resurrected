@@ -34,7 +34,7 @@ namespace Deuteros.Code.Objects
             {
                 var VRatio = 0;
 
-                if (AOC)
+                if (!AOC)
                     VRatio = (Builder.Count << Builder.GetLevel()) * currentProductionItem.Object_Multiplier / 801;
                 else
                     VRatio = 128;

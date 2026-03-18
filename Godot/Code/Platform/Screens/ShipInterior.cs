@@ -480,14 +480,14 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override void DayTick(uint currentDay, uint nextDay)
+        protected override void DayTick(uint previousDay, uint currentDay)
         {
             UpdateState();
         }
 
         #region Statics
 
-        public static void UpdateShips(uint currentDay, uint nextDay)
+        public static void UpdateShips(uint previousDay, uint currentDay)
         {
             foreach (var ship in GameCore.SingletonInstance.GameData.Ships)
             {
