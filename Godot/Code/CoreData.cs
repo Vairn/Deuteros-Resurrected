@@ -67,7 +67,7 @@ namespace Deuteros.Code
                 newGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
                 newGameData.Unlocks = new List<Enums.Game_Unlocks>();
                 newGameData.Ships = new List<IShip>();
-                newGameData.CurrentDay = 1;
+                newGameData.CurrentDay = 0;
                 newGameData.SCGCount = 0;
                 newGameData.IOSCount = 0;
 
@@ -127,8 +127,8 @@ namespace Deuteros.Code
 
                 shuttledrive.Research = new ResearchItem(Enums.ItemTypes.s_drive, 4, 1);
                 shuttledrive.Research.Locked = false;
-                shuttledrive.Research.ResearchMultiplier = 32;
-                shuttledrive.Research.ResearchValue = 96;
+                shuttledrive.Research.ResearchMultiplier = 96;
+                shuttledrive.Research.ResearchValue = 32;
 
                 shuttledrive.Locked = true;
                 shuttledrive.OrbitOnly = false;
@@ -161,31 +161,13 @@ namespace Deuteros.Code
 
                 newGameData.ItemList.Add(ofFrame);
 
-                var toolPod = new Item();
-                toolPod.FullName = "Tool and Equipment Mounting";
-                toolPod.ItemCategory = Enums.ItemCategory.item;
-                toolPod.ItemType = Enums.ItemTypes.tool_pod;
-                toolPod.Mass = 4;
-
-                toolPod.Research = new ResearchItem(Enums.ItemTypes.tool_pod, 7, 1);
-                toolPod.Research.Locked = false;
-
-                toolPod.Locked = true;
-                toolPod.OrbitOnly = false;
-                toolPod.BuildRequirements = new List<BuildRequirement>();
-                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 2));
-                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
-                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
-
-                newGameData.ItemList.Add(toolPod);
-
                 var supplyPod = new Item();
                 supplyPod.FullName = "Supply Pod";
                 supplyPod.ItemCategory = Enums.ItemCategory.item;
                 supplyPod.ItemType = Enums.ItemTypes.supply_pod;
                 supplyPod.Mass = 4;
 
-                supplyPod.Research = new ResearchItem(Enums.ItemTypes.supply_pod, 8, 1);
+                supplyPod.Research = new ResearchItem(Enums.ItemTypes.supply_pod, 7, 1);
                 supplyPod.Research.Locked = false;
 
                 supplyPod.Locked = true;
@@ -196,6 +178,24 @@ namespace Deuteros.Code
                 supplyPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
                 newGameData.ItemList.Add(supplyPod);
+
+                var toolPod = new Item();
+                toolPod.FullName = "Tool and Equipment Mounting";
+                toolPod.ItemCategory = Enums.ItemCategory.item;
+                toolPod.ItemType = Enums.ItemTypes.tool_pod;
+                toolPod.Mass = 4;
+
+                toolPod.Research = new ResearchItem(Enums.ItemTypes.tool_pod, 8, 1);
+                toolPod.Research.Locked = false;
+
+                toolPod.Locked = true;
+                toolPod.OrbitOnly = false;
+                toolPod.BuildRequirements = new List<BuildRequirement>();
+                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 2));
+                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
+                toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
+
+                newGameData.ItemList.Add(toolPod);
 
                 var cryoPod = new Item();
                 cryoPod.FullName = "Cryogenic Holding Pod";
@@ -601,12 +601,14 @@ namespace Deuteros.Code
                 SonicBlaster.FullName = "Sonic Blaster";
                 SonicBlaster.ItemCategory = Enums.ItemCategory.item;
                 SonicBlaster.ItemType = Enums.ItemTypes.sonic_blaster;
-                SonicBlaster.Mass = 7;
+                SonicBlaster.Mass = 1065;
                 SonicBlaster.ToolPod = true;
 
                 SonicBlaster.Research = new ResearchItem(Enums.ItemTypes.sonic_blaster, 32, 3);
 
                 SonicBlaster.Locked = true;
+                SonicBlaster.Research.ResearchMultiplier = 16;
+                SonicBlaster.Research.ResearchValue = 16;
                 SonicBlaster.OrbitOnly = true;
                 SonicBlaster.BuildRequirements = new List<BuildRequirement>();
                 SonicBlaster.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 1000));
@@ -898,7 +900,7 @@ namespace Deuteros.Code
 
                 //Special Earth setup for a new game
                 ((Earth)newGameData.Planets[StellarBodies.earth]).Factory.Ground = true;
-                newGameData.Planets[StellarBodies.earth].PlanetResources.Stores[Enums.ItemTypes.derrick] = 1;
+                newGameData.Planets[StellarBodies.earth].PlanetResources.Derricks = 1;
 
                 var trainingData = new Objects.Training();
 

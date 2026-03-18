@@ -54,8 +54,8 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void UpdateTime(uint currentDay, uint nextDay)
 		{
-			var curDay = (currentDay % 1000).ToString().PadLeft(3, '0');
-			var outputYear = (3100 + Math.Floor((decimal)(nextDay / 1000))) + " " + curDay + ".00";
+			var newDay = (nextDay % 1000).ToString().PadLeft(3, '0');
+			var outputYear = (3100 + Math.Floor((decimal)(nextDay / 1000))) + " " + newDay + ".00";
 
 			Time.Text = outputYear;
 		}

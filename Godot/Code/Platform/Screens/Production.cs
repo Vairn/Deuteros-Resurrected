@@ -110,7 +110,7 @@ namespace Deuteros.Code.Platform.Screens
                         {
                             if (CurrentFactory.CurrentProductionItem() != null)
                             {
-                                CurrentFactory.CurrentProductionItem().Production_Value = 1;
+                                CurrentFactory.CurrentProductionItem().Production_Value = CurrentFactory.CurrentProductionItem().Product.Research.ResearchValue;
                                 CurrentFactory.CurrentProductionItem().Active = false;
                             }
 
@@ -124,6 +124,7 @@ namespace Deuteros.Code.Platform.Screens
                                 newProdItem.AOCOneTime = false;
                                 newProdItem.AOCRepeat = false;
                                 newProdItem.Active = true;
+                                newProdItem.Production_Value = addedItem.Research.ResearchValue;
                                 CurrentFactory.ProductionQueue.Add(newProdItem);
 
                                 RemoveResourceByItem(CurrentPlanet, addedItem, Ground);
@@ -140,6 +141,7 @@ namespace Deuteros.Code.Platform.Screens
                         var newProdItem = new ProductionItem(addedItem);
                         newProdItem.AOCOneTime = true;
                         newProdItem.AOCRepeat = false;
+                        newProdItem.Production_Value = addedItem.Research.ResearchValue;
 
                         CurrentFactory.ProductionQueue.Add(newProdItem);
                     }
@@ -214,7 +216,7 @@ namespace Deuteros.Code.Platform.Screens
             {
                 StaffCountLabel.Text = CurrentFactory.Builder.Count.ToString();
                 StaffNameLabel.Text = CurrentFactory.Builder.Leader;
-                StaffRankLabel.Text = CurrentFactory.Builder.ActionsTaken.ToString();
+                StaffRankLabel.Text = ((Enums.StaffLevel_Production)CurrentFactory.Builder.GetLevel()).ToString();
             }
             else
             {
