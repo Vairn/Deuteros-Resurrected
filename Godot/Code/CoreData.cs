@@ -325,6 +325,7 @@ namespace Deuteros.Code
                 aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 4));
                 aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
                 aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 2));
+                aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 1));
 
                 newGameData.ItemList.Add(aoc);
 

@@ -179,7 +179,7 @@ namespace Deuteros.Code.Platform.Screens
         {
             Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
             GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && !T.Locked
-            && (CurrentPlanet.PlanetId != Enums.StellarBodies.earth || !T.OrbitOnly)
+            && (!Ground || !T.OrbitOnly)
             && !T.AutoProduce
             ).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
             this,

@@ -17,6 +17,14 @@ namespace Deuteros.Code
 {
     public partial class GameCore : BaseSubScene
     {
+        #region DEBUGVARS
+        
+        //TODO DEBUG
+        
+        public bool InfiniteResources { get; set; }
+
+        #endregion
+
         private List<Objects.MenuButton> EarthMenuButtons
         {
             get

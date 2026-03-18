@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Reflection;
 using static Deuteros.Code.Enums;
 using Deuteros.Code.Utility;
+using System.ComponentModel.Design;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -209,11 +210,11 @@ namespace Deuteros.Code.Platform.Screens
         {
             var planetStores = this.Ground ? CurrentPlanet.PlanetResources.Stores : CurrentPlanet.Station.Resources.Stores;
 
-            if (ShipPresent && Ship.Fuel < 250)
+            if (ShipPresent && Ship.Fuel > 0)
             {
-                Ship.Fuel++;
+                Ship.Fuel--;
                 if (planetStores[Ship.FuelType] < 50000)
-                    planetStores[Ship.FuelType]--;
+                    planetStores[Ship.FuelType]++;
 
                 UpdateState();
             }
@@ -677,11 +678,19 @@ namespace Deuteros.Code.Platform.Screens
         private bool ShipBay_ModuleChanged(Enums.Module_Types moduleType, int torsoSection)
         {
             var currentModule = Ship.Modules[torsoSection];
-            if (currentModule.ModuleType == Enums.Module_Types.Supply && currentModule.ItemCount > 0)
+            var currentStore = Ground ? CurrentPlanet.PlanetResources.Stores : CurrentPlanet.Station.Resources.Stores;
+
+            if (currentModule.ModuleType == Enums.Module_Types.Supply && (currentModule.ItemCount > 0 || moduleType == Module_Types.Supply))
                 return false;
-            else if (currentModule.ModuleType == Enums.Module_Types.Tool && currentModule.ItemStored != Enums.ItemTypes.none)
+            else if (currentModule.ModuleType == Enums.Module_Types.Tool && (currentModule.ItemStored != Enums.ItemTypes.none || moduleType == Module_Types.Tool))
                 return false;
-            else if (currentModule.ModuleType == Enums.Module_Types.Cryo && currentModule.StaffStored != null)
+            else if (currentModule.ModuleType == Enums.Module_Types.Cryo && (currentModule.StaffStored != null || moduleType == Module_Types.Cryo))
+                return false;
+            else if (moduleType == Module_Types.Supply && (GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.supply_pod).Locked || currentStore[Enums.ItemTypes.supply_pod] == 0))
+                return false;
+            else if (moduleType == Module_Types.Tool && (GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.tool_pod).Locked || currentStore[Enums.ItemTypes.tool_pod] == 0))
+                return false;
+            else if (moduleType == Module_Types.Cryo && (GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.cryo_pod).Locked || currentStore[Enums.ItemTypes.cryo_pod] == 0))
                 return false;
             else
                 Ship.Modules[torsoSection].ModuleType = moduleType;

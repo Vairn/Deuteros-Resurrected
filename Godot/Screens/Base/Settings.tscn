@@ -24,18 +24,18 @@ offset_bottom = 47.0
 
 [node name="Sound" type="Label" parent="SoundToggle"]
 layout_mode = 0
-offset_left = 2.4643
+offset_left = 9.4643
 offset_top = 6.41026
-offset_right = 42.4643
+offset_right = 49.4643
 offset_bottom = 15.4103
 theme = ExtResource("1_2svh5")
 text = "SOUND"
 
 [node name="SoundToggleText" type="Label" parent="SoundToggle"]
 layout_mode = 0
-offset_left = 52.4643
+offset_left = 54.4643
 offset_top = 5.76923
-offset_right = 68.4643
+offset_right = 70.4643
 offset_bottom = 15.7692
 text = "ON"
 
@@ -72,3 +72,27 @@ offset_right = 137.464
 offset_bottom = 15.4103
 theme = ExtResource("1_2svh5")
 text = "Earth Station to 7"
+
+[node name="MaxResources" type="Button" parent="."]
+show_behind_parent = true
+z_index = 1
+offset_left = 84.0
+offset_top = 110.0
+offset_right = 243.0
+offset_bottom = 132.0
+
+[node name="MaxResources" type="Label" parent="MaxResources"]
+layout_mode = 0
+offset_left = 9.46429
+offset_top = 6.41026
+offset_right = 137.464
+offset_bottom = 15.4103
+theme = ExtResource("1_2svh5")
+text = "Max Resources"
+
+[node name="MaxResourcesText" type="Label" parent="MaxResources"]
+offset_left = 121.464
+offset_top = 5.76923
+offset_right = 137.464
+offset_bottom = 15.7692
+text = "OFF"
