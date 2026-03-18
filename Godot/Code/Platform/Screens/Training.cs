@@ -122,7 +122,7 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override async void DayTick(uint currentDay, uint nextDay)
+        protected override async void DayTick(uint previousDay, uint currentDay)
         {
             DrawData();
         }

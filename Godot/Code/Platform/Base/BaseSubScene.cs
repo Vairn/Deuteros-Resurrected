@@ -45,7 +45,7 @@ namespace Deuteros.Code.Platform.Base
             Deuteros.Code.GameCore.SingletonInstance.ResearchFinished -= ResearchFinished;
         }
 
-        protected virtual async void DayTick(uint currentDay, uint nextDay) { QueueRedraw(); }
+        protected virtual async void DayTick(uint previousDay, uint currentDay) { QueueRedraw(); }
 
         protected virtual async void PlanetChange(Deuteros.Code.Objects.Interfaces.IPlanet newPlanet) { QueueRedraw(); }
 

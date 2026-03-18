@@ -197,7 +197,7 @@ namespace Deuteros.Code.Platform.Screens
         }
 
         //Triggered from gamecore
-        protected override void DayTick(uint currentDay, uint nextDay)
+        protected override void DayTick(uint previousDay, uint currentDay)
         {
             CheckProductionStart();
 
@@ -242,7 +242,7 @@ namespace Deuteros.Code.Platform.Screens
 
         #region Statics
 
-        public static void UpdateProduction(uint currentDay, uint nextDay)
+        public static void UpdateProduction(uint previousDay, uint currentDay)
         {
             foreach (var planet in GameCore.SingletonInstance.GameData.Planets)
             {

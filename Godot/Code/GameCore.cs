@@ -170,7 +170,7 @@ namespace Deuteros.Code
         public Guid ShipSelected { get; set; }
 
         //Data stored in the GameCore is temporary
-        public delegate void DayPassedDelegate(uint currentDay, uint nextDay);
+        public delegate void DayPassedDelegate(uint previousDay, uint currentDay);
         public event DayPassedDelegate DayPassed;
 
         public delegate void PlanetChangedDelegate(Objects.Interfaces.IPlanet newPlanet);
@@ -223,9 +223,9 @@ namespace Deuteros.Code
             ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
         }
 
-        private void TriggerDay(uint currentDay, uint nextDay)
+        private void TriggerDay(uint previousDay, uint currentDay)
         {
-            DayPassed?.Invoke(currentDay, nextDay);
+            DayPassed?.Invoke(previousDay, currentDay);
         }
 
         private void TriggerPlanetChange(Objects.Interfaces.IPlanet newPlanet)
@@ -278,9 +278,9 @@ namespace Deuteros.Code
             {
                 if (GameData.TimeSkipDay || Time.GetTicksMsec() - GameData.TimeSkipStart > 999)
                 {
-                    TriggerDay(GameData.CurrentDay, GameData.CurrentDay + 1);
-
                     GameData.CurrentDay++;
+                    TriggerDay(GameData.CurrentDay-1, GameData.CurrentDay);
+
                     GameData.TimeSkipStart = Time.GetTicksMsec();
                     GameData.TimeSkipDay = false;
 

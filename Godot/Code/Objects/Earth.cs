@@ -30,9 +30,9 @@ namespace Deuteros.Code.Objects
         }
 
         //Triggered from gamecore
-        public new void DayTick(uint currentDay, uint nextDay)
+        public new void DayTick(uint previousDay, uint currentDay)
         {
-            TrainingData.ChildDayTick(currentDay, nextDay);
+            TrainingData.ChildDayTick(previousDay, currentDay);
         }
     }
 }

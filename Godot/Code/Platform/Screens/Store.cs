@@ -98,7 +98,7 @@ namespace Deuteros.Code.Platform.Screens
         {
         }
 
-        protected override void DayTick(uint currentDay, uint nextDay)
+        protected override void DayTick(uint previousDay, uint currentDay)
         {
             DrawData();
         }
