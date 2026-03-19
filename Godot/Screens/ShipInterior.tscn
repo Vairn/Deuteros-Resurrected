@@ -137,7 +137,6 @@ metadata/_edit_use_anchors_ = true
 [node name="EngineStatusText" type="Label" parent="TextLayout"]
 layout_mode = 1
 anchors_preset = -1
-anchor_bottom = -0.0538462
 offset_top = 77.0
 offset_right = 80.0
 offset_bottom = 94.0

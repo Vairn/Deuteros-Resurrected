@@ -259,7 +259,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CreateIOS()
         {
-            if ((Ground && CurrentPlanet.PlanetResources.Stores[Enums.ItemTypes.i_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.i_chassis] > 0))
+            if (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.i_chassis] > 0)
             {
                 var newIOS = new IOS();
                 newIOS.StartTravelDay = 0;
@@ -272,9 +272,9 @@ namespace Deuteros.Code.Platform.Screens
                 newIOS.FuelType = Enums.ItemTypes.meh_fuel;
                 newIOS.Pilot = null;
                 newIOS.PlanetLocation = CurrentPlanet.PlanetId;
-                newIOS.ShipType = Enums.Ship_Types.Shuttle;
-                newIOS.PlanetDestination = CurrentPlanet.PlanetId;
-                newIOS.StarDestination = CurrentPlanet.ParentStar;
+                newIOS.ShipType = Enums.Ship_Types.IOS;
+                newIOS.DestinationPlanetLocation = CurrentPlanet.PlanetId;
+                newIOS.DestinationStarLocation = CurrentPlanet.ParentStar;
                 newIOS.LocationView = false;
                 newIOS.Name = "IOS3" + GameCore.SingletonInstance.GameData.IOSCount.ToString().PadLeft(5, '0');
 
@@ -289,7 +289,7 @@ namespace Deuteros.Code.Platform.Screens
 
         private void CreateSCG()
         {
-            if ((Ground && CurrentPlanet.PlanetResources.Stores[Enums.ItemTypes.g_chassis] > 0) || (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.g_chassis] > 0))
+            if (!Ground && CurrentPlanet.Station.Resources.Stores[Enums.ItemTypes.g_chassis] > 0)
             {
                 var newSCG = new SCG();
                 newSCG.StartTravelDay = 0;
@@ -302,9 +302,9 @@ namespace Deuteros.Code.Platform.Screens
                 newSCG.FuelType = Enums.ItemTypes.hed_fuel;
                 newSCG.Pilot = null;
                 newSCG.PlanetLocation = CurrentPlanet.PlanetId;
-                newSCG.ShipType = Enums.Ship_Types.Shuttle;
-                newSCG.PlanetDestination = CurrentPlanet.PlanetId;
-                newSCG.StarDestination = CurrentPlanet.ParentStar;
+                newSCG.ShipType = Enums.Ship_Types.SCG;
+                newSCG.DestinationPlanetLocation = CurrentPlanet.PlanetId;
+                newSCG.DestinationStarLocation = CurrentPlanet.ParentStar;
                 newSCG.LocationView = false;
                 newSCG.Name = "SCG3" + GameCore.SingletonInstance.GameData.SCGCount.ToString().PadLeft(5, '0');
 
@@ -450,6 +450,8 @@ namespace Deuteros.Code.Platform.Screens
             //There is no ship, reset buttons and reset state
             if (!ShipPresent)
             {
+                ScreenState = 0;
+
                 Nav_Dismantle.Visible = false;
                 Nav_Cockpit.Visible = false;
                 Nav_Torsos.ForEach(T => T.Visible = false);
@@ -477,8 +479,8 @@ namespace Deuteros.Code.Platform.Screens
                 {
                     Nav_Create_Shuttle.Visible = false;
                     Nav_Create_IOS.Visible = true;
-                    //TODO - Need to be passed the point of having SVGs available
-                    Nav_Create_SCG.Visible = true;
+                    if (!GameCore.SingletonInstance.GameData.GetItem(ItemTypes.s_chassis).Locked)
+                        Nav_Create_SCG.Visible = true;
                 }
             }
             else
