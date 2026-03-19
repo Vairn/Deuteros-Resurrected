@@ -18,6 +18,8 @@ namespace Deuteros.Code.Platform
         {
             if (ObjectData != null)
             {
+                HoverText = ObjectData.FullName;
+
                 var currentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
                 Code.Objects.Factory currentFactory;
 

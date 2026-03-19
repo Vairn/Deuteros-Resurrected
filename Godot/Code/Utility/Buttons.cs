@@ -40,9 +40,9 @@ namespace Deuteros.Code.Utility
 
                 if (createdButton is ButtonType typedButton)
                 {
-                    if (objectDataList.ContainsKey(i))
+                    if (i <= objectDataList.Count())
                     {
-                        typedButton.ObjectData = objectDataList[i];
+                        typedButton.ObjectData = objectDataList.ElementAt(i-1).Value;
                         typedButton.Connect("Clicked", new Callable(referenceScene, clickedEventName));
                     }
                     createdButtons.Add(typedButton);

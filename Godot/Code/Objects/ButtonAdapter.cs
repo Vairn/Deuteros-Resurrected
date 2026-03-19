@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Deuteros.Code.Objects
 {
-    public abstract partial class ButtonAdapter<ObjectDataType> : Button, Objects.Interfaces.IButton
+    public abstract partial class ButtonAdapter<ObjectDataType> : Platform.Base.HoverButton, Objects.Interfaces.IButton
     {
         public int EmissionValue;
         protected AnimatedSprite2D AnimatedSprite { get; set; }
