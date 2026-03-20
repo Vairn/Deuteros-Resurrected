@@ -12,6 +12,29 @@ namespace Deuteros.Code
     [Serializable]
     public partial class CoreData
     {
+        private static string[] PersonNames = {
+            "None","Jones","Jackson","Straker","Collins","Johnson","Emerson",
+            "Benson","Brubaker","Nilson","Cummins","Edberg","Fischer","Lasky",
+            "Sheppard","Zapasnik","Delaney","Rimmer","Olson","Gregory","Adamson",
+            "Prescott","Palmer","Blake","Devlin","Bean","Sweeney","Bates","Mannion",
+            "Matusiak","Thomson","Scott","Langer","James","Urlich","Seth","Rogers",
+            "Zuccker","Foster","Allen","Loakes","Peterson","Edmunds","Rooney","Polanski",
+            "Quinn","Wheeler","Lister","Andrews","Dawson","Goldberg","Spilaney","Singh",
+            "Taylor","Hunter","Jarre","Clarke","Ash","Lyons","Wright","Cousins","Lennox",
+            "Biggs","Galagher","Cooper","Yuen","Sykes","Sellers","Fowler","Anderson","Moore",
+            "Lovell","Zaranoff","Dalton","Berry","Morgan","Nimitz","Hall","Tindel","Cavell",
+            "Redman","Blunket","Raphael","Morse","Kingston","Floyd","Thackray","Chan","Quigley",
+            "Deering","Keegan","Packer","Chandi","Price","Curtis","Sharma","Dodd","Rosso","Arnold",
+            "Turner","Wells","Nipper","Campbell","Corrigan","Grant","Appleby","Foreman","Lee","Smith",
+            "Hill","Dexter","Phillips","Bishop","Haggerty","Walsh","Green","Cushing","Harris",
+            "Darcy","Farquhar","Townsend","Booker","Ould","Hobbs","Templer","Metcalfe","Davis",
+            "White","Garner","Finch","Pablov","Rigsby","Ford","Lyons","Ashforth","Richards",
+            "Gibbon","Snipe","Schmidt","Dempsey","Nauls","Cohen","Proctor","Skupski",
+            "Docherty","Yamahata","Barber","Ives","Jansen","Callan","Wilkes","Tkaczuk",
+            "Andreas","Nichols","Ingram","Connors","Nunn","Blood","Sommers","Nelson",
+            "Lander","Suchon","Pinky","Vaccaro","Gill","Lloyd","Dade","Matthews","Forsyth","Goode"
+        };
+
         public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Interfaces.IPlanet> Planets { get; set; }
         public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Star> Stars { get; set; }
 
@@ -41,10 +64,17 @@ namespace Deuteros.Code
         public static Color Dark_Beige { get; set; } = new Color(85, 102, 51, 255);
         public static Color Yellow { get; set; } = new Color(255, 255, 0, 255);
 
+        public uint NextPersonIndex;
 
         public Item GetItem(Enums.ItemTypes itemType)
         {
             return ItemList.First(T => T.ItemType == itemType);
+        }
+
+        public string GetNextPersonName()
+        {
+            if (NextPersonIndex >= PersonNames.Count()) NextPersonIndex = 1;
+            return PersonNames[NextPersonIndex++];
         }
 
         public IEnumerable<Item> GetAllActiveItems()
@@ -70,12 +100,27 @@ namespace Deuteros.Code
                 newGameData.CurrentDay = 0;
                 newGameData.SCGCount = 0;
                 newGameData.IOSCount = 0;
+                newGameData.NextPersonIndex = (uint)Random.Shared.Next(PersonNames.Length - 1) + 1;
 
                 #region ItemList
 
                 newGameData.ItemList = new List<Item>();
 
                 #region Items
+
+                var unknownitem = new Item();
+                unknownitem.FullName = "";
+                unknownitem.ItemCategory = Enums.ItemCategory.item;
+                unknownitem.ItemType = Enums.ItemTypes.aluminium;
+                unknownitem.Mass = 2000 ;
+                unknownitem.ToolPod = false;
+                unknownitem.Locked = true;
+
+                unknownitem.Research = new ResearchItem(Enums.ItemTypes.none, 1, 1);
+                unknownitem.Research.Researched = false;
+                unknownitem.Research.Locked = true;
+
+                newGameData.ItemList.Add(unknownitem);
 
                 var derrick = new Item();
                 derrick.FullName = "Resource Mining Rig";
@@ -214,6 +259,24 @@ namespace Deuteros.Code
                 cryoPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
                 newGameData.ItemList.Add(cryoPod);
+                
+                var pulseLaser = new Item();
+
+                pulseLaser.FullName = "Blaser";
+                pulseLaser.ItemCategory = Enums.ItemCategory.item;
+                pulseLaser.ItemType = Enums.ItemTypes.pulse_blaster_laser;
+                pulseLaser.Mass = 750;
+
+                pulseLaser.Research = new ResearchItem(Enums.ItemTypes.pulse_blaster_laser, 10, 3);
+
+                pulseLaser.Locked = true;
+                pulseLaser.OrbitOnly = true;
+                pulseLaser.BuildRequirements = new List<BuildRequirement>();
+                pulseLaser.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.paladium, 120));
+                pulseLaser.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 30));
+                pulseLaser.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.hed_fuel, 600));
+
+                newGameData.ItemList.Add(pulseLaser);
 
                 var iChassis = new Item();
                 iChassis.FullName = "I.O.S Chassis";
@@ -429,7 +492,7 @@ namespace Deuteros.Code
                 newGameData.ItemList.Add(AMA);
 
                 var Hyperlight = new Item();
-                Hyperlight.FullName = "Asteroid Mining Attachment";
+                Hyperlight.FullName = "Hyperlight Travel";
                 Hyperlight.ItemCategory = Enums.ItemCategory.item;
                 Hyperlight.ItemType = Enums.ItemTypes.hyperlight;
                 Hyperlight.Mass = 124;
@@ -461,7 +524,7 @@ namespace Deuteros.Code
                 newGameData.ItemList.Add(MTX);
 
                 var MFL = new Item();
-                MFL.FullName = "Mass Tranceiver";
+                MFL.FullName = "Methanoid Fusion Laser";
                 MFL.ItemCategory = Enums.ItemCategory.item;
                 MFL.ItemType = Enums.ItemTypes.m__f__l;
                 MFL.Mass = 25;

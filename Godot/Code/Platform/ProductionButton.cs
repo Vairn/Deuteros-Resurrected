@@ -30,7 +30,20 @@ namespace Deuteros.Code.Platform
 
                 if (!currentFactory.AOC)
                 {
-                    AnimationState = Enums.SidePanel_Button_State_Animations.Static_Green;
+                    var item = GameCore.SingletonInstance.GameData.ItemList.First(T => T.ItemType == ObjectData.ItemType);
+                    if (currentFactory.Ground && item.OrbitOnly)
+                    {
+                        AnimationState = Enums.SidePanel_Button_State_Animations.Static_Red;
+                    }
+                    else if (currentFactory.Builder!=null && (Enums.StaffLevel_Production)currentFactory.Builder.GetLevel()< Enums.StaffLevel_Production.Expert && item.Research.TechLevel>2)
+                    {
+                        AnimationState = Enums.SidePanel_Button_State_Animations.Static_Yellow;
+                    }
+                    else
+                    {
+                        AnimationState = Enums.SidePanel_Button_State_Animations.Static_Green;
+                    }
+
                 }
                 else if (currentFactory.AOC && currentFactory.ProductionQueue.Any(T => T.Product.ItemType == ObjectData.ItemType) &&
                     currentFactory.ProductionQueue.Single(T => T.Product.ItemType == ObjectData.ItemType).AOCOneTime)

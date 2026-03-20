@@ -56,7 +56,7 @@ namespace Deuteros.Code.Objects
                 if (earth.ResearchStaff == null)
                 {
                     var newResearcher = new Staff();
-                    newResearcher.Leader = "Seth";
+                    newResearcher.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
                     newResearcher.Count = 0;
                     newResearcher.Type = Enums.StaffType.Research;
 
@@ -82,7 +82,7 @@ namespace Deuteros.Code.Objects
                 {
                     var newProduction = new Staff();
                     //TODO - Generate proper names
-                    newProduction.Leader = "Roger";
+                    newProduction.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName(); ;
                     newProduction.Count = GameCore.Earth.TrainingData.ProductionTrainingCount;
                     newProduction.Type = Enums.StaffType.Production;
                     earth.Factory.Builder = newProduction;
@@ -109,8 +109,7 @@ namespace Deuteros.Code.Objects
                     GameCore.Earth.TrainingData.MarinesLocked = false;
 
                     var newMarine = new Staff();
-                    //TODO - Generate proper names
-                    newMarine.Leader = "Roger" + Random.Shared.Next(0, 100).ToString();
+                    newMarine.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
                     newMarine.Count = GameCore.Earth.TrainingData.MarinesTrainingCount;
                     newMarine.Type = Enums.StaffType.Marines;
 

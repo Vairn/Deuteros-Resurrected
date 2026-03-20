@@ -1,4 +1,4 @@
-﻿using Deuteros.Code.Objects;
+using Deuteros.Code.Objects;
 using Deuteros.Code.Objects.Interfaces;
 using Godot;
 using System;
@@ -10,62 +10,62 @@ using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code.Platform.Screens.ShipBayScenes
 {
-    public partial class Cockpit : Control
-    {
-        public Control SpriteHolder { get; set; }
+	public partial class Cockpit : Control
+	{
+		public Control SpriteHolder { get; set; }
 
-        public Label PilotNameLabel { get; set; }
-        
-        public TextureButton AddACC { get; set; }
+		public Label PilotNameLabel { get; set; }
+		
+		public TextureButton AddACC { get; set; }
 
-        public IShip CurrentShip { get; set; }
+		public IShip CurrentShip { get; set; }
 
-        public StaffList StaffList { get; set; }
-        
-        public delegate void AddACCDelegate();
-        public event AddACCDelegate ACCAdded;
+		public StaffList StaffList { get; set; }
+		
+		public delegate void AddACCDelegate();
+		public event AddACCDelegate ACCAdded;
 
-        public override void _Ready()
-        {
-            SpriteHolder = GetNode<Control>("SpriteHolder");
+		public override void _Ready()
+		{
+			SpriteHolder = GetNode<Control>("SpriteHolder");
 
-            AddACC = GetNode<TextureButton>("Buttons/AddACC");
+			AddACC = GetNode<TextureButton>("Buttons/AddACC");
 
-            PilotNameLabel = GetNode<Label>("Labels/PilotName");
+			PilotNameLabel = GetNode<Label>("Labels/PilotName");
 
-            StaffList = GetNode<StaffList>("StaffList");
-        }
+			StaffList = GetNode<StaffList>("StaffList");
+		}
 
-        public void UpdateStaff(Staff[] staff)
-        {
-            StaffList.UpdateStaff(staff);
+		public void UpdateStaff(Staff[] staff)
+		{
+			StaffList.UpdateStaff(staff);
 
-            UpdateState();
-        }
+			UpdateState();
+		}
 
-        public void LoadShip(IShip ship)
-        {
-            CurrentShip = ship;
+		public void LoadShip(IShip ship)
+		{
+			CurrentShip = ship;
 
-            StaffList.UpdateShip(CurrentShip != null);
+			StaffList.UpdateShip(CurrentShip != null);
 
-            UpdateState();
-        }
+			UpdateState();
+		}
 
-        public void UpdateState()
-        {
-            if (CurrentShip == null)
-            {
-                PilotNameLabel.Text = "";
-                SpriteHolder.Visible = false;
-                AddACC.Visible = false;
-            }
-            else
-            {
-                PilotNameLabel.Text = CurrentShip.Pilot != null ? CurrentShip.Pilot.Leader : "";
-                SpriteHolder.Visible = true;
-                AddACC.Visible = true;
-            }
-        }
-    }
+		public void UpdateState()
+		{
+			if (CurrentShip == null)
+			{
+				PilotNameLabel.Text = "";
+				SpriteHolder.Visible = false;
+				AddACC.Visible = false;
+			}
+			else
+			{
+				PilotNameLabel.Text = CurrentShip.Pilot != null ? CurrentShip.Pilot.GetLevelString()+"\n"+CurrentShip.Pilot.Leader : "";
+				SpriteHolder.Visible = true;
+				AddACC.Visible = true;
+			}
+		}
+	}
 }

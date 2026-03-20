@@ -17,7 +17,8 @@ namespace Deuteros.Code.Platform
         {
             if (ObjectData != null)
             {
-                HoverText = GameCore.SingletonInstance.GameData.GetItem(ObjectData.ItemType).FullName;
+                var item = GameCore.SingletonInstance.GameData.GetItem(ObjectData.ItemType);
+                HoverText = (item.Research.Locked) ? "" : item.FullName;
 
                 if (Selected)
                 {

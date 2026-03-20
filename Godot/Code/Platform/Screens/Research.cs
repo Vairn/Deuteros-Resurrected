@@ -60,7 +60,7 @@ namespace Deuteros.Code.Platform.Screens
             SelectedButton = new ResearchButton();
 
             Buttons = Utility.Buttons.CreateButtons<ResearchButton, ResearchItem>(GetNode<GridContainer>("ResearchButtonGrid"),
-                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && !T.Research.Locked).Select(T => T.Research).OrderBy(T => T.Index).ToDictionary(obj => obj.Index),
+                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null).Select(T => T.Research).OrderBy(T => T.Index).ToDictionary(obj => obj.Index),
                 this,
                 nameof(ResearchButton_Clicked),
                 "/Code/Platform/ResearchButton.cs",
@@ -147,7 +147,7 @@ namespace Deuteros.Code.Platform.Screens
             {
                 StaffCountLabel.Text = GameCore.Earth.ResearchStaff.Count.ToString();
                 RankLabel.Text = ((Enums.StaffLevel_Researcher)GameCore.Earth.ResearchStaff.GetLevel()).ToString();
-                LeaderNameLabel.Text = "Seth";
+                LeaderNameLabel.Text = GameCore.Earth.ResearchStaff.Leader;
             }
 
             if (SelectedButton != null && SelectedButton.ObjectData != null)
