@@ -751,7 +751,7 @@ namespace Deuteros.Code.Platform.Screens
                     EquipmentStockCountLabels[i].Visible = true;
                     EquipmentStockButtons[i].Visible = true;
 
-                    EquipmentStockNameLabels[i].Text = equipmentList[i].ItemType.ToScreenString();
+                    EquipmentStockNameLabels[i].Text = equipmentList[i].ShortName;
                     EquipmentStockCountLabels[i].Text = resourceList.Stores[equipmentList[i].ItemType].ToString();
                 }
                 else

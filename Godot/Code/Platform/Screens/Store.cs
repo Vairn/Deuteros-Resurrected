@@ -112,7 +112,7 @@ namespace Deuteros.Code.Platform.Screens
             var currentStore = SceneVariables.Contains(Enums.SceneVariables.Ground) ? currentPlanet.PlanetResources.Stores : currentPlanet.Station.Resources.Stores;
 
             foreach (var item in GameCore.SingletonInstance.GameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
-                ResourceListLabel.Text += item.ItemType.ToScreenString() + " " + currentStore[item.ItemType] + "\n";
+                ResourceListLabel.Text += item.ShortName + " " + currentStore[item.ItemType] + "\n";
 
             if (SelectedButton != null)
             {

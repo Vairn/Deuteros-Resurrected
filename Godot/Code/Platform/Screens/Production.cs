@@ -227,7 +227,7 @@ namespace Deuteros.Code.Platform.Screens
             if (CurrentFactory.CurrentProductionItem() != null)
             {
                 var currentProductionItem = CurrentFactory.CurrentProductionItem();
-                ProductionNameLabel.Text = currentProductionItem.Product.FullName;
+                ProductionNameLabel.Text = currentProductionItem.Product.ShortName;
                 SmallItemImageTextureRect = SpriteManager.LoadImageToTextureRect(ResearchSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + ".png", SmallItemImageTextureRect);
                 ItemProgressImageTextureRect = SpriteManager.LoadImageToTextureRect(ProductionProgressSpriteBasePath + currentProductionItem.Product.ItemType.ToString() + "_" + currentProductionItem.Production_Complete + ".png", ItemProgressImageTextureRect);
             }

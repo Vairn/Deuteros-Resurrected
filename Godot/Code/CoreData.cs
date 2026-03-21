@@ -124,6 +124,7 @@ namespace Deuteros.Code
 
                 var derrick = new Item();
                 derrick.FullName = "Resource Mining Rig";
+                derrick.ShortName = "Derrick";
                 derrick.ItemCategory = Enums.ItemCategory.item;
                 derrick.ItemType = Enums.ItemTypes.derrick;
                 derrick.Mass = 8;
@@ -146,6 +147,7 @@ namespace Deuteros.Code
 
                 var shuttlechas = new Item();
                 shuttlechas.FullName = "Shuttle Chassis";
+                shuttlechas.ShortName = "S Chassis";
                 shuttlechas.ItemCategory = Enums.ItemCategory.item;
                 shuttlechas.ItemType = Enums.ItemTypes.s_chassis;
                 shuttlechas.Mass = 130;
@@ -166,6 +168,7 @@ namespace Deuteros.Code
 
                 var shuttledrive = new Item();
                 shuttledrive.FullName = "Shuttle Drive Unit";
+                shuttledrive.ShortName = "S Drive";
                 shuttledrive.ItemCategory = Enums.ItemCategory.item;
                 shuttledrive.ItemType = Enums.ItemTypes.s_drive;
                 shuttledrive.Mass = 20;
@@ -186,6 +189,7 @@ namespace Deuteros.Code
 
                 var ofFrame = new Item();
                 ofFrame.FullName = "Orbital Factory Section";
+                ofFrame.ShortName = "OF Frame";
                 ofFrame.ItemCategory = Enums.ItemCategory.item;
                 ofFrame.ItemType = Enums.ItemTypes.of_frame;
                 ofFrame.Mass = 250;
@@ -208,6 +212,7 @@ namespace Deuteros.Code
 
                 var supplyPod = new Item();
                 supplyPod.FullName = "Supply Pod";
+                supplyPod.ShortName = "Supply Pod";
                 supplyPod.ItemCategory = Enums.ItemCategory.item;
                 supplyPod.ItemType = Enums.ItemTypes.supply_pod;
                 supplyPod.Mass = 4;
@@ -226,6 +231,7 @@ namespace Deuteros.Code
 
                 var toolPod = new Item();
                 toolPod.FullName = "Tool and Equipment Mounting";
+                toolPod.ShortName = "Tool Pod";
                 toolPod.ItemCategory = Enums.ItemCategory.item;
                 toolPod.ItemType = Enums.ItemTypes.tool_pod;
                 toolPod.Mass = 4;
@@ -244,6 +250,7 @@ namespace Deuteros.Code
 
                 var cryoPod = new Item();
                 cryoPod.FullName = "Cryogenic Holding Pod";
+                cryoPod.ShortName = "Cryo Pod";
                 cryoPod.ItemCategory = Enums.ItemCategory.item;
                 cryoPod.ItemType = Enums.ItemTypes.cryo_pod;
                 cryoPod.Mass = 4;
@@ -259,10 +266,11 @@ namespace Deuteros.Code
                 cryoPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
                 newGameData.ItemList.Add(cryoPod);
-                
+
                 var pulseLaser = new Item();
 
-                pulseLaser.FullName = "Blaser";
+                pulseLaser.FullName = "Pulse Blast Laser";
+                pulseLaser.ShortName = "Blaser";
                 pulseLaser.ItemCategory = Enums.ItemCategory.item;
                 pulseLaser.ItemType = Enums.ItemTypes.pulse_blaster_laser;
                 pulseLaser.Mass = 750;
@@ -280,6 +288,7 @@ namespace Deuteros.Code
 
                 var iChassis = new Item();
                 iChassis.FullName = "I.O.S Chassis";
+                iChassis.ShortName = "I Chassis";
                 iChassis.ItemCategory = Enums.ItemCategory.item;
                 iChassis.ItemType = Enums.ItemTypes.i_chassis;
                 iChassis.Mass = 650;
@@ -299,6 +308,7 @@ namespace Deuteros.Code
 
                 var iDrive = new Item();
                 iDrive.FullName = "I.O.S Drive Unit";
+                iDrive.ShortName = "I Drive";
                 iDrive.ItemCategory = Enums.ItemCategory.item;
                 iDrive.ItemType = Enums.ItemTypes.i_drive;
                 iDrive.Mass = 95;
@@ -357,6 +367,7 @@ namespace Deuteros.Code
 
                 var acc = new Item();
                 acc.FullName = "Auto Cargo Computer";
+                acc.ShortName = "A.C.C.";
                 acc.ItemCategory = Enums.ItemCategory.item;
                 acc.ItemType = Enums.ItemTypes.a__c__c;
                 acc.Mass = 8;
@@ -376,6 +387,7 @@ namespace Deuteros.Code
 
                 var aoc = new Item();
                 aoc.FullName = "Auto Operations Computer";
+                aoc.ShortName = "A.O.C.";
                 aoc.ItemCategory = Enums.ItemCategory.item;
                 aoc.ItemType = Enums.ItemTypes.a__o__c;
                 aoc.Mass = 8;
@@ -394,6 +406,7 @@ namespace Deuteros.Code
 
                 var BandAid = new Item();
                 BandAid.FullName = "Installation Repair Equip";
+                BandAid.ShortName = "Bandaid";
                 BandAid.ItemCategory = Enums.ItemCategory.item;
                 BandAid.ItemType = Enums.ItemTypes.bandaid;
                 BandAid.Mass = 150;
@@ -414,6 +427,7 @@ namespace Deuteros.Code
 
                 var SelfDestruct = new Item();
                 SelfDestruct.FullName = "Self Destruct Mechanism";
+                SelfDestruct.ShortName = "S.D.M.";
                 SelfDestruct.ItemCategory = Enums.ItemCategory.item;
                 SelfDestruct.ItemType = Enums.ItemTypes.s__d__m;
                 SelfDestruct.Mass = 9;
@@ -432,6 +446,7 @@ namespace Deuteros.Code
 
                 var HydraulicGrapple = new Item();
                 HydraulicGrapple.FullName = "Hydraulic Grapple";
+                HydraulicGrapple.ShortName = "Grapple";
                 HydraulicGrapple.ItemCategory = Enums.ItemCategory.item;
                 HydraulicGrapple.ItemType = Enums.ItemTypes.grapple;
                 HydraulicGrapple.Mass = 5;
@@ -450,6 +465,7 @@ namespace Deuteros.Code
 
                 var DFCC = new Item();
                 DFCC.FullName = "Drone Fleet Control Computer";
+                DFCC.ShortName = "D.F.C.C.";
                 DFCC.ItemCategory = Enums.ItemCategory.item;
                 DFCC.ItemType = Enums.ItemTypes.d__f__c__c;
                 DFCC.Mass = 8;
@@ -471,6 +487,7 @@ namespace Deuteros.Code
 
                 var AMA = new Item();
                 AMA.FullName = "Asteroid Mining Attachment";
+                AMA.ShortName = "A.M.A.";
                 AMA.ItemCategory = Enums.ItemCategory.item;
                 AMA.ItemType = Enums.ItemTypes.a__m__a;
                 AMA.Mass = 124;
@@ -493,6 +510,7 @@ namespace Deuteros.Code
 
                 var Hyperlight = new Item();
                 Hyperlight.FullName = "Hyperlight Travel";
+                Hyperlight.ShortName = "Hyperlight";
                 Hyperlight.ItemCategory = Enums.ItemCategory.item;
                 Hyperlight.ItemType = Enums.ItemTypes.hyperlight;
                 Hyperlight.Mass = 124;
@@ -507,6 +525,7 @@ namespace Deuteros.Code
 
                 var MTX = new Item();
                 MTX.FullName = "Mass Tranceiver";
+                MTX.ShortName = "M.T.X.";
                 MTX.ItemCategory = Enums.ItemCategory.item;
                 MTX.ItemType = Enums.ItemTypes.m__t__x;
                 MTX.Mass = 722;
@@ -525,6 +544,7 @@ namespace Deuteros.Code
 
                 var MFL = new Item();
                 MFL.FullName = "Methanoid Fusion Laser";
+                MFL.ShortName = "FuzLaser";
                 MFL.ItemCategory = Enums.ItemCategory.item;
                 MFL.ItemType = Enums.ItemTypes.m__f__l;
                 MFL.Mass = 25;
@@ -542,6 +562,7 @@ namespace Deuteros.Code
 
                 var RFrame = new Item();
                 RFrame.FullName = "Resource Station Section";
+                RFrame.ShortName = "R Frame";
                 RFrame.ItemCategory = Enums.ItemCategory.item;
                 RFrame.ItemType = Enums.ItemTypes.r_frame;
                 RFrame.Mass = 200;
@@ -565,6 +586,7 @@ namespace Deuteros.Code
 
                 var PrejudiceTorpedoLauncher = new Item();
                 PrejudiceTorpedoLauncher.FullName = "Prejudice Torpedo Launcher";
+                PrejudiceTorpedoLauncher.ShortName = "P.T.L.";
                 PrejudiceTorpedoLauncher.ItemCategory = Enums.ItemCategory.item;
                 PrejudiceTorpedoLauncher.ItemType = Enums.ItemTypes.prejudice_torpedo_launcher;
                 PrejudiceTorpedoLauncher.Mass = 151;
@@ -582,6 +604,7 @@ namespace Deuteros.Code
 
                 var COMMSPOD = new Item();
                 COMMSPOD.FullName = "Communication Adapter";
+                COMMSPOD.ShortName = "CommsPod";
                 COMMSPOD.ItemCategory = Enums.ItemCategory.item;
                 COMMSPOD.ItemType = Enums.ItemTypes.commspod;
                 COMMSPOD.Mass = 5;
@@ -601,6 +624,7 @@ namespace Deuteros.Code
 
                 var IOSDrone = new Item();
                 IOSDrone.FullName = "IOS Battle Drone";
+                IOSDrone.ShortName = "IOS Drone";
                 IOSDrone.ItemCategory = Enums.ItemCategory.item;
                 IOSDrone.ItemType = Enums.ItemTypes.ios_drone;
                 IOSDrone.Mass = 490;
@@ -622,6 +646,7 @@ namespace Deuteros.Code
 
                 var StarDrone = new Item();
                 StarDrone.FullName = "SCG Battle Drone";
+                StarDrone.ShortName = "Star Drone";
                 StarDrone.ItemCategory = Enums.ItemCategory.item;
                 StarDrone.ItemType = Enums.ItemTypes.star_drone;
                 StarDrone.Mass = 1015;
@@ -644,6 +669,7 @@ namespace Deuteros.Code
 
                 var PrisonPod = new Item();
                 PrisonPod.FullName = "Prison Pod";
+                PrisonPod.ShortName = "Prison Pod";
                 PrisonPod.ItemCategory = Enums.ItemCategory.item;
                 PrisonPod.ItemType = Enums.ItemTypes.prison_pod;
                 PrisonPod.Mass = 7;
@@ -663,6 +689,7 @@ namespace Deuteros.Code
 
                 var SonicBlaster = new Item();
                 SonicBlaster.FullName = "Sonic Blaster";
+                SonicBlaster.ShortName = "Blaster";
                 SonicBlaster.ItemCategory = Enums.ItemCategory.item;
                 SonicBlaster.ItemType = Enums.ItemTypes.sonic_blaster;
                 SonicBlaster.Mass = 1065;
@@ -690,6 +717,7 @@ namespace Deuteros.Code
 
                 var Iron = new Item();
                 Iron.FullName = "Iron";
+                Iron.ShortName = "Iron";
                 Iron.ItemCategory = Enums.ItemCategory.resource;
                 Iron.ItemType = Enums.ItemTypes.iron;
                 Iron.Mass = 1;
@@ -699,6 +727,7 @@ namespace Deuteros.Code
 
                 var Titanium = new Item();
                 Titanium.FullName = "Titanium";
+                Titanium.ShortName = "Titanium";
                 Titanium.ItemCategory = Enums.ItemCategory.resource;
                 Titanium.ItemType = Enums.ItemTypes.titanium;
                 Titanium.Mass = 1;
@@ -708,6 +737,7 @@ namespace Deuteros.Code
 
                 var Aluminium = new Item();
                 Aluminium.FullName = "Aluminium";
+                Aluminium.ShortName = "Aluminium";
                 Aluminium.ItemCategory = Enums.ItemCategory.resource;
                 Aluminium.ItemType = Enums.ItemTypes.aluminium;
                 Aluminium.Mass = 1;
@@ -717,6 +747,7 @@ namespace Deuteros.Code
 
                 var Carbon = new Item();
                 Carbon.FullName = "Carbon";
+                Carbon.ShortName = "Carbon";
                 Carbon.ItemCategory = Enums.ItemCategory.resource;
                 Carbon.ItemType = Enums.ItemTypes.carbon;
                 Carbon.Mass = 1;
@@ -726,6 +757,7 @@ namespace Deuteros.Code
 
                 var Copper = new Item();
                 Copper.FullName = "Copper";
+                Copper.ShortName = "Copper";
                 Copper.ItemCategory = Enums.ItemCategory.resource;
                 Copper.ItemType = Enums.ItemTypes.copper;
                 Copper.Mass = 1;
@@ -735,6 +767,7 @@ namespace Deuteros.Code
 
                 var Hydrogen = new Item();
                 Hydrogen.FullName = "Hydrogen";
+                Hydrogen.ShortName = "Hydrogen";
                 Hydrogen.ItemCategory = Enums.ItemCategory.resource;
                 Hydrogen.ItemType = Enums.ItemTypes.hydrogen;
                 Hydrogen.Mass = 1;
@@ -744,6 +777,7 @@ namespace Deuteros.Code
 
                 var Deuterium = new Item();
                 Deuterium.FullName = "Deuterium";
+                Deuterium.ShortName = "Deuterium";
                 Deuterium.ItemCategory = Enums.ItemCategory.resource;
                 Deuterium.ItemType = Enums.ItemTypes.deuterium;
                 Deuterium.Mass = 1;
@@ -753,6 +787,7 @@ namespace Deuteros.Code
 
                 var Methane = new Item();
                 Methane.FullName = "Methane";
+                Methane.ShortName = "Methane";
                 Methane.ItemCategory = Enums.ItemCategory.resource;
                 Methane.ItemType = Enums.ItemTypes.methane;
                 Methane.Mass = 1;
@@ -762,6 +797,7 @@ namespace Deuteros.Code
 
                 var Helium = new Item();
                 Helium.FullName = "Helium";
+                Helium.ShortName = "Helium";
                 Helium.ItemCategory = Enums.ItemCategory.resource;
                 Helium.ItemType = Enums.ItemTypes.helium;
                 Helium.Mass = 1;
@@ -771,6 +807,7 @@ namespace Deuteros.Code
 
                 var Paladium = new Item();
                 Paladium.FullName = "Paladium";
+                Paladium.ShortName = "Paladium";
                 Paladium.ItemCategory = Enums.ItemCategory.resource;
                 Paladium.ItemType = Enums.ItemTypes.paladium;
                 Paladium.Mass = 1;
@@ -780,6 +817,7 @@ namespace Deuteros.Code
 
                 var Platinum = new Item();
                 Platinum.FullName = "Platinum";
+                Platinum.ShortName = "Platinum";
                 Platinum.ItemCategory = Enums.ItemCategory.resource;
                 Platinum.ItemType = Enums.ItemTypes.platinum;
                 Platinum.Mass = 1;
@@ -789,6 +827,7 @@ namespace Deuteros.Code
 
                 var Silver = new Item();
                 Silver.FullName = "Silver";
+                Silver.ShortName = "Silver";
                 Silver.ItemCategory = Enums.ItemCategory.resource;
                 Silver.ItemType = Enums.ItemTypes.silver;
                 Silver.Mass = 1;
@@ -798,6 +837,7 @@ namespace Deuteros.Code
 
                 var Gold = new Item();
                 Gold.FullName = "Gold";
+                Gold.ShortName = "Gold";
                 Gold.ItemCategory = Enums.ItemCategory.resource;
                 Gold.ItemType = Enums.ItemTypes.gold;
                 Gold.Mass = 1;
@@ -807,6 +847,7 @@ namespace Deuteros.Code
 
                 var Silica = new Item();
                 Silica.FullName = "Silica";
+                Silica.ShortName = "Silica";
                 Silica.ItemCategory = Enums.ItemCategory.resource;
                 Silica.ItemType = Enums.ItemTypes.silica;
                 Silica.Mass = 1;
@@ -815,8 +856,8 @@ namespace Deuteros.Code
                 newGameData.ItemList.Add(Silica);
 
                 var mehFuel = new Item();
-                mehFuel.FullName = "MeH Fuel";
-                mehFuel.ShortName = "MeH";
+                mehFuel.FullName = "Hydrogen Methanol Fuel";
+                mehFuel.ShortName = "MeH Fuel";
                 mehFuel.ItemCategory = Enums.ItemCategory.resource;
                 mehFuel.ItemType = Enums.ItemTypes.meh_fuel;
                 mehFuel.Mass = 3;
