@@ -82,7 +82,8 @@ namespace Deuteros.Code.Platform.Screens
 				else
 				{
 					currentButton.SetButtonType(menuButton.ButtonType);
-					currentButton.SceneVariables = menuButton.SceneVariables;
+					currentButton.HoverText = menuButton.ButtonType.ToScreenString();
+                    currentButton.SceneVariables = menuButton.SceneVariables;
 					currentButton.TargetScene = menuButton.SceneToLoad;
 					currentButton.ClickActions = menuButton.ClickActions;
 				}
