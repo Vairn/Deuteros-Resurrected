@@ -417,6 +417,25 @@ namespace Deuteros.Code
             ios,
             ios_attachments,
             methanoid_laser,
+            self_destruct,
+            matter_transmitter,
+            scg_drone,
+            hyperlight_speed,
+            fuel_weapon,
+            drone_ships,
+            sol_cleared,
+            rogue_ship,
+            mutiny,
+            transmission1,
+            transmission2,
+            storm,
+            storm_over,
+            mining_dump,
+            meteor_warning,
+            meteor_strike,
+            sonic_weapon,
+            eureka
+
         }
     }
 }
