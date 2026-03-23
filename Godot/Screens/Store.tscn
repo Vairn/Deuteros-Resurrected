@@ -39,15 +39,20 @@ columns = 2
 [node name="Button" parent="StoreButtons" instance=ExtResource("4_60fa7")]
 layout_mode = 2
 
-[node name="ResourceList" type="Label" parent="."]
+[node name="ResourceList" type="RichTextLabel" parent="."]
 offset_left = 64.0
 offset_top = 23.0
 offset_right = 155.0
 offset_bottom = 124.0
 theme = ExtResource("3_jtic2")
+theme_override_constants/line_separation = -1
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
 
 [node name="Recipe" type="Label" parent="."]
-offset_left = 175.0
+offset_left = 184.0
 offset_top = 26.0
 offset_right = 258.0
 offset_bottom = 130.0

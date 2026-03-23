@@ -20,6 +20,8 @@ namespace Deuteros.Code.Platform
         {
             if (stellarBody == Enums.StellarBodies.earth && GameCore.SingletonInstance.GetCurrentPlanet().Station.BuildParts == 1)
             {
+                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.ios);
+
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;

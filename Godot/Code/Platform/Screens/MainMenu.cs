@@ -8,37 +8,39 @@ namespace Deuteros.Code.Platform.Screens
 	{
 		public Label HoverInfo { get; set; }
 		public Label Location { get; set; }
+		public Label Star { get; set; }
 		public Label Time { get; set; }
-        public List<Objects.MenuButton> MenuButtons { get; set; }
+		public List<Objects.MenuButton> MenuButtons { get; set; }
 
-        // Called when the node enters the scene tree for the first time.
-        public override void _Ready()
+		// Called when the node enters the scene tree for the first time.
+		public override void _Ready()
 		{
 			MenuButtons = new List<Objects.MenuButton>();
 			HoverInfo = GetNode<Label>("HoverInfo");
 			Location = GetNode<Label>("Location/LocationBox/Location");
+			Star = GetNode<Label>("Boxes/StarName/Star");
 			Time = GetNode<Label>("Time/TimeBox/Time");
 
-            GameCore.SingletonInstance.UnlockAdded += SingletonInstance_UnlockAdded;
+			GameCore.SingletonInstance.UnlockAdded += SingletonInstance_UnlockAdded;
 
 			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay);
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
 
-            if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
-            {
-                Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
-            }
+			if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
+			{
+				Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
+			}
 
-            base._Ready();
-        }
+			base._Ready();
+		}
 
-        private void SingletonInstance_UnlockAdded(Enums.Game_Unlocks addedUnlock)
-        {
+		private void SingletonInstance_UnlockAdded(Enums.Game_Unlocks addedUnlock)
+		{
 			SetupMenus();
-        }
+		}
 
-        public override void _Process(double delta)
+		public override void _Process(double delta)
 		{
 			if (Deuteros.Code.GameCore.HoverText != HoverInfo.Text)
 			{
@@ -71,21 +73,21 @@ namespace Deuteros.Code.Platform.Screens
 
 				var currentButton = GetNode<MenuButton>("MainButtons/" + column + row.ToString() + "/");
 
-                if (menuButton == null || !menuButton.Enabled())
+				if (menuButton == null || !menuButton.Enabled())
 				{
 					currentButton.SetButtonType(Enums.Menu_Buttons.Empty);
 					currentButton.SceneVariables = new Godot.Collections.Array<Enums.SceneVariables>();
-                    currentButton.TargetScene = Enums.Scenes.None;
-                }
+					currentButton.TargetScene = Enums.Scenes.None;
+				}
 				else
 				{
-                    currentButton.SetButtonType(menuButton.ButtonType);
-                    currentButton.SceneVariables = menuButton.SceneVariables;
-                    currentButton.TargetScene = menuButton.SceneToLoad;
-                    currentButton.ClickActions = menuButton.ClickActions;
-                }
+					currentButton.SetButtonType(menuButton.ButtonType);
+					currentButton.SceneVariables = menuButton.SceneVariables;
+					currentButton.TargetScene = menuButton.SceneToLoad;
+					currentButton.ClickActions = menuButton.ClickActions;
+				}
 
-                row++;
+				row++;
 
 				if (row == 7)
 				{
@@ -94,5 +96,5 @@ namespace Deuteros.Code.Platform.Screens
 				}
 			}
 		}
-    }
+	}
 }

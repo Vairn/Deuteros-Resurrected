@@ -12,6 +12,7 @@ using Deuteros.Code.Utility;
 using System.Diagnostics;
 using Deuteros.Code.Objects.Interfaces;
 using Deuteros.Code.Platform;
+using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code
 {
@@ -297,6 +298,13 @@ namespace Deuteros.Code
 			}
 		}
 
+		public void ShowBulletin(BulletinTypes bulletin)
+		{
+			GameCore.SingletonInstance.ChangeScene("Bulletins.tscn", new List<SceneVariables>());
+			_menuScreen.Location.Text = "News Bulletins";
+			((Bulletins)_currentScreen).DisplayBulletin(bulletin);
+		}
+
 		public void ChangeScene(string sceneName, List<Enums.SceneVariables> sceneVariables)
 		{
 			//This is a special case for the loading screen, only happens once on a new game
@@ -318,17 +326,52 @@ namespace Deuteros.Code
 			if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
 			{
 				_menuScreen.MenuButtons = EarthMenuButtons;
+				_menuScreen.Location.Text = "Earth City";
+				_menuScreen.Star.Text = "The Sun";
 				_menuScreen.SetupMenus();
 			}
 			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Orbit))
 			{
 				_menuScreen.MenuButtons = EarthStationMenuButtons;
+				_menuScreen.Location.Text = "Earth Orbital";
+				_menuScreen.Star.Text = "The Sun";
 				_menuScreen.SetupMenus();
 			}
 			else if (_menuScreen != null && GetCurrentPlanet().PlanetId != Enums.StellarBodies.earth)
 			{
 				_menuScreen.MenuButtons = StandardMenuButtons;
+
+				if (_currentScreen.GetType() == typeof(ShipBay) || _currentScreen.GetType() == typeof(GroundMaterials) || _currentScreen.GetType() == typeof(Deuteros.Code.Platform.Screens.Store))
+				{
+					_menuScreen.Location.Text = GetCurrentPlanet().PlanetId.ToString() + " colony";
+				}
+				else
+				{
+					_menuScreen.Location.Text = GetCurrentPlanet().PlanetId.ToString() + " orbital";
+				}
+
+				_menuScreen.Star.Text = GetCurrentPlanet().ParentStar.ToScreenString();
 				_menuScreen.SetupMenus();
+			}
+
+			if (_currentScreen.GetType() == typeof(ShipInterior))
+			{
+				_menuScreen.Location.Text = ((ShipInterior)_currentScreen).Ship.Name;
+			}
+
+			if (_currentScreen.SceneFilePath.Contains("ResourceMap"))
+			{
+				_menuScreen.Location.Text = "Deposit Analysis";
+			}
+
+			if (_currentScreen.SceneFilePath.Contains("News.tscn"))
+			{
+				_menuScreen.Location.Text = "News Bulletins";
+			}
+
+			if (_currentScreen.SceneFilePath.Contains("SaveScreen.tscn"))
+			{
+				_menuScreen.Location.Text = "Disk Access";
 			}
 
 			ShipSelected = Guid.Empty;

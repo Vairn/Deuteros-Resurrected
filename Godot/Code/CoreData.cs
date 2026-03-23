@@ -867,7 +867,7 @@ namespace Deuteros.Code
                 mehFuel.Research = new ResearchItem(Enums.ItemTypes.meh_fuel, 5, 1);
                 mehFuel.Research.Locked = false;
 
-                mehFuel.Locked = false;
+                mehFuel.Locked = true;
                 mehFuel.OrbitOnly = false;
                 mehFuel.BuildRequirements = new List<BuildRequirement>();
                 mehFuel.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.hydrogen, 2));

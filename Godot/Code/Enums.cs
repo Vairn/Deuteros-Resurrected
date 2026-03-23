@@ -301,6 +301,7 @@ namespace Deuteros.Code
             ShipBay,
             ShipInterior,
             ResourceMap,
+            Bulletin,
             None
         }
 
@@ -409,6 +410,13 @@ namespace Deuteros.Code
             Station_Right = 1200,
             Store = 1300,
             Training = 1400
+        }
+
+        public enum BulletinTypes
+        {
+            ios,
+            ios_attachments,
+            methanoid_laser,
         }
     }
 }
