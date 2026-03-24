@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://du6cxq2xabkyu"]
+[gd_scene load_steps=22 format=3 uid="uid://du6cxq2xabkyu"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/ShipBay.cs" id="1_ka4jh"]
 [ext_resource type="Texture2D" uid="uid://c75qloyqqj1ad" path="res://Sprites/Scenes/ShipBay.png" id="2_2703a"]
@@ -18,9 +18,8 @@
 [ext_resource type="PackedScene" uid="uid://cqjq2ikj5kdfx" path="res://PreFabs/StaffList.tscn" id="16_87g0b"]
 [ext_resource type="Texture2D" uid="uid://b8c5qo11ls550" path="res://Sprites/SceneSprites/Ships/FuelGauge_Minus.png" id="17_jaqr8"]
 [ext_resource type="Texture2D" uid="uid://dkyqkrw1tcabb" path="res://Sprites/SceneSprites/Ships/FuelGauge_Middle.png" id="18_dvytx"]
-[ext_resource type="Script" path="res://Screens/Minus.cs" id="18_ybe3b"]
 [ext_resource type="Texture2D" uid="uid://yt7ht1f0rxff" path="res://Sprites/SceneSprites/Ships/FuelGauge_Plus.png" id="19_iifyq"]
-[ext_resource type="Script" path="res://Screens/Plus.cs" id="20_3je0f"]
+[ext_resource type="PackedScene" uid="uid://dlpf322m5s804" path="res://PreFabs/Buttons/RepeatingButton.tscn" id="22_ykcnk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10r56"]
 bg_color = Color(0, 0, 0, 1)
@@ -867,10 +866,18 @@ offset_right = 170.0
 offset_bottom = 14.0
 theme_override_constants/separation = 0
 
-[node name="Minus" type="TextureButton" parent="Fuel/FuelGauge"]
+[node name="Minus" type="TextureRect" parent="Fuel/FuelGauge"]
 layout_mode = 2
-texture_normal = ExtResource("17_jaqr8")
-script = ExtResource("18_ybe3b")
+texture = ExtResource("17_jaqr8")
+stretch_mode = 2
+
+[node name="RepeatingButton" parent="Fuel/FuelGauge/Minus" instance=ExtResource("22_ykcnk")]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 10.0
+offset_bottom = 10.0
+RepeatRate = 0.01
 
 [node name="Middle" type="TextureRect" parent="Fuel/FuelGauge"]
 layout_mode = 2
@@ -879,7 +886,15 @@ texture = ExtResource("18_dvytx")
 expand_mode = 2
 stretch_mode = 1
 
-[node name="Plus" type="TextureButton" parent="Fuel/FuelGauge"]
+[node name="Plus" type="TextureRect" parent="Fuel/FuelGauge"]
 layout_mode = 2
-texture_normal = ExtResource("19_iifyq")
-script = ExtResource("20_3je0f")
+texture = ExtResource("19_iifyq")
+stretch_mode = 2
+
+[node name="RepeatingButton" parent="Fuel/FuelGauge/Plus" instance=ExtResource("22_ykcnk")]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = 9.0
+offset_bottom = 10.0
+RepeatRate = 0.01
