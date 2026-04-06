@@ -79,10 +79,10 @@ mouse_filter = 2
 
 [node name="PilotName" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 113.0
-offset_top = 103.0
-offset_right = 153.0
-offset_bottom = 120.0
+offset_left = 112.0
+offset_top = 104.0
+offset_right = 152.0
+offset_bottom = 121.0
 text = "Pilot
 Name"
 

@@ -24,15 +24,6 @@ namespace Deuteros.Code.Objects.Interfaces
         public Enums.ItemTypes FuelType { get; set; }
         public List<ShipModule> Modules { get; set; }
         public int TravelTimeRemain();
-
-
-        #region ACC
-        public bool ACC { get; set; }
-        public bool ACCEnabled { get; set; }
-        public Enums.StellarBodies ACCFrom { get; set; }
-        public Enums.StellarBodies ACCTo { get; set; }
-        public List<Enums.ItemTypes> ACCSend { get; set; }
-        public List<Enums.ItemTypes> ACCReceive { get; set; }
-        #endregion
+        public Objects.ACC ACC { get; set; }
     }
 }

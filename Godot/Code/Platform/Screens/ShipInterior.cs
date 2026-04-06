@@ -26,13 +26,14 @@ namespace Deuteros.Code.Platform.Screens
         Control TextLayout { get; set; }
         Control StarMap { get; set; }
         Control Window { get; set; }
+        Control ACC { get; set; }
 
         TextureRect LandingBlank { get; set; }
         TextureRect EngineControls { get; set; }
         TextureRect BigLocation { get; set; }
 
         TextureButton SmallLocation { get; set; }
-        TextureButton ACC { get; set; }
+        TextureButton OpenACC { get; set; }
         TextureButton SetCourse { get; set; }
         TextureButton[] Modules { get; set; } = new TextureButton[6];
 
@@ -56,6 +57,7 @@ namespace Deuteros.Code.Platform.Screens
 
         StarMap DestinationStarMap { get; set; }
         OFFrameDeploy OfFrameDeployScene {get; set;}
+        ACC ACCScreen { get; set; }
 
         public override void _Ready()
         {
@@ -67,12 +69,13 @@ namespace Deuteros.Code.Platform.Screens
             TextLayout = GetNode<Control>("TextLayout");
             StarMap = GetNode<Control>("StarMap");
             Window = GetNode<Control>("Window");
+            ACC = GetNode<Control>("ACCScreen");
 
             LandingBlank = GetNode<TextureRect>("LandingBlank");
             EngineControls = GetNode<TextureRect>("EngineControls");
             BigLocation = GetNode<TextureRect>("Location/BigLocation");
 
-            ACC = GetNode<TextureButton>("ACC");
+            OpenACC = GetNode<TextureButton>("OpenACC");
             SetCourse = GetNode<TextureButton>("SetCourse");
             SmallLocation = GetNode<TextureButton>("Location/SmallLocation");
 
@@ -104,7 +107,7 @@ namespace Deuteros.Code.Platform.Screens
             CourseValue = GetNode<Label>("TextLayout/CourseValue");
             ETA = GetNode<Label>("TextLayout/ETA");
 
-            ACC.Pressed += ACC_Pressed;
+            OpenACC.Pressed += ACC_Pressed;
             SetCourse.Pressed += SetCourse_Pressed;
             EngageEngine.Pressed += EngageEngine_Pressed;
 
@@ -271,8 +274,17 @@ namespace Deuteros.Code.Platform.Screens
 
         private void ACC_Pressed()
         {
-            //TODO - Implement ACC prefab
-            throw new NotImplementedException();
+            ACCScreen = GD.Load<PackedScene>("res://PreFabs/ACC.tscn").Instantiate<ACC>();
+            ACCScreen.SetACC(Ship.ACC);
+
+            ACC.AddChild(ACCScreen);
+
+            ACCScreen.UpdateState();
+
+            var cursor = GetTree().CurrentScene.GetNode<GlobalInput>("VirtualCursorView");
+            cursor.LockToRect(ACC.GetGlobalRect());
+
+            UpdateState();
         }
 
         private void UpdateState()
@@ -331,12 +343,23 @@ namespace Deuteros.Code.Platform.Screens
                 }
             }
 
-            if (Ship.ACC && Ship.ACCEnabled)
-                ACCStatus.Text = "A.C.C Is Engaged";
-            else if (Ship.ACC && !Ship.ACCEnabled)
-                ACCStatus.Text = "A.C.C Is Disengaged";
+            if (Ship.ACC != null)
+            {
+                OpenACC.Visible = true;
+
+                if (Ship.ACC.Active)
+                    ACCStatus.Text = "A.C.C Is \nEngaged";
+                else if (Ship.ACC.CycleMode)
+                    ACCStatus.Text = "A.C.C Is \nFinishing";
+                else if (!Ship.ACC.Active)
+                    ACCStatus.Text = "A.C.C Is \nDisengaged";
+            }
             else
+            {
+                OpenACC.Visible = false;
+
                 ACCStatus.Text = "";
+            }
 
             for (int i = 0; i < Ship.Modules.Count(); i++)
             {
@@ -452,7 +475,6 @@ namespace Deuteros.Code.Platform.Screens
             SetCourse.Visible = Ship.ShipType != Ship_Types.Shuttle; 
 
             //TODO - Set images
-            //Click events for ACC
             //Click events for modules
         }
 
@@ -465,7 +487,7 @@ namespace Deuteros.Code.Platform.Screens
                 if (cursor.IsLocked)
                 {
                     //We were locked into the star map, let's read the new destination
-                    if (DestinationStarMap.Visible == true)
+                    if (DestinationStarMap != null && DestinationStarMap.Visible == true)
                     {
                         DestinationStarMap.Visible = false;
 
@@ -474,7 +496,17 @@ namespace Deuteros.Code.Platform.Screens
                         Ship.DestinationPlanetLocation = newDestination.PlanetId;
                         Ship.DestinationStarLocation = newDestination.ParentStar;
 
-                        GetNode<Control>("StarMap").RemoveChild(DestinationStarMap);
+                        StarMap.RemoveChild(DestinationStarMap);
+
+                        UpdateState();
+                    }
+
+                    //We were locked into the star map, let's read the new destination
+                    if (ACCScreen != null && ACCScreen.Visible == true)
+                    {
+                        ACCScreen.Visible = false;
+
+                        ACC.RemoveChild(ACCScreen);
 
                         UpdateState();
                     }

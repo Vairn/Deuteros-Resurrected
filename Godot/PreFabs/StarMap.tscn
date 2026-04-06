@@ -351,124 +351,122 @@ mouse_filter = 2
 
 [node name="Sun" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 9.0
-offset_top = 7.0
-offset_right = 65.0
-offset_bottom = 16.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 64.0
+offset_bottom = 17.0
 theme = ExtResource("10_xyw0q")
 text = "The Sun"
 
 [node name="SelectedLocation" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 103.0
-offset_right = 65.0
-offset_bottom = 112.0
+offset_top = 104.0
+offset_right = 64.0
+offset_bottom = 113.0
 text = "The Moon	"
 
 [node name="StarCount" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 119.0
-offset_right = 41.0
-offset_bottom = 128.0
+offset_top = 120.0
+offset_right = 40.0
+offset_bottom = 129.0
 text = "10"
 
 [node name="StarSummary" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 25.0
-offset_top = 119.0
-offset_right = 169.0
-offset_bottom = 128.0
+offset_left = 24.0
+offset_top = 120.0
+offset_right = 168.0
+offset_bottom = 129.0
 theme = ExtResource("11_wv0dr")
 text = "Planetary Systems."
 
 [node name="Planet" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 81.0
-offset_top = 7.0
-offset_right = 121.0
-offset_bottom = 16.0
+offset_left = 80.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 17.0
 text = "Earth"
 
 [node name="Moon" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 161.0
-offset_top = 7.0
-offset_right = 225.0
-offset_bottom = 16.0
+offset_left = 160.0
+offset_top = 8.0
+offset_right = 224.0
+offset_bottom = 17.0
 theme = ExtResource("11_wv0dr")
 text = "The Moon"
 
 [node name="Deposits" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 103.0
-offset_right = 161.0
-offset_bottom = 112.0
+offset_left = 96.0
+offset_top = 104.0
+offset_right = 160.0
+offset_bottom = 113.0
 theme = ExtResource("12_j8rs2")
 text = "Deposits"
 
 [node name="Deposit00" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 111.0
-offset_right = 137.0
-offset_bottom = 120.0
+offset_left = 96.0
+offset_top = 112.0
+offset_right = 136.0
+offset_bottom = 121.0
 text = "Iron"
 
 [node name="Deposit01" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 119.0
-offset_right = 161.0
-offset_bottom = 128.0
+offset_left = 96.0
+offset_top = 120.0
+offset_right = 160.0
+offset_bottom = 129.0
 text = "Titanium"
 
 [node name="Deposit02" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 127.0
-offset_right = 169.0
-offset_bottom = 136.0
+offset_left = 96.0
+offset_top = 128.0
+offset_right = 168.0
+offset_bottom = 137.0
 text = "Aluminium"
 
 [node name="Deposit03" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 135.0
-offset_right = 145.0
-offset_bottom = 144.0
+offset_left = 96.0
+offset_top = 136.0
+offset_right = 144.0
+offset_bottom = 145.0
 text = "Carbon"
 
 [node name="Deposit04" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 111.0
-offset_right = 249.0
-offset_bottom = 120.0
+offset_left = 176.0
+offset_top = 112.0
+offset_right = 248.0
+offset_bottom = 121.0
 text = "Deuterium"
 
 [node name="Deposit05" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 119.0
-offset_right = 217.0
-offset_bottom = 128.0
+offset_left = 176.0
+offset_top = 120.0
+offset_right = 216.0
+offset_bottom = 129.0
 text = "Gold"
 
 [node name="Deposit06" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 127.0
-offset_right = 225.0
-offset_bottom = 136.0
+offset_left = 176.0
+offset_top = 128.0
+offset_right = 224.0
+offset_bottom = 137.0
 text = "Silica"
 
 [node name="Deposit07" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 135.0
-offset_right = 225.0
-offset_bottom = 144.0
+offset_left = 176.0
+offset_top = 136.0
+offset_right = 224.0
+offset_bottom = 145.0
 text = "Silica"

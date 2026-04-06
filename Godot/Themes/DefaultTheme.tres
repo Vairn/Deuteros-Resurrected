@@ -1,7 +1,6 @@
-[gd_resource type="Theme" load_steps=4 format=3 uid="uid://cqqqainab4nqh"]
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://cqqqainab4nqh"]
 
 [ext_resource type="FontFile" uid="uid://bqve2sq72jkms" path="res://Fonts/deuteros.ttf" id="1_rci8t"]
-[ext_resource type="FontFile" uid="uid://onpj2h56c3cq" path="res://Fonts/Deuteros.tres" id="1_yegd2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q5sgc"]
 
@@ -10,6 +9,6 @@ default_font = ExtResource("1_rci8t")
 default_font_size = 5
 Button/styles/focus = SubResource("StyleBoxEmpty_q5sgc")
 Label/colors/font_color = Color(1, 1, 1, 1)
-Label/constants/line_spacing = -1
+Label/constants/line_spacing = 0
 Label/font_sizes/font_size = 5
-Label/fonts/font = ExtResource("1_yegd2")
+Label/fonts/font = ExtResource("1_rci8t")

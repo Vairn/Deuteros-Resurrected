@@ -30,13 +30,6 @@ namespace Deuteros.Code.Objects
             return 0;
         }
 
-        #region ACC
-        public bool ACC { get; set; }
-        public bool ACCEnabled { get; set; }
-        public Enums.StellarBodies ACCFrom { get; set; }
-        public Enums.StellarBodies ACCTo { get; set; }
-        public List<Enums.ItemTypes> ACCSend { get; set; }
-        public List<Enums.ItemTypes> ACCReceive { get; set; }
-        #endregion
+        public Objects.ACC ACC { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
 		public Control SpriteHolder { get; set; }
 
 		public Label PilotNameLabel { get; set; }
-		
+	
 		public TextureButton AddACC { get; set; }
 
 		public IShip CurrentShip { get; set; }
@@ -64,7 +64,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
 			{
 				PilotNameLabel.Text = CurrentShip.Pilot != null ? CurrentShip.Pilot.GetLevelString()+"\n"+CurrentShip.Pilot.Leader : "";
 				SpriteHolder.Visible = true;
-				AddACC.Visible = true;
+				AddACC.Visible = CurrentShip.ACC == null;
 			}
 		}
 	}

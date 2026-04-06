@@ -226,8 +226,9 @@ namespace Deuteros.Code
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ShipInterior.UpdateShips;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Research.UpdateResearch;
+            Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ACC.UpdateACC;
 
-			Input.MouseMode = Input.MouseModeEnum.Hidden;
+            Input.MouseMode = Input.MouseModeEnum.Hidden;
 
 			ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
 		}

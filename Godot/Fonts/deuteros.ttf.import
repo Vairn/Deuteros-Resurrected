@@ -14,8 +14,8 @@ dest_files=["res://.godot/imported/deuteros.ttf-f65802d56d564534b866fdc57ff8b303
 
 Rendering=null
 antialiasing=0
-generate_mipmaps=true
-multichannel_signed_distance_field=true
+generate_mipmaps=false
+multichannel_signed_distance_field=false
 msdf_pixel_range=8
 msdf_size=48
 allow_system_fallback=false

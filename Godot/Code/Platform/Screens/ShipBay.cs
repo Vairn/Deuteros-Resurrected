@@ -31,8 +31,9 @@ namespace Deuteros.Code.Platform.Screens
         TextureButton Nav_Create_Shuttle { get; set; }
         TextureButton Nav_Create_IOS { get; set; }
         TextureButton Nav_Create_SCG { get; set; }
-        TextureButton FuelGaugeMinus { get; set; }
-        TextureButton FuelGaugePlus { get; set; }
+
+        RepeatingButton FuelGaugeMinus { get; set; }
+        RepeatingButton FuelGaugePlus { get; set; }
 
         Control CargoService { get; set; }
         Control EquipmentStock { get; set; }
@@ -55,7 +56,7 @@ namespace Deuteros.Code.Platform.Screens
         public ScrollContainer ScrollContainer;
         public int ScreenWidth = 224;
 
-        public Resource resourceList { get; set; }
+        public Resource ResourceList { get; set; }
 
         public int ScreenState { get; set; }
 
@@ -69,7 +70,7 @@ namespace Deuteros.Code.Platform.Screens
             Ground = SceneVariables.Contains(Enums.SceneVariables.Ground);
             Shuttle = SceneVariables.Contains(Enums.SceneVariables.Shuttle);
 
-            resourceList = (Resource)(Ground ? CurrentPlanet.PlanetResources : CurrentPlanet.Station.Resources);
+            ResourceList = (Resource)(Ground ? CurrentPlanet.PlanetResources : CurrentPlanet.Station.Resources);
 
             CockpitInstance = GetNode<ShipBayScenes.Cockpit>("ShipContainer/ScrollContainer2/HBoxContainer/Cockpit");
 
@@ -94,13 +95,13 @@ namespace Deuteros.Code.Platform.Screens
             Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso5"));
             Nav_Torsos.Add(GetNode<TextureButton>("Buttons/ShipNav/Nav_Torso6"));
             Nav_Engine = GetNode<TextureButton>("Buttons/ShipNav/Nav_Engine");
-
             Nav_Dismantle = GetNode<TextureButton>("Buttons/Nav_Dismantle");
             Nav_Create_Shuttle = GetNode<TextureButton>("Buttons/Nav_Create_Shuttle");
             Nav_Create_IOS = GetNode<TextureButton>("Buttons/Nav_Create_IOS");
             Nav_Create_SCG = GetNode<TextureButton>("Buttons/Nav_Create_SCG");
-            FuelGaugeMinus = GetNode<TextureButton>("Fuel/FuelGauge/Minus");
-            FuelGaugePlus = GetNode<TextureButton>("Fuel/FuelGauge/Plus");
+
+            FuelGaugeMinus = GetNode<RepeatingButton>("Fuel/FuelGauge/Minus/RepeatingButton");
+            FuelGaugePlus = GetNode<RepeatingButton>("Fuel/FuelGauge/Plus/RepeatingButton");
 
             CargoService = GetNode<Control>("CargoService");
             EquipmentStock = GetNode<Control>("EquipmentStock");
@@ -164,6 +165,8 @@ namespace Deuteros.Code.Platform.Screens
             Nav_Create_SCG.Pressed += CreateSCG;
             Nav_Dismantle.Pressed += DismantleShip;
 
+            CockpitInstance.GetNode<TextureButton>("Buttons/AddACC").Pressed += AddACC_Pressed;
+
             FuelGaugeMinus.Pressed += FuelGaugeMinus_Pressed;
             FuelGaugePlus.Pressed += FuelGaugePlus_Pressed;
 
@@ -180,6 +183,21 @@ namespace Deuteros.Code.Platform.Screens
             RefreshButtons();
 
             base._Ready();
+        }
+
+        private void AddACC_Pressed()
+        {
+            Ship.ACC = new Objects.ACC();
+            Ship.ACC.Source = CurrentPlanet.PlanetId;
+            Ship.ACC.Destination = CurrentPlanet.PlanetId;
+            Ship.ACC.Active = false;
+            Ship.ACC.CycleMode = false;
+            Ship.ACC.SourceItems = new List<ItemTypes>();
+            Ship.ACC.DestinationItems = new List<ItemTypes>();
+            Ship.ACC.CurrentSource = ItemTypes.iron;
+            Ship.ACC.CurrentDestination = ItemTypes.iron;
+            
+            UpdateState();
         }
 
         private void OpenShipInterior_Pressed()
@@ -631,50 +649,50 @@ namespace Deuteros.Code.Platform.Screens
             if (Ship != null)
             {
                 if (staff != null && Ship.Pilot != null)
-                    Ship.Pilot = resourceList.SwapStaff(staff, Ship.Pilot);
+                    Ship.Pilot = ResourceList.SwapStaff(staff, Ship.Pilot);
 
                 if (staff != null && Ship.Pilot == null)
                 {
                     Ship.Pilot = staff;
-                    resourceList.RemoveStaff(staff);
+                    ResourceList.RemoveStaff(staff);
                 }
 
                 if (staff == null && Ship.Pilot != null)
                 {
-                    resourceList.AddStaff(Ship.Pilot);
+                    ResourceList.AddStaff(Ship.Pilot);
                     Ship.Pilot = null;
                 }
 
                 CockpitInstance.UpdateState();
             }
 
-            return resourceList.Staff;
+            return ResourceList.Staff;
         }
 
         private Staff[] TorsoStaffList_StaffClicked(Staff staff)
         {
             if (staff != null && Ship.Modules[ScreenState - 1].StaffStored != null)
             {
-                Ship.Modules[ScreenState - 1].StaffStored = resourceList.SwapStaff(staff, Ship.Modules[ScreenState - 1].StaffStored);
+                Ship.Modules[ScreenState - 1].StaffStored = ResourceList.SwapStaff(staff, Ship.Modules[ScreenState - 1].StaffStored);
             }
             else if (staff == null && Ship.Modules[ScreenState - 1].StaffStored != null)
             {
-                resourceList.AddStaff(Ship.Modules[ScreenState - 1].StaffStored);
+                ResourceList.AddStaff(Ship.Modules[ScreenState - 1].StaffStored);
                 Ship.Modules[ScreenState - 1].StaffStored = null;
             }
             else if (staff != null && Ship.Modules[ScreenState - 1].StaffStored == null)
             {
                 Ship.Modules[ScreenState - 1].StaffStored = staff;
-                resourceList.RemoveStaff(staff);
+                ResourceList.RemoveStaff(staff);
             }
 
             TorsoStaffList.UpdateState();
-            CockpitInstance.UpdateStaff(resourceList.Staff);
+            CockpitInstance.UpdateStaff(ResourceList.Staff);
             CockpitInstance.UpdateState();
 
             TorsoInstances[ScreenState - 1].UpdateState();
 
-            return resourceList.Staff;
+            return ResourceList.Staff;
         }
 
         private bool ShipBay_ModuleChanged(Enums.Module_Types moduleType, int torsoSection)
@@ -752,7 +770,7 @@ namespace Deuteros.Code.Platform.Screens
                     EquipmentStockButtons[i].Visible = true;
 
                     EquipmentStockNameLabels[i].Text = equipmentList[i].ShortName;
-                    EquipmentStockCountLabels[i].Text = resourceList.Stores[equipmentList[i].ItemType].ToString();
+                    EquipmentStockCountLabels[i].Text = ResourceList.Stores[equipmentList[i].ItemType].ToString();
                 }
                 else
                 {
@@ -784,7 +802,7 @@ namespace Deuteros.Code.Platform.Screens
             {
                 var storedItemIndex = Array.FindIndex<Item>(equipmentList, T => T.ItemType == Ship.Modules[ScreenState - 1].ItemStored);
 
-                resourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
+                ResourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
 
                 EquipmentStockNameLabels[storedItemIndex].RemoveThemeColorOverride("font_color");
                 EquipmentStockCountLabels[storedItemIndex].RemoveThemeColorOverride("font_color");
@@ -795,19 +813,19 @@ namespace Deuteros.Code.Platform.Screens
                 Ship.Modules[ScreenState - 1].ItemStored = ItemTypes.none;
                 Ship.Modules[ScreenState - 1].ItemCount = 0;
             }
-            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && resourceList.Stores[itemType] > 0)
+            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && ResourceList.Stores[itemType] > 0)
             {
                 Ship.Modules[ScreenState - 1].ItemStored = itemType;
 
                 if (GameCore.SingletonInstance.GameData.GetItem(itemType).ToolPodSingular)
                 {
                     Ship.Modules[ScreenState - 1].ItemCount = 1;
-                    resourceList.Stores[itemType]--;
+                    ResourceList.Stores[itemType]--;
                 }
                 else
                 {
-                    Ship.Modules[ScreenState - 1].ItemCount = resourceList.Stores[itemType];
-                    resourceList.Stores[itemType] = 0;
+                    Ship.Modules[ScreenState - 1].ItemCount = ResourceList.Stores[itemType];
+                    ResourceList.Stores[itemType] = 0;
                 }
             }
 
@@ -826,14 +844,14 @@ namespace Deuteros.Code.Platform.Screens
                 GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", CoreData.Red);
 
             foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
-                GetNode<Label>("CargoService/Labels/MineralCount" + mineral.ItemType.ToScreenString()).Text = resourceList.Stores[mineral.ItemType].ToString();
+                GetNode<Label>("CargoService/Labels/MineralCount" + mineral.ItemType.ToScreenString()).Text = ResourceList.Stores[mineral.ItemType].ToString();
         }
 
         private void SelectMineral(ItemTypes itemType)
         {
             if (Ship.Modules[ScreenState - 1].ItemCount > 0)
             {
-                resourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
+                ResourceList.Stores[Ship.Modules[ScreenState - 1].ItemStored] += Ship.Modules[ScreenState - 1].ItemCount;
                 GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).RemoveThemeColorOverride("font_color");
             }
 
@@ -842,12 +860,12 @@ namespace Deuteros.Code.Platform.Screens
                 Ship.Modules[ScreenState - 1].ItemStored = ItemTypes.none;
                 Ship.Modules[ScreenState - 1].ItemCount = 0;
             }
-            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && resourceList.Stores[itemType] > 0)
+            else if (Ship.Modules[ScreenState - 1].ItemStored != itemType && ResourceList.Stores[itemType] > 0)
             {
                 Ship.Modules[ScreenState - 1].ItemStored = itemType;
-                Ship.Modules[ScreenState - 1].ItemCount = resourceList.Stores[itemType] >= 250 ? 250 : resourceList.Stores[itemType];
+                Ship.Modules[ScreenState - 1].ItemCount = ResourceList.Stores[itemType] >= 250 ? 250 : ResourceList.Stores[itemType];
 
-                resourceList.Stores[itemType] = Math.Max(0, resourceList.Stores[itemType] - 250);
+                ResourceList.Stores[itemType] = Math.Max(0, ResourceList.Stores[itemType] - 250);
             }
 
             TorsoInstances[ScreenState - 1].UpdateState();

@@ -13,9 +13,11 @@ offset_bottom = 143.0
 texture = ExtResource("1_2yovx")
 
 [node name="Number" type="Label" parent="Background"]
-offset_left = 113.0
-offset_right = 121.0
-offset_bottom = 9.0
+layout_mode = 0
+offset_left = 112.0
+offset_top = 1.0
+offset_right = 120.0
+offset_bottom = 10.0
 theme = ExtResource("2_winep")
 text = "2"
 

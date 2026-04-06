@@ -591,10 +591,10 @@ grow_vertical = 1
 
 [node name="Location" type="Label" parent="Location/LocationBox"]
 layout_mode = 0
-offset_left = 6.0
-offset_top = 3.0
-offset_right = 156.0
-offset_bottom = 13.0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 155.0
+offset_bottom = 14.0
 text = "The Shuttle Bay
 "
 
@@ -615,16 +615,15 @@ grow_vertical = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0292537
-anchor_top = 0.622288
+anchor_top = 0.684788
 anchor_right = 1.15011
-anchor_bottom = 1.67297
-offset_left = -2.27642
-offset_top = -6.9566
-offset_right = -23.8124
+anchor_bottom = 1.73547
+offset_left = -3.27642
+offset_top = -6.95661
+offset_right = -24.8124
 offset_bottom = -13.7676
 text = "3110 618.80"
 horizontal_alignment = 2
-metadata/_edit_use_anchors_ = true
 
 [node name="TimerHoldButton" parent="Time/TimeBox" instance=ExtResource("9")]
 layout_mode = 0
@@ -641,8 +640,10 @@ anchor_left = -1.2375
 anchor_top = -0.184686
 anchor_right = -1.2375
 anchor_bottom = -0.184686
-offset_right = 200.0
-offset_bottom = 16.0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 199.0
+offset_bottom = 17.0
 text = "Advance Time"
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
@@ -767,10 +768,10 @@ grow_vertical = 1
 
 [node name="Star" type="Label" parent="Boxes/StarName"]
 layout_mode = 0
-offset_left = 4.0
-offset_top = 3.0
-offset_right = 76.0
-offset_bottom = 13.0
+offset_left = 3.0
+offset_top = 4.0
+offset_right = 75.0
+offset_bottom = 14.0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 text = "Sol
 "
