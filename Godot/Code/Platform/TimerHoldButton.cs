@@ -12,8 +12,18 @@ namespace Deuteros.Code.Platform
         {
             this.Connect("button_up", new Callable(this, nameof(TimerHold_ButtonUp)));
             this.Connect("button_down", new Callable(this, nameof(TimerHold_ButtonDown)));
+            this.Connect("mouse_exited", new Callable(this, nameof(TimerHold_Exit)));
 
             base._Ready();
+        }
+
+        private void TimerHold_Exit()
+        {
+            if (Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkip)
+            {
+                TimerHold_ButtonUp();
+            }
+
         }
 
         private void TimerHold_ButtonUp()

@@ -35,22 +35,23 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true, 
 					new Godot.Collections.Array<Enums.SceneVariables>() { 
 						Enums.SceneVariables.Ground 
-					}, null),
+					}, null,null, "Production"),
 					null,
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Ground
 						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
-						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock)),
+						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
+						"Shuttle"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Training, Enums.Scenes.Earth_Training, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null),
-					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
+					}, null,null,"Training"),
+					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground,
 						Enums.SceneVariables.Shuttle
-					}, null),
+					}, null,null,"Shuttle Bay"),
 					null,
 					null,
 					null,
@@ -58,15 +59,15 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Research, Enums.Scenes.Earth_Research, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null),
+					}, null, null, "Research"),
 					new Objects.MenuButton(Enums.Menu_Buttons.GroundMaterials, Enums.Scenes.GroundMaterials, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null),
+					}, null, null, "Resource"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null)
+					}, null, null, "MiningStore")
 				};
 			}
 		}
@@ -79,28 +80,29 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit
-					}, null),
-					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
+					}, null, null, "Production"),
+					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit,
 						Enums.SceneVariables.Shuttle
-					}, null),
+					}, null, null, "Space Bay"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Orbit
-						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null),
+						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null, 
+						"Shuttle"),
 					null,
 					null,
 					null,
 					new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit
-					}, null),
+					}, null, null, "Stores"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit,
 						Enums.SceneVariables.Ship
-					}, null),
+					}, null, null, "SpaceDock"),
 					null,
 					null,
 					null,
@@ -117,26 +119,27 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null),
+					}, null, null, "Production"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Ground
-					}, null),
+					}, null, null, "MiningStore"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit,
 						Enums.SceneVariables.Shuttle
-					}, null),
+					}, null, null, "Shuttle"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
 						Enums.SceneVariables.Orbit,
 						Enums.SceneVariables.Ship
-					}, null),
+					}, null, null, "Shuttle"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Ground
 						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
-						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock)),
+						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
+						"Shuttle"),
 					null,
 
 					null,
@@ -226,9 +229,9 @@ namespace Deuteros.Code
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ShipInterior.UpdateShips;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Research.UpdateResearch;
-            Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ACC.UpdateACC;
+			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ACC.UpdateACC;
 
-            Input.MouseMode = Input.MouseModeEnum.Hidden;
+			Input.MouseMode = Input.MouseModeEnum.Hidden;
 
 			ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
 		}

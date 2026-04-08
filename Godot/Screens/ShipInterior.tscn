@@ -97,7 +97,7 @@ offset_top = 37.0
 offset_right = 82.0
 offset_bottom = 47.0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
-text = "Fuel:   T"
+text = "Fuel:    T"
 metadata/_edit_use_anchors_ = true
 
 [node name="FuelValue" type="Label" parent="TextLayout"]
@@ -107,9 +107,9 @@ anchor_left = -0.00448431
 anchor_top = 0.00769231
 anchor_right = -0.00448431
 anchor_bottom = 0.00769231
-offset_left = 30.0
+offset_left = 40.0
 offset_top = 37.0
-offset_right = 57.0
+offset_right = 67.0
 offset_bottom = 47.0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 text = "93"
@@ -304,7 +304,7 @@ offset_top = 89.0
 offset_right = 200.0
 offset_bottom = 107.0
 theme_override_colors/font_color = Color(0.333333, 0.4, 0.2, 1)
-text = "ETA :
+text = "ETA:
 3193 696.49"
 metadata/_edit_use_anchors_ = true
 
