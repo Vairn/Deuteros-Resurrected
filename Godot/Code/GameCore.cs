@@ -150,6 +150,28 @@ namespace Deuteros.Code
 			}
 		}
 
+		private List<Objects.MenuButton> OverviewMenuButtons
+		{
+			get
+			{
+				return new List<Objects.MenuButton>()
+				{
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null
+				};
+			}
+		}
+
 		private static GameCore _instance;
 		private Node _currentScreen;
 		private MainMenu _menuScreen;
@@ -327,7 +349,15 @@ namespace Deuteros.Code
 			GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
 			_currentScreen = newScene;
 
-			if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
+			if (_menuScreen != null && _currentScreen.SceneFilePath.Contains("Overview") && !sceneVariables.Contains(Enums.SceneVariables.Orbit))
+			{
+				_menuScreen.MenuButtons = OverviewMenuButtons;
+				_menuScreen.Location.Text = "MASTER CONTROL";
+				_menuScreen.Star.Text = GetCurrentPlanet().ParentStar.ToScreenString();
+				_menuScreen.SetupMenus();
+
+			}
+			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
 			{
 				_menuScreen.MenuButtons = EarthMenuButtons;
 				_menuScreen.Location.Text = "Earth City";

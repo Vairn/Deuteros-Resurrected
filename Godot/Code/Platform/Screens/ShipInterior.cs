@@ -195,30 +195,13 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void Land_Pressed()
 		{
-			if (Ship.ShipType == Ship_Types.Shuttle && Ship.ShipState == Ship_States.UnDocked)
-			{
-				Ship.ShipState = Ship_States.Landing;
-				Ship.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-				
-				UpdateState();
-			}
+			Ship.Land();
+			UpdateState();
 		}
 
 		private void TakeOff_Pressed()
 		{
-			if (Ship.Engine && Ship.Fuel > 0)
-				if (Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround == true)
-				{
-					((Shuttle)Ship).OnGround = false;
-					Ship.ShipState = Ship_States.TakingOff;
-					Ship.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-				}
-				else if (Ship.ShipState == Ship_States.Docked)
-				{
-					Ship.ShipState = Ship_States.Launching;
-					Ship.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-				}
-
+			Ship.TakeOff();
 			UpdateState();
 		}
 
@@ -226,8 +209,7 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			if (Ship.ShipState == Ship_States.UnDocked && CurrentPlanet.Station.Built)
 			{
-				Ship.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-				Ship.ShipState = Ship_States.Docking;
+				Ship.Dock();
 				UpdateState();
 			}
 		}
@@ -542,11 +524,15 @@ namespace Deuteros.Code.Platform.Screens
 					if (ship.ShipState == Ship_States.Launching)
 					{
 						ship.ShipState = Ship_States.UnDocked;
+						if (ship.ACC != null) ship.ACC.Update(Ship_States.Launching);
 					}
 					else if (ship.ShipState == Ship_States.TakingOff)
 					{
 						if (ship.TravelTimeRemain() == 0)
+						{
 							ship.ShipState = Ship_States.UnDocked;
+							if (ship.ACC != null) ship.ACC.Update(Ship_States.TakingOff);
+						}
 					}
 					else if (ship.ShipState == Ship_States.Landing)
 					{
@@ -554,6 +540,7 @@ namespace Deuteros.Code.Platform.Screens
 						{
 							ship.ShipState = Ship_States.Docked;
 							((Shuttle)ship).OnGround = true;
+							if (ship.ACC != null) ship.ACC.Update(Ship_States.Landing);
 						}
 					}
 					else if (ship.ShipState == Ship_States.InTransit)
@@ -563,13 +550,17 @@ namespace Deuteros.Code.Platform.Screens
 							ship.ShipState = Ship_States.UnDocked;
 							ship.PlanetLocation = ship.DestinationPlanetLocation;
 							ship.StarLocation = ship.DestinationStarLocation;
+							if (ship.ACC != null) ship.ACC.Update(Ship_States.InTransit);
 						}
-							
+
 					}
 					else if (ship.ShipState == Ship_States.Docking)
 					{
 						if (ship.ShipType == Ship_Types.Shuttle || !GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == ship.PlanetLocation && T.ShipType != Ship_Types.Shuttle && T.ShipState == Ship_States.Docked))
+						{
 							ship.ShipState = Ship_States.Docked;
+							if (ship.ACC != null) ship.ACC.Update(Ship_States.Docking);
+						}
 					}
 				}
 			}

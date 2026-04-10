@@ -76,6 +76,7 @@ namespace Deuteros.Code.Platform.Screens
 				if (menuButton == null || !menuButton.Enabled())
 				{
 					currentButton.SetButtonType(Enums.Menu_Buttons.Empty);
+					currentButton.HoverText = "";
 					currentButton.SceneVariables = new Godot.Collections.Array<Enums.SceneVariables>();
 					currentButton.TargetScene = Enums.Scenes.None;
 				}

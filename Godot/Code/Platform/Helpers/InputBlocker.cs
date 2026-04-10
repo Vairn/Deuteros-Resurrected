@@ -1,4 +1,8 @@
-﻿using Godot;
+﻿using Deuteros.Code.Utility;
+using Godot;
+using System.Collections.Generic;
+using System.Linq;
+using static Deuteros.Code.Enums;
 
 
 namespace Deuteros.Code.Platform.Helpers
@@ -48,7 +52,28 @@ namespace Deuteros.Code.Platform.Helpers
 
         public override void _Input(InputEvent @event)
         {
-            if (!Blocked) return;
+            if (!Blocked)
+            {
+                var cursor = GetTree().CurrentScene.GetNode<GlobalInput>("VirtualCursorView");
+
+                if (!cursor.IsLocked && @event is InputEventMouseButton)
+                {
+                    if (((InputEventMouseButton)@event).ButtonIndex == MouseButton.Right && ((InputEventMouseButton)@event).Pressed)
+                    {
+                        if (Deuteros.Code.GameCore.SingletonInstance.GameData.Planets.Values
+                            .Select(p => p.Station)
+                            .Where(s => s.BuildParts > 0).ToList().Count() > 0)
+                        {
+
+                            var sceneNameSplit = Enums.Scenes.Overview.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
+
+                            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", new List<Enums.SceneVariables>());
+                        }
+                    }
+                }
+                return;
+            }
+
             GetViewport().SetInputAsHandled(); // eats keyboard/gamepad too
         }
     }

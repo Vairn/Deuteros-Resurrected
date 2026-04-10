@@ -29,7 +29,7 @@ namespace Deuteros.Code.Objects
             PlanetId = planetId;
             Order = order;
             Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
-            Station = new SpaceStation();
+            Station = new SpaceStation(planetId);
             ActiveMethanoid = false;
             MoonParentPlanetId = Enums.StellarBodies.none;
         }

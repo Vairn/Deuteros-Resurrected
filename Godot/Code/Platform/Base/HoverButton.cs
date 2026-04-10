@@ -10,11 +10,11 @@ namespace Deuteros.Code.Platform.Base
         // Called when the node enters the scene tree for the first time.
         public override void _Ready()
         {
-            if (HoverText != "")
-            {
+            //if (HoverText != "")
+            //{
                 this.Connect("mouse_entered", new Callable(this, nameof(MouseHover_Enter)));
                 this.Connect("mouse_exited", new Callable(this, nameof(MouseHover_Exit)));
-            }
+            //}
         }
 
         private void MouseHover_Enter()

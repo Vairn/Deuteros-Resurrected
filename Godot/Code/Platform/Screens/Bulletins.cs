@@ -36,6 +36,7 @@ public partial class Bulletins : BaseSubScene
 	}
 	private async Task TypeText(RichTextLabel label, string fullText)
 	{
+		GameCore.LockScreen();
 		label.Text = "";
 
 		for (int i = 0; i < fullText.Length; i++)
@@ -67,6 +68,7 @@ public partial class Bulletins : BaseSubScene
 
 			await WaitMs(LetterDelayMs);
 		}
+		GameCore.UnLockScreen();
 	}
 
 	private async Task WaitMs(int ms)
@@ -76,6 +78,27 @@ public partial class Bulletins : BaseSubScene
 			SceneTreeTimer.SignalName.Timeout
 		);
 	}
+
+	public async void AlienTransmission()
+	{
+		string bulletinText = 
+		"greetings human.\n" +
+		"we are monitoring all of your\n" +
+		"transmissions in an attempt to\n" +
+		"understand your language\n" +
+		" \n" +
+		"this message shall be repeated\n" +
+		"until we are able to communicate\n" +
+		"fluently\n" +
+		" \n" +
+		"there is a subject of great\n" +
+		"importance we must discuss\n" +
+		"with you";
+
+		await TypeText(BulletinLabel, bulletinText);
+
+	}
+
 
 	public async void DisplayBulletin(BulletinTypes bulletin)
 	{
@@ -299,8 +322,8 @@ public partial class Bulletins : BaseSubScene
 				"For You...";
 				break;
 
-            case BulletinTypes.storm:
-                bulletinText =
+			case BulletinTypes.storm:
+				bulletinText =
 				"We Have Observed A Very Strange\n" +
 				"Event On {0}\n" +
 				"It Seems To Be An Immense Storm\n" +
@@ -315,10 +338,10 @@ public partial class Bulletins : BaseSubScene
 				" \n" +
 				"We Cannot Predict When It Will\n" +
 				"Subside.If Ever!";
-                break;
+				break;
 
-            case BulletinTypes.storm_over:
-                bulletinText =
+			case BulletinTypes.storm_over:
+				bulletinText =
 				"The Storm On {0} Has\n" +
 				"Almost Disappeared And All\n" +
 				"Factories Are Now Operational\n" +
@@ -326,48 +349,48 @@ public partial class Bulletins : BaseSubScene
 				"We Shall Study This Phenomenon\n" +
 				"In Detail And Inform You When\n" +
 				"It Is Likely To Occur Again.";
-                break;
+				break;
 
-            case BulletinTypes.mining_dump:
-                bulletinText =
-                "We Have Found An Old Methanoid\n" +
-                "Mining Dump On {0} !\n" +
-                "\n" +
-                "It Holds 10000 tonnes of\n" +
-                "{1}\n" +
-                "This Has Now Been Transfered\n" +
-                "To The Surface Stores.";
-                break;
+			case BulletinTypes.mining_dump:
+				bulletinText =
+				"We Have Found An Old Methanoid\n" +
+				"Mining Dump On {0} !\n" +
+				"\n" +
+				"It Holds 10000 tonnes of\n" +
+				"{1}\n" +
+				"This Has Now Been Transfered\n" +
+				"To The Surface Stores.";
+				break;
 
-            case BulletinTypes.meteor_warning:
-                bulletinText =
-                "WARNING!\n" +
-                " \n" +
-                "We Are Tracking A Meteor Of\n" +
-                "Great Mass Heading Directly For\n" +
-                "{0}\n" +
-                "At Present We Cannot Predict\n" +
-                "The Exact Time And Location\n" +
-                "Of Impact But I Suggest You\n" +
-                "Evacuate The Factory\n" +
-                "Immediately...";
-                break;
+			case BulletinTypes.meteor_warning:
+				bulletinText =
+				"WARNING!\n" +
+				" \n" +
+				"We Are Tracking A Meteor Of\n" +
+				"Great Mass Heading Directly For\n" +
+				"{0}\n" +
+				"At Present We Cannot Predict\n" +
+				"The Exact Time And Location\n" +
+				"Of Impact But I Suggest You\n" +
+				"Evacuate The Factory\n" +
+				"Immediately...";
+				break;
 
-            case BulletinTypes.meteor_strike:
-                bulletinText =
-                "The Meteor Has Destoyed The\n" +
-                "Factory At {0} !\n" +
-                "However, It Failed To Impact\n" +
-                "On The Surface And Has Veered\n" +
-                "Off Into A Larger Orbit.\n" +
-                " \n" +
-                "We Are Continuing To Track Its\n" +
-                "Course...";
-                break;
+			case BulletinTypes.meteor_strike:
+				bulletinText =
+				"The Meteor Has Destoyed The\n" +
+				"Factory At {0} !\n" +
+				"However, It Failed To Impact\n" +
+				"On The Surface And Has Veered\n" +
+				"Off Into A Larger Orbit.\n" +
+				" \n" +
+				"We Are Continuing To Track Its\n" +
+				"Course...";
+				break;
 
-            case BulletinTypes.sonic_weapon:
-                bulletinText =
-                "When {0} Was Captured\n" +
+			case BulletinTypes.sonic_weapon:
+				bulletinText =
+				"When {0} Was Captured\n" +
 				"We Found An Old Blueprint In\n" +
 				"The Production Library.At The\n" +
 				"Time It Seemed Unimportant So\n" +
@@ -379,11 +402,11 @@ public partial class Bulletins : BaseSubScene
 				"Some Kind Of Sonic Pulses.\n" +
 				" \n" +
 				"We Are Ready To Design It...";
-                break;
+				break;
 
-            case BulletinTypes.eureka:
-                bulletinText =
-                "E U R E K A!\n" +
+			case BulletinTypes.eureka:
+				bulletinText =
+				"E U R E K A!\n" +
 				" \n" +
 				"I've Been Working On A Little\n" +
 				"Something For Last Few Months\n" +
@@ -397,11 +420,11 @@ public partial class Bulletins : BaseSubScene
 				"The D.F.C.C.\n" +
 				" \n" +
 				"I'm So Clever !";
-                break;
+				break;
 
-        }
+		}
 
-        bulletinText = "@RSpecial Bulletin.\n" +
+		bulletinText = "@RSpecial Bulletin.\n" +
 			"@WFrom: \n" +
 			GameCore.Earth.ResearchStaff.Leader+"\n"+
 			"Head of research.\n \n" + bulletinText+"\n \nMessage ends.";
@@ -411,19 +434,6 @@ public partial class Bulletins : BaseSubScene
 
 
 /*
-
-"greetings human.\n"+
-"we are monitoring all of your\n"+
-"transmissions in an attempt to\n"+
-"understand your language\n"+
-" \n"+
-"this message shall be repeated\n"+
-"until we are able to communicate\n"+
-"fluently\n"+
-" \n"+
-"there is a subject of great\n"+
-"importance we must discuss\n"+
-"with you";
 
 
 
@@ -503,4 +513,4 @@ public partial class Bulletins : BaseSubScene
 "WE WILL DO THE REST.\n"+
 " \n"+
 "SEE YOU SOON , HUMAN!\n";
-                    */
+					*/

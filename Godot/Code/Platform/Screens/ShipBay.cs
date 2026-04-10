@@ -188,6 +188,7 @@ namespace Deuteros.Code.Platform.Screens
 		private void AddACC_Pressed()
 		{
 			Ship.ACC = new Objects.ACC();
+			Ship.ACC.Ship = Ship;
 			Ship.ACC.Source = CurrentPlanet.PlanetId;
 			Ship.ACC.Destination = CurrentPlanet.PlanetId;
 			Ship.ACC.Active = false;

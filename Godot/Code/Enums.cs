@@ -302,6 +302,7 @@ namespace Deuteros.Code
             ShipInterior,
             ResourceMap,
             Bulletin,
+            Overview,
             None
         }
 
@@ -313,7 +314,7 @@ namespace Deuteros.Code
             Ground = 100,
             Orbit = 200,
             Shuttle = 300,
-            Ship = 400
+            Ship = 400,
         }
 
         [Serializable]
