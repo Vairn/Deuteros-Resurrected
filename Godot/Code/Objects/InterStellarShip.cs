@@ -11,24 +11,27 @@ namespace Deuteros.Code.Objects
     public class InterStellarShip : Ship, IShip
     {
         public bool InTransit { get; set; }
+        public bool DFCC { get; set; }
+        public bool Scanning { get; set; }
+        public bool Mining { get; set; }
 
         public override int TravelTimeRemain()
         {
             int totalJourneyTime = 0;
 
-            var startPlanet = GameCore.SingletonInstance.GameData.Planets[PlanetLocation];
-            var destinationPlanet = GameCore.SingletonInstance.GameData.Planets[DestinationPlanetLocation];
+            var startPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation];
+            var destinationPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[DestinationPlanetLocation];
 
             if (startPlanet.MoonParentPlanetId != Enums.StellarBodies.none)
-                startPlanet = GameCore.SingletonInstance.GameData.Planets[startPlanet.MoonParentPlanetId];
+                startPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[startPlanet.MoonParentPlanetId];
 
             if (destinationPlanet.MoonParentPlanetId != Enums.StellarBodies.none)
-                destinationPlanet = GameCore.SingletonInstance.GameData.Planets[destinationPlanet.MoonParentPlanetId];
+                destinationPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[destinationPlanet.MoonParentPlanetId];
 
             //Travelling within the same planetary system
             if (startPlanet == destinationPlanet)
             {
-                totalJourneyTime = Math.Max(Math.Abs(GameCore.SingletonInstance.GameData.Planets[PlanetLocation].Order - GameCore.SingletonInstance.GameData.Planets[DestinationPlanetLocation].Order), 1);
+                totalJourneyTime = Math.Max(Math.Abs(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Order - GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[DestinationPlanetLocation].Order), 1);
             }
             //We're going to a different planet
             else if (startPlanet != destinationPlanet)
@@ -36,7 +39,7 @@ namespace Deuteros.Code.Objects
                 totalJourneyTime = Math.Abs(destinationPlanet.Order - startPlanet.Order) * 4;
             }
 
-            return totalJourneyTime - (int)(GameCore.SingletonInstance.GameData.CurrentDay - StartTravelDay);
+            return totalJourneyTime - (int)(GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - StartTravelDay);
         }
     }
 }

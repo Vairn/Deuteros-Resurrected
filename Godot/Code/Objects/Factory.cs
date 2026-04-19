@@ -16,6 +16,8 @@ namespace Deuteros.Code.Objects
         public Staff Builder { get; set; }
         public bool AOC { get; set; }
         public bool Ground { get; set; }
+        //Helps maintain animation on main screen
+        public int ProdCycle { get; set; }
 
         public Factory() 
         {
@@ -29,9 +31,15 @@ namespace Deuteros.Code.Objects
 
         public void IncrementCurrentProd()
         {
+
             var currentProductionItem = CurrentProductionItem();
             if (currentProductionItem != null)
             {
+                ProdCycle++;
+
+                if (ProdCycle == 7)
+                    ProdCycle = 0;
+
                 var VRatio = 0;
 
                 if (!AOC)

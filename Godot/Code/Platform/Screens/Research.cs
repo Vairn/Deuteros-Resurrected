@@ -60,7 +60,7 @@ namespace Deuteros.Code.Platform.Screens
             SelectedButton = new ResearchButton();
 
             Buttons = Utility.Buttons.CreateButtons<ResearchButton, ResearchItem>(GetNode<GridContainer>("ResearchButtonGrid"),
-                GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null).Select(T => T.Research).OrderBy(T => T.Index).ToDictionary(obj => obj.Index),
+                GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null).Select(T => T.Research).OrderBy(T => T.Index).ToDictionary(obj => obj.Index),
                 this,
                 nameof(ResearchButton_Clicked),
                 "/Code/Platform/ResearchButton.cs",
@@ -152,7 +152,7 @@ namespace Deuteros.Code.Platform.Screens
 
             if (SelectedButton != null && SelectedButton.ObjectData != null)
             {
-                var researchItem = GameCore.SingletonInstance.GameData.ItemList.Single(T => T.Research != null && T.Research.Index == SelectedButton.ObjectData.Index);
+                var researchItem = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Single(T => T.Research != null && T.Research.Index == SelectedButton.ObjectData.Index);
 
                 ItemAnalysisLabel.Text = "Item Analysis";
                 ItemNameLabel.Text = researchItem.FullName;
@@ -230,7 +230,7 @@ namespace Deuteros.Code.Platform.Screens
                     if (currentItem.ResearchPercentageComplete == 100)
                     {
                         currentItem.Researched = true;
-                        currentItem.ResearchOrder = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+                        currentItem.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
                         earth.ResearchStaff.ActionsTaken++;
 
                         GameCore.SingletonInstance.GameData.GetItem(currentItem.ItemType).Locked = false;

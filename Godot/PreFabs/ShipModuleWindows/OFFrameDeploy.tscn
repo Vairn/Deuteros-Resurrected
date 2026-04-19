@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsb6dm4ck0qvk"]
+[gd_scene load_steps=6 format=3 uid="uid://bsb6dm4ck0qvk"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/ModuleScenes/OFFrameDeploy.cs" id="1_8m1sl"]
 [ext_resource type="PackedScene" uid="uid://dfxcpnk8y4m45" path="res://PreFabs/UI/Window.tscn" id="1_clv0d"]
 [ext_resource type="AudioStream" uid="uid://c5vjyvse1fcx1" path="res://Sounds/Typing.wav" id="2_0es70"]
+[ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont5.tres" id="4_5m1lh"]
 [ext_resource type="Theme" uid="uid://d3ky76lin6gp4" path="res://Themes/GreenFont5.tres" id="4_vftlv"]
 
 [node name="OfFrameDeploy" type="Node2D" node_paths=PackedStringArray("TypeSound")]
@@ -34,6 +35,7 @@ offset_left = 72.0
 offset_top = 77.0
 offset_right = 280.0
 offset_bottom = 94.0
+theme = ExtResource("4_5m1lh")
 text = "Sequence Complete."
 
 [node name="Text04" type="Label" parent="Window"]

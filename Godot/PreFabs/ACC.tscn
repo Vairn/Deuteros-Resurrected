@@ -261,6 +261,7 @@ text = "Mimas"
 autowrap_mode = 1
 
 [node name="Warning" type="Label" parent="Window/Text"]
+layout_mode = 0
 offset_left = 136.0
 offset_top = 80.0
 offset_right = 226.0
@@ -318,6 +319,7 @@ layout_mode = 2
 text = "Methane"
 
 [node name="Col02" type="VBoxContainer" parent="Window/Text/ResourceNames"]
+layout_mode = 0
 offset_left = 104.0
 offset_right = 176.0
 offset_bottom = 65.0
@@ -378,18 +380,21 @@ offset_bottom = 16.0
 texture_normal = ExtResource("10_hr2vs")
 
 [node name="Disengage" type="TextureButton" parent="Window/Buttons"]
+layout_mode = 0
 offset_left = 32.0
 offset_right = 56.0
 offset_bottom = 16.0
 texture_normal = ExtResource("11_5fu8q")
 
 [node name="Cycle" type="TextureButton" parent="Window/Buttons"]
+layout_mode = 0
 offset_left = 64.0
 offset_right = 88.0
 offset_bottom = 16.0
 texture_normal = ExtResource("12_6oc3e")
 
 [node name="Clear" type="TextureButton" parent="Window/Buttons"]
+layout_mode = 0
 offset_left = 96.0
 offset_right = 120.0
 offset_bottom = 16.0

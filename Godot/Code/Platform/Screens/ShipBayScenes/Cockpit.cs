@@ -64,7 +64,7 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
 			{
 				PilotNameLabel.Text = CurrentShip.Pilot != null ? CurrentShip.Pilot.GetLevelString()+"\n"+CurrentShip.Pilot.Leader : "";
 				SpriteHolder.Visible = true;
-				AddACC.Visible = CurrentShip.ACC == null;
+				AddACC.Visible = true;
 			}
 		}
 	}

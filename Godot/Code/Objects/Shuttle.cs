@@ -21,9 +21,9 @@ namespace Deuteros.Code.Objects
         public override int TravelTimeRemain()
         {
             if (ShipState == Enums.Ship_States.Landing)
-                return 2 - (int)(GameCore.SingletonInstance.GameData.CurrentDay - StartTravelDay);
+                return 2 - (int)(GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - StartTravelDay);
             else if (ShipState == Enums.Ship_States.TakingOff)
-                return 5 - (int)(GameCore.SingletonInstance.GameData.CurrentDay - StartTravelDay);
+                return 5 - (int)(GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - StartTravelDay);
             else
                 return 0;
         }

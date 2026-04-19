@@ -25,11 +25,8 @@ namespace Deuteros.Code.Platform
         {
             if (TargetScene != Enums.Scenes.None)
             {
-                //Double underscores in scene names represent a flag to pass to the scene
-                var sceneNameSplit = TargetScene.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
-
                 //Underscores in scene names represent a folder
-                Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", SceneVariables.ToList());
+                Deuteros.Code.GameCore.SingletonInstance.ChangeScene(TargetScene, SceneVariables.ToList());
             }
         }
     }

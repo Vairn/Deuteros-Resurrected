@@ -16,8 +16,8 @@ namespace Deuteros.Code.Platform
 
         private void TimerSwitch_ButtonUp()
         {
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkip = !Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkip;
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkipStart = Time.GetTicksMsec();
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkip = !Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkip;
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
         }
     }
 }

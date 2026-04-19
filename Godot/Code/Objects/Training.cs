@@ -81,8 +81,7 @@ namespace Deuteros.Code.Objects
                 if (earth.Factory.Builder == null)
                 {
                     var newProduction = new Staff();
-                    //TODO - Generate proper names
-                    newProduction.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName(); ;
+                    newProduction.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
                     newProduction.Count = GameCore.Earth.TrainingData.ProductionTrainingCount;
                     newProduction.Type = Enums.StaffType.Production;
                     earth.Factory.Builder = newProduction;

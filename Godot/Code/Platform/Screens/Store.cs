@@ -87,7 +87,7 @@ namespace Deuteros.Code.Platform.Screens
 		public void RefreshButtons()
 		{
 			Buttons = Utility.Buttons.CreateButtons<StoreButton, Item>(StoreButtonsNode,
-				GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Research != null && !ViewTypeToggle && T.Research.Researched && !T.AutoProduce).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
+				GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && !ViewTypeToggle && T.Research.Researched && !T.AutoProduce).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
 				this,
 				nameof(StoreButton_Clicked),
 				"/Code/Platform/StoreButton.cs",
@@ -113,12 +113,12 @@ namespace Deuteros.Code.Platform.Screens
 			var currentStore = SceneVariables.Contains(Enums.SceneVariables.Ground) ? currentPlanet.PlanetResources.Stores : currentPlanet.Station.Resources.Stores;
 
 			int padlength = 1;
-			foreach (var item in GameCore.SingletonInstance.GameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
+			foreach (var item in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
 			{
 				padlength = Math.Max(padlength, currentStore[item.ItemType].ToString().Length);
 			}
 
-			foreach (var item in GameCore.SingletonInstance.GameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
+			foreach (var item in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
 			{
 				if (SelectedButton != null)
 				{

@@ -63,18 +63,18 @@ namespace Deuteros.Code.Objects
                 {
                     if (material.GroundAmount < 1 && material.SurveyTicks == 0)
                     {
-                        material.SurveyTicks = randomGen.Next(0, 8) * GameCore.SingletonInstance.GameData.ResourceLevels_Survey_Multiplier[material.MaterialType];
+                        material.SurveyTicks = randomGen.Next(0, 8) * GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ResourceLevels_Survey_Multiplier[material.MaterialType];
                     }
                     else if (material.GroundAmount < 1 && material.SurveyTicks > 0)
                     {
                         material.SurveyTicks--;
 
                         if (material.SurveyTicks == 0)
-                            material.GroundAmount = (randomGen.Next(0, 32768) * GameCore.SingletonInstance.GameData.ResourceLevels_Survey_Multiplier[material.MaterialType]) & 0x7FFF;
+                            material.GroundAmount = (randomGen.Next(0, 32768) * GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ResourceLevels_Survey_Multiplier[material.MaterialType]) & 0x7FFF;
                     }
                     else
                     {
-                        int amountRemoved = (PlanetResources.Derricks * GameCore.SingletonInstance.GameData.ResourceRate_Per_Derrick[material.MaterialType]) * daysDifference;
+                        int amountRemoved = (PlanetResources.Derricks * GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ResourceRate_Per_Derrick[material.MaterialType]) * daysDifference;
                         material.GroundAmount -= amountRemoved;
 
                         if (PlanetResources.Stores[material.MaterialType] < 50000)

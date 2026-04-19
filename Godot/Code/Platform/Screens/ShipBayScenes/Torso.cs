@@ -109,9 +109,9 @@ namespace Deuteros.Code.Platform.Screens.ShipBayScenes
                     Contents.Text = Module.StaffStored.Leader + "\n" + Module.StaffStored.Count;
 
                     if (Module.StaffStored.Type == StaffType.Production)
-                        Contents.AddThemeColorOverride("font_color", CoreData.Blue);
+                        Contents.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Blue);
                     else if (Module.StaffStored.Type == StaffType.Marines)
-                        Contents.AddThemeColorOverride("font_color", CoreData.Red);
+                        Contents.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
                 }
                 else
                 {

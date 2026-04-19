@@ -108,9 +108,9 @@ namespace Deuteros.Code.Platform
 					staffName.Text = CurrentStaff[i].GetLevelString()+"\n"+CurrentStaff[i].Leader;
 					staffCount.Text = CurrentStaff[i].Count.ToString();
 					if (CurrentStaff[i].Type == StaffType.Marines)
-						staffBackground.Color = CoreData.Red;
+						staffBackground.Color = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red;
 					else if (CurrentStaff[i].Type == StaffType.Production)
-						staffBackground.Color = CoreData.Blue;
+						staffBackground.Color = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Blue;
 				}
 				else
 				{

@@ -112,7 +112,7 @@ namespace Deuteros.Code.Platform.Screens
         public void LoadMap(Enums.StellarBodies currentLocation)
         {
             //Sense check - If we have no location, but the starmap is not available then 
-            if (currentLocation == Enums.StellarBodies.none && !GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel))
+            if (currentLocation == Enums.StellarBodies.none && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel))
             {
                 SelectedStar = Enums.StellarBodies.the_sun;
                 SelectedPlanet = Enums.StellarBodies.none;
@@ -120,7 +120,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 CurrentLocation = Enums.StellarBodies.the_sun;
             }
-            else if (currentLocation == Enums.StellarBodies.none && GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel))
+            else if (currentLocation == Enums.StellarBodies.none && GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel))
             {
                 SelectedStar = Enums.StellarBodies.the_sun;
                 SelectedPlanet = Enums.StellarBodies.none;
@@ -128,7 +128,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 CurrentLocation = Enums.StellarBodies.none;
             }
-            else if (GameCore.SingletonInstance.GameData.Stars.ContainsKey(currentLocation))
+            else if (GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Stars.ContainsKey(currentLocation))
             {
                 SelectedStar = currentLocation;
                 SelectedPlanet = Enums.StellarBodies.none;
@@ -138,7 +138,7 @@ namespace Deuteros.Code.Platform.Screens
             }
             else
             {
-                var currentPlanet = GameCore.SingletonInstance.GameData.Planets[currentLocation];
+                var currentPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[currentLocation];
 
                 SelectedStar = currentPlanet.ParentStar;
 
@@ -161,8 +161,8 @@ namespace Deuteros.Code.Platform.Screens
 
         private void SelectMoon_Pressed(int moonIndex)
         {
-            var currentPlanet = (Planet)GameCore.SingletonInstance.GameData.Planets[SelectedPlanet];
-            var currentMoon = GameCore.SingletonInstance.GameData.Planets.Single(T => T.Value.MoonParentPlanetId == currentPlanet.PlanetId && T.Value.Order == moonIndex).Value.PlanetId;
+            var currentPlanet = (Planet)GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedPlanet];
+            var currentMoon = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Single(T => T.Value.MoonParentPlanetId == currentPlanet.PlanetId && T.Value.Order == moonIndex).Value.PlanetId;
 
             CurrentLocation = currentMoon;
             SelectedMoon = currentMoon;
@@ -223,7 +223,7 @@ namespace Deuteros.Code.Platform.Screens
                 DepositLabels[i].Text = "";
             }
 
-            StarSystemGoBack.Visible = GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel);
+            StarSystemGoBack.Visible = GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel);
 
             if (SelectedMoon != Enums.StellarBodies.none)
                 SelectedLocationLabel.Text = SelectedMoon.ToScreenString();
@@ -241,7 +241,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 SunLabel.Text = SelectedStar.ToScreenString();
 
-                var starData = GameCore.SingletonInstance.GameData.Stars[SelectedStar];
+                var starData = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Stars[SelectedStar];
 
                 StarCountLabel.Text = (starData.PlanetDistanceList.Count / 2).ToString();
                 StarSummaryLabel.Text = "Planetary Systems";
@@ -253,8 +253,8 @@ namespace Deuteros.Code.Platform.Screens
                 StarSystemHolder.Visible = true;
                 StarMapHolder.Visible = false;
 
-                var starData = GameCore.SingletonInstance.GameData.Stars[CurrentLocation];
-                var planetData = GameCore.SingletonInstance.GameData.Planets.Where(T => T.Value.ParentStar == CurrentLocation && !T.Value.IsMoon).OrderBy(T => T.Value.Order).ToList();
+                var starData = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Stars[CurrentLocation];
+                var planetData = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Where(T => T.Value.ParentStar == CurrentLocation && !T.Value.IsMoon).OrderBy(T => T.Value.Order).ToList();
 
                 StarSystem = SpriteManager.LoadImageToTextureRect(StarMapSpriteBasePath + "//Star_" + CurrentLocation.ToScreenString("_") + ".png", StarSystem);
 
@@ -283,7 +283,7 @@ namespace Deuteros.Code.Platform.Screens
                 {
                     PlanetLabel.Text = SelectedPlanet.ToScreenString();
 
-                    ShowDeposits(GameCore.SingletonInstance.GameData.Planets[SelectedPlanet]);
+                    ShowDeposits(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedPlanet]);
                 }
                 else
                 {
@@ -301,9 +301,9 @@ namespace Deuteros.Code.Platform.Screens
                 IPlanet currentPlanet;
 
                 if (SelectedMoon == Enums.StellarBodies.none)
-                    currentPlanet = GameCore.SingletonInstance.GameData.Planets[CurrentLocation];
+                    currentPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[CurrentLocation];
                 else
-                    currentPlanet = GameCore.SingletonInstance.GameData.Planets[GameCore.SingletonInstance.GameData.Planets[SelectedMoon].MoonParentPlanetId];
+                    currentPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedMoon].MoonParentPlanetId];
 
                 Planet = SpriteManager.LoadImageToTextureRect(StarMapSpriteBasePath + "//Planet_" + currentPlanet.PlanetImageName() + ".png", Planet);
 
@@ -315,7 +315,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 var moonList = currentPlanet.IsMoon
                     //If this is a moon, grab the moonlist from the parent planet
-                    ? GameCore.SingletonInstance.GameData.Planets[currentPlanet.MoonParentPlanetId].MoonList
+                    ? GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[currentPlanet.MoonParentPlanetId].MoonList
                     : currentPlanet.MoonList;
 
                 var moonCount = 0;
@@ -344,12 +344,12 @@ namespace Deuteros.Code.Platform.Screens
                 if (SelectedMoon != Enums.StellarBodies.none)
                 {
                     MoonLabel.Text = SelectedMoon.ToScreenString();
-                    ShowDeposits(GameCore.SingletonInstance.GameData.Planets[SelectedMoon]);
+                    ShowDeposits(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedMoon]);
                 }
                 //Show the planetary deposits
                 else
                 {
-                    ShowDeposits(GameCore.SingletonInstance.GameData.Planets[SelectedPlanet]);
+                    ShowDeposits(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedPlanet]);
                 }
             }
         }

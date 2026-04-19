@@ -30,20 +30,20 @@ namespace Deuteros.Code.Platform
         private void TimerHold_ButtonUp()
         {
             ButtonDownFlag = false;
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkip = false;
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkipStart = Time.GetTicksMsec();
-            if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay - DaysAtStart == 0 && Time.GetTicksMsec() - Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkipStart < 999)
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkip = false;
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
+            if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - DaysAtStart == 0 && Time.GetTicksMsec() - Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart < 999)
             {
-                Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkipDay = true;
+                Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipDay = true;
             }
         }
 
         private void TimerHold_ButtonDown()
         {
             ButtonDownFlag = true;
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkip = true;
-            Deuteros.Code.GameCore.SingletonInstance.GameData.TimeSkipStart = Time.GetTicksMsec();
-            DaysAtStart = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay;
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkip = true;
+            Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
+            DaysAtStart = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
         }
     }
 }

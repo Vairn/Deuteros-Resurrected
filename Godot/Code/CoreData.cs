@@ -1,4 +1,5 @@
 using Deuteros.Code.Objects;
+using Deuteros.Code.Objects.GameData;
 using Deuteros.Code.Objects.Interfaces;
 using Godot;
 using System;
@@ -9,102 +10,80 @@ using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code
 {
-    [Serializable]
     public partial class CoreData
     {
-        private static string[] PersonNames = {
-            "None","Jones","Jackson","Straker","Collins","Johnson","Emerson",
-            "Benson","Brubaker","Nilson","Cummins","Edberg","Fischer","Lasky",
-            "Sheppard","Zapasnik","Delaney","Rimmer","Olson","Gregory","Adamson",
-            "Prescott","Palmer","Blake","Devlin","Bean","Sweeney","Bates","Mannion",
-            "Matusiak","Thomson","Scott","Langer","James","Urlich","Seth","Rogers",
-            "Zuccker","Foster","Allen","Loakes","Peterson","Edmunds","Rooney","Polanski",
-            "Quinn","Wheeler","Lister","Andrews","Dawson","Goldberg","Spilaney","Singh",
-            "Taylor","Hunter","Jarre","Clarke","Ash","Lyons","Wright","Cousins","Lennox",
-            "Biggs","Galagher","Cooper","Yuen","Sykes","Sellers","Fowler","Anderson","Moore",
-            "Lovell","Zaranoff","Dalton","Berry","Morgan","Nimitz","Hall","Tindel","Cavell",
-            "Redman","Blunket","Raphael","Morse","Kingston","Floyd","Thackray","Chan","Quigley",
-            "Deering","Keegan","Packer","Chandi","Price","Curtis","Sharma","Dodd","Rosso","Arnold",
-            "Turner","Wells","Nipper","Campbell","Corrigan","Grant","Appleby","Foreman","Lee","Smith",
-            "Hill","Dexter","Phillips","Bishop","Haggerty","Walsh","Green","Cushing","Harris",
-            "Darcy","Farquhar","Townsend","Booker","Ould","Hobbs","Templer","Metcalfe","Davis",
-            "White","Garner","Finch","Pablov","Rigsby","Ford","Lyons","Ashforth","Richards",
-            "Gibbon","Snipe","Schmidt","Dempsey","Nauls","Cohen","Proctor","Skupski",
-            "Docherty","Yamahata","Barber","Ives","Jansen","Callan","Wilkes","Tkaczuk",
-            "Andreas","Nichols","Ingram","Connors","Nunn","Blood","Sommers","Nelson",
-            "Lander","Suchon","Pinky","Vaccaro","Gill","Lloyd","Dade","Matthews","Forsyth","Goode"
-        };
-
-        public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Interfaces.IPlanet> Planets { get; set; }
-        public Dictionary<Enums.StellarBodies, Deuteros.Code.Objects.Star> Stars { get; set; }
-
-        public List<Item> ItemList { get; set; }
-
-        //The number of days since day 0
-        public uint CurrentDay { get; set; }
-        public int IOSCount { get; set; }
-        public int SCGCount { get; set; }
-
-        public Dictionary<Enums.ItemTypes, int> ResourceLevels_Survey_Multiplier { get; set; }
-        public Dictionary<Enums.ItemTypes, int> ResourceRate_Per_Derrick { get; set; }
-
-        public bool TimeSkip { get; set; }
-        public ulong TimeSkipStart { get; set; }
-        public bool TimeSkipDay { get; set; }
-
-        public List<IShip> Ships { get; set; }
-
-        public Enums.StellarBodies CurrentPlanet { get; set; }
-        public List<Enums.Game_Unlocks> Unlocks { get; set; }
-
-        public static Color Red { get; set; } = new Color(255, 0, 0, 255);
-        public static Color Green { get; set; } = new Color(0, 136, 0, 255);
-        public static Color Blue { get; set; } = new Color(0, 34, 136, 255);
-        public static Color Beige { get; set; } = new Color(153, 170, 119, 255);
-        public static Color Dark_Beige { get; set; } = new Color(85, 102, 51, 255);
-        public static Color Yellow { get; set; } = new Color(255, 255, 0, 255);
-
-        public uint NextPersonIndex;
+        public SaveFile ActiveSaveFile { get; set; }
+        public static BaseData StaticGameData { get; set; }
 
         public Item GetItem(Enums.ItemTypes itemType)
         {
-            return ItemList.First(T => T.ItemType == itemType);
+            return ActiveSaveFile.BaseGameData.ItemList.First(T => T.ItemType == itemType);
         }
 
         public string GetNextPersonName()
         {
-            if (NextPersonIndex >= PersonNames.Count()) NextPersonIndex = 1;
-            return PersonNames[NextPersonIndex++];
+            if (ActiveSaveFile.NextPersonIndex >= ActiveSaveFile.BaseGameData.PersonNames.Count()) ActiveSaveFile.NextPersonIndex = 1;
+            return ActiveSaveFile.BaseGameData.PersonNames[ActiveSaveFile.NextPersonIndex++];
         }
 
         public IEnumerable<Item> GetAllActiveItems()
         {
-            return ItemList.Where(T => T.Locked == false && (T.Research == null || T.Research.Researched));
+            return ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Locked == false && (T.Research == null || T.Research.Researched));
         }
 
-        public static CoreData CreateNewGameFile()
+        public static SaveFile CreateNewSaveFile()
+        {
+            var newGameSave = new SaveFile();
+            newGameSave.BaseGameData = StaticGameData;
+            newGameSave.GameConfig = new Config();
+            newGameSave.CurrentPlanet = Enums.StellarBodies.earth;
+            newGameSave.Unlocks = new List<Enums.Game_Unlocks>();
+            newGameSave.Ships = new List<IShip>();
+            newGameSave.CurrentDay = 0;
+            newGameSave.GameConfig.ShuttleRefuelThreshold = 50;
+            newGameSave.GameConfig.IOSRefuelThreshold = 200;
+            newGameSave.NextPersonIndex = Random.Shared.Next(StaticGameData.PersonNames.Count() + 1);
+
+            return newGameSave;
+        }
+
+        public static void CreateBaseGameData()
         {
             if (!System.IO.Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "Data") || 1 == 1)
             {
                 System.IO.Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Data");
 
-                var newGameData = new CoreData();
+                StaticGameData = new BaseData();
 
-                newGameData.CurrentPlanet = Enums.StellarBodies.earth;
-                newGameData.Planets = new Dictionary<Enums.StellarBodies, Objects.Interfaces.IPlanet>();
-                newGameData.Stars = new Dictionary<StellarBodies, Star>();
-                newGameData.ResourceLevels_Survey_Multiplier = new Dictionary<Enums.ItemTypes, int>();
-                newGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
-                newGameData.Unlocks = new List<Enums.Game_Unlocks>();
-                newGameData.Ships = new List<IShip>();
-                newGameData.CurrentDay = 0;
-                newGameData.SCGCount = 0;
-                newGameData.IOSCount = 0;
-                newGameData.NextPersonIndex = (uint)Random.Shared.Next(PersonNames.Length - 1) + 1;
+                StaticGameData.Planets = new Dictionary<Enums.StellarBodies, Objects.Interfaces.IPlanet>();
+                StaticGameData.Stars = new Dictionary<StellarBodies, Star>();
+                StaticGameData.ResourceLevels_Survey_Multiplier = new Dictionary<Enums.ItemTypes, int>();
+                StaticGameData.ResourceRate_Per_Derrick = new Dictionary<Enums.ItemTypes, int>();
+                StaticGameData.PersonNames = new List<string>() { "None","Jones","Jackson","Straker","Collins","Johnson","Emerson",
+                    "Benson","Brubaker","Nilson","Cummins","Edberg","Fischer","Lasky",
+                    "Sheppard","Zapasnik","Delaney","Rimmer","Olson","Gregory","Adamson",
+                    "Prescott","Palmer","Blake","Devlin","Bean","Sweeney","Bates","Mannion",
+                    "Matusiak","Thomson","Scott","Langer","James","Urlich","Seth","Rogers",
+                    "Zuccker","Foster","Allen","Loakes","Peterson","Edmunds","Rooney","Polanski",
+                    "Quinn","Wheeler","Lister","Andrews","Dawson","Goldberg","Spilaney","Singh",
+                    "Taylor","Hunter","Jarre","Clarke","Ash","Lyons","Wright","Cousins","Lennox",
+                    "Biggs","Galagher","Cooper","Yuen","Sykes","Sellers","Fowler","Anderson","Moore",
+                    "Lovell","Zaranoff","Dalton","Berry","Morgan","Nimitz","Hall","Tindel","Cavell",
+                    "Redman","Blunket","Raphael","Morse","Kingston","Floyd","Thackray","Chan","Quigley",
+                    "Deering","Keegan","Packer","Chandi","Price","Curtis","Sharma","Dodd","Rosso","Arnold",
+                    "Turner","Wells","Nipper","Campbell","Corrigan","Grant","Appleby","Foreman","Lee","Smith",
+                    "Hill","Dexter","Phillips","Bishop","Haggerty","Walsh","Green","Cushing","Harris",
+                    "Darcy","Farquhar","Townsend","Booker","Ould","Hobbs","Templer","Metcalfe","Davis",
+                    "White","Garner","Finch","Pablov","Rigsby","Ford","Lyons","Ashforth","Richards",
+                    "Gibbon","Snipe","Schmidt","Dempsey","Nauls","Cohen","Proctor","Skupski",
+                    "Docherty","Yamahata","Barber","Ives","Jansen","Callan","Wilkes","Tkaczuk",
+                    "Andreas","Nichols","Ingram","Connors","Nunn","Blood","Sommers","Nelson",
+                    "Lander","Suchon","Pinky","Vaccaro","Gill","Lloyd","Dade","Matthews","Forsyth","Goode"
+                };
 
                 #region ItemList
 
-                newGameData.ItemList = new List<Item>();
+                StaticGameData.ItemList = new List<Item>();
 
                 #region Items
 
@@ -120,7 +99,7 @@ namespace Deuteros.Code
                 unknownitem.Research.Researched = false;
                 unknownitem.Research.Locked = true;
 
-                newGameData.ItemList.Add(unknownitem);
+                StaticGameData.ItemList.Add(unknownitem);
 
                 var derrick = new Item();
                 derrick.FullName = "Resource Mining Rig";
@@ -143,7 +122,7 @@ namespace Deuteros.Code
                 derrick.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 4));
                 derrick.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 1));
 
-                newGameData.ItemList.Add(derrick);
+                StaticGameData.ItemList.Add(derrick);
 
                 var shuttlechas = new Item();
                 shuttlechas.FullName = "Shuttle Chassis";
@@ -164,7 +143,7 @@ namespace Deuteros.Code
                 shuttlechas.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 10));
                 shuttlechas.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 15));
 
-                newGameData.ItemList.Add(shuttlechas);
+                StaticGameData.ItemList.Add(shuttlechas);
 
                 var shuttledrive = new Item();
                 shuttledrive.FullName = "Shuttle Drive Unit";
@@ -185,7 +164,7 @@ namespace Deuteros.Code
                 shuttledrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 10));
                 shuttledrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 4));
 
-                newGameData.ItemList.Add(shuttledrive);
+                StaticGameData.ItemList.Add(shuttledrive);
 
                 var ofFrame = new Item();
                 ofFrame.FullName = "Orbital Factory Section";
@@ -208,7 +187,7 @@ namespace Deuteros.Code
                 ofFrame.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 25));
                 ofFrame.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 40));
 
-                newGameData.ItemList.Add(ofFrame);
+                StaticGameData.ItemList.Add(ofFrame);
 
                 var supplyPod = new Item();
                 supplyPod.FullName = "Supply Pod";
@@ -227,7 +206,7 @@ namespace Deuteros.Code
                 supplyPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
                 supplyPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
-                newGameData.ItemList.Add(supplyPod);
+                StaticGameData.ItemList.Add(supplyPod);
 
                 var toolPod = new Item();
                 toolPod.FullName = "Tool and Equipment Mounting";
@@ -246,7 +225,7 @@ namespace Deuteros.Code
                 toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
                 toolPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
-                newGameData.ItemList.Add(toolPod);
+                StaticGameData.ItemList.Add(toolPod);
 
                 var cryoPod = new Item();
                 cryoPod.FullName = "Cryogenic Holding Pod";
@@ -265,7 +244,7 @@ namespace Deuteros.Code
                 cryoPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 1));
                 cryoPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
-                newGameData.ItemList.Add(cryoPod);
+                StaticGameData.ItemList.Add(cryoPod);
 
                 var pulseLaser = new Item();
 
@@ -284,7 +263,7 @@ namespace Deuteros.Code
                 pulseLaser.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 30));
                 pulseLaser.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.hed_fuel, 600));
 
-                newGameData.ItemList.Add(pulseLaser);
+                StaticGameData.ItemList.Add(pulseLaser);
 
                 var iChassis = new Item();
                 iChassis.FullName = "I.O.S Chassis";
@@ -304,7 +283,7 @@ namespace Deuteros.Code
                 iChassis.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 50));
                 iChassis.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 75));
 
-                newGameData.ItemList.Add(iChassis);
+                StaticGameData.ItemList.Add(iChassis);
 
                 var iDrive = new Item();
                 iDrive.FullName = "I.O.S Drive Unit";
@@ -322,7 +301,7 @@ namespace Deuteros.Code
                 iDrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 50));
                 iDrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 15));
 
-                newGameData.ItemList.Add(iDrive);
+                StaticGameData.ItemList.Add(iDrive);
 
                 var gChassis = new Item();
                 gChassis.FullName = "S.C.G. Chassis";
@@ -343,7 +322,7 @@ namespace Deuteros.Code
                 gChassis.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 100));
                 gChassis.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 50));
 
-                newGameData.ItemList.Add(gChassis);
+                StaticGameData.ItemList.Add(gChassis);
 
                 var starDrive = new Item();
                 starDrive.FullName = "S.C.G. Drive Unit";
@@ -363,7 +342,7 @@ namespace Deuteros.Code
                 starDrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 25));
                 starDrive.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 10));
 
-                newGameData.ItemList.Add(starDrive);
+                StaticGameData.ItemList.Add(starDrive);
 
                 var acc = new Item();
                 acc.FullName = "Auto Cargo Computer";
@@ -383,7 +362,7 @@ namespace Deuteros.Code
                 acc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 1));
                 acc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
-                newGameData.ItemList.Add(acc);
+                StaticGameData.ItemList.Add(acc);
 
                 var aoc = new Item();
                 aoc.FullName = "Auto Operations Computer";
@@ -402,7 +381,7 @@ namespace Deuteros.Code
                 aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 2));
                 aoc.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 1));
 
-                newGameData.ItemList.Add(aoc);
+                StaticGameData.ItemList.Add(aoc);
 
                 var BandAid = new Item();
                 BandAid.FullName = "Installation Repair Equip";
@@ -423,7 +402,7 @@ namespace Deuteros.Code
                 BandAid.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.carbon, 30));
                 BandAid.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 30));
 
-                newGameData.ItemList.Add(BandAid);
+                StaticGameData.ItemList.Add(BandAid);
 
                 var SelfDestruct = new Item();
                 SelfDestruct.FullName = "Self Destruct Mechanism";
@@ -442,7 +421,7 @@ namespace Deuteros.Code
                 SelfDestruct.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.paladium, 1));
                 SelfDestruct.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 2));
 
-                newGameData.ItemList.Add(SelfDestruct);
+                StaticGameData.ItemList.Add(SelfDestruct);
 
                 var HydraulicGrapple = new Item();
                 HydraulicGrapple.FullName = "Hydraulic Grapple";
@@ -461,7 +440,7 @@ namespace Deuteros.Code
                 HydraulicGrapple.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.titanium, 2));
                 HydraulicGrapple.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
 
-                newGameData.ItemList.Add(HydraulicGrapple);
+                StaticGameData.ItemList.Add(HydraulicGrapple);
 
                 var DFCC = new Item();
                 DFCC.FullName = "Drone Fleet Control Computer";
@@ -483,7 +462,7 @@ namespace Deuteros.Code
                 DFCC.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 2));
                 DFCC.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 1));
 
-                newGameData.ItemList.Add(DFCC);
+                StaticGameData.ItemList.Add(DFCC);
 
                 var AMA = new Item();
                 AMA.FullName = "Asteroid Mining Attachment";
@@ -506,7 +485,7 @@ namespace Deuteros.Code
                 AMA.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 5));
                 AMA.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 1));
 
-                newGameData.ItemList.Add(AMA);
+                StaticGameData.ItemList.Add(AMA);
 
                 var Hyperlight = new Item();
                 Hyperlight.FullName = "Hyperlight Travel";
@@ -521,7 +500,7 @@ namespace Deuteros.Code
                 Hyperlight.OrbitOnly = true;
                 Hyperlight.BuildRequirements = null;
 
-                newGameData.ItemList.Add(Hyperlight);
+                StaticGameData.ItemList.Add(Hyperlight);
 
                 var MTX = new Item();
                 MTX.FullName = "Mass Tranceiver";
@@ -540,7 +519,7 @@ namespace Deuteros.Code
                 MTX.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.paladium, 100));
                 MTX.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 40));
 
-                newGameData.ItemList.Add(MTX);
+                StaticGameData.ItemList.Add(MTX);
 
                 var MFL = new Item();
                 MFL.FullName = "Methanoid Fusion Laser";
@@ -558,7 +537,7 @@ namespace Deuteros.Code
                 MFL.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.paladium, 10));
                 MFL.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 10));
 
-                newGameData.ItemList.Add(MFL);
+                StaticGameData.ItemList.Add(MFL);
 
                 var RFrame = new Item();
                 RFrame.FullName = "Resource Station Section";
@@ -582,7 +561,7 @@ namespace Deuteros.Code
                 RFrame.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 10));
                 RFrame.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silica, 15));
 
-                newGameData.ItemList.Add(RFrame);
+                StaticGameData.ItemList.Add(RFrame);
 
                 var PrejudiceTorpedoLauncher = new Item();
                 PrejudiceTorpedoLauncher.FullName = "Prejudice Torpedo Launcher";
@@ -600,7 +579,7 @@ namespace Deuteros.Code
                 PrejudiceTorpedoLauncher.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.aluminium, 45));
                 PrejudiceTorpedoLauncher.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 10));
 
-                newGameData.ItemList.Add(PrejudiceTorpedoLauncher);
+                StaticGameData.ItemList.Add(PrejudiceTorpedoLauncher);
 
                 var COMMSPOD = new Item();
                 COMMSPOD.FullName = "Communication Adapter";
@@ -620,7 +599,7 @@ namespace Deuteros.Code
                 COMMSPOD.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
                 COMMSPOD.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 1));
 
-                newGameData.ItemList.Add(COMMSPOD);
+                StaticGameData.ItemList.Add(COMMSPOD);
 
                 var IOSDrone = new Item();
                 IOSDrone.FullName = "IOS Battle Drone";
@@ -642,7 +621,7 @@ namespace Deuteros.Code
                 IOSDrone.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.paladium, 30));
                 IOSDrone.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 30));
 
-                newGameData.ItemList.Add(IOSDrone);
+                StaticGameData.ItemList.Add(IOSDrone);
 
                 var StarDrone = new Item();
                 StarDrone.FullName = "SCG Battle Drone";
@@ -665,7 +644,7 @@ namespace Deuteros.Code
                 StarDrone.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 95));
                 StarDrone.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 50));
 
-                newGameData.ItemList.Add(StarDrone);
+                StaticGameData.ItemList.Add(StarDrone);
 
                 var PrisonPod = new Item();
                 PrisonPod.FullName = "Prison Pod";
@@ -685,7 +664,7 @@ namespace Deuteros.Code
                 PrisonPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.copper, 1));
                 PrisonPod.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.platinum, 2));
 
-                newGameData.ItemList.Add(PrisonPod);
+                StaticGameData.ItemList.Add(PrisonPod);
 
                 var SonicBlaster = new Item();
                 SonicBlaster.FullName = "Sonic Blaster";
@@ -709,7 +688,7 @@ namespace Deuteros.Code
                 SonicBlaster.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.silver, 3000));
                 SonicBlaster.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.gold, 3000));
 
-                newGameData.ItemList.Add(SonicBlaster);
+                StaticGameData.ItemList.Add(SonicBlaster);
 
                 #endregion
 
@@ -723,7 +702,7 @@ namespace Deuteros.Code
                 Iron.Mass = 1;
                 Iron.Production = false;
 
-                newGameData.ItemList.Add(Iron);
+                StaticGameData.ItemList.Add(Iron);
 
                 var Titanium = new Item();
                 Titanium.FullName = "Titanium";
@@ -733,7 +712,7 @@ namespace Deuteros.Code
                 Titanium.Mass = 1;
                 Titanium.Production = false;
 
-                newGameData.ItemList.Add(Titanium);
+                StaticGameData.ItemList.Add(Titanium);
 
                 var Aluminium = new Item();
                 Aluminium.FullName = "Aluminium";
@@ -743,7 +722,7 @@ namespace Deuteros.Code
                 Aluminium.Mass = 1;
                 Aluminium.Production = false;
 
-                newGameData.ItemList.Add(Aluminium);
+                StaticGameData.ItemList.Add(Aluminium);
 
                 var Carbon = new Item();
                 Carbon.FullName = "Carbon";
@@ -753,7 +732,7 @@ namespace Deuteros.Code
                 Carbon.Mass = 1;
                 Carbon.Production = false;
 
-                newGameData.ItemList.Add(Carbon);
+                StaticGameData.ItemList.Add(Carbon);
 
                 var Copper = new Item();
                 Copper.FullName = "Copper";
@@ -763,7 +742,7 @@ namespace Deuteros.Code
                 Copper.Mass = 1;
                 Copper.Production = false;
 
-                newGameData.ItemList.Add(Copper);
+                StaticGameData.ItemList.Add(Copper);
 
                 var Hydrogen = new Item();
                 Hydrogen.FullName = "Hydrogen";
@@ -773,7 +752,7 @@ namespace Deuteros.Code
                 Hydrogen.Mass = 1;
                 Hydrogen.Production = false;
 
-                newGameData.ItemList.Add(Hydrogen);
+                StaticGameData.ItemList.Add(Hydrogen);
 
                 var Deuterium = new Item();
                 Deuterium.FullName = "Deuterium";
@@ -783,7 +762,7 @@ namespace Deuteros.Code
                 Deuterium.Mass = 1;
                 Deuterium.Production = false;
 
-                newGameData.ItemList.Add(Deuterium);
+                StaticGameData.ItemList.Add(Deuterium);
 
                 var Methane = new Item();
                 Methane.FullName = "Methane";
@@ -793,7 +772,7 @@ namespace Deuteros.Code
                 Methane.Mass = 1;
                 Methane.Production = false;
 
-                newGameData.ItemList.Add(Methane);
+                StaticGameData.ItemList.Add(Methane);
 
                 var Helium = new Item();
                 Helium.FullName = "Helium";
@@ -803,7 +782,7 @@ namespace Deuteros.Code
                 Helium.Mass = 1;
                 Helium.Production = false;
 
-                newGameData.ItemList.Add(Helium);
+                StaticGameData.ItemList.Add(Helium);
 
                 var Paladium = new Item();
                 Paladium.FullName = "Paladium";
@@ -813,7 +792,7 @@ namespace Deuteros.Code
                 Paladium.Mass = 1;
                 Paladium.Production = false;
 
-                newGameData.ItemList.Add(Paladium);
+                StaticGameData.ItemList.Add(Paladium);
 
                 var Platinum = new Item();
                 Platinum.FullName = "Platinum";
@@ -823,7 +802,7 @@ namespace Deuteros.Code
                 Platinum.Mass = 1;
                 Platinum.Production = false;
 
-                newGameData.ItemList.Add(Platinum);
+                StaticGameData.ItemList.Add(Platinum);
 
                 var Silver = new Item();
                 Silver.FullName = "Silver";
@@ -833,7 +812,7 @@ namespace Deuteros.Code
                 Silver.Mass = 1;
                 Silver.Production = false;
 
-                newGameData.ItemList.Add(Silver);
+                StaticGameData.ItemList.Add(Silver);
 
                 var Gold = new Item();
                 Gold.FullName = "Gold";
@@ -843,7 +822,7 @@ namespace Deuteros.Code
                 Gold.Mass = 1;
                 Gold.Production = false;
 
-                newGameData.ItemList.Add(Gold);
+                StaticGameData.ItemList.Add(Gold);
 
                 var Silica = new Item();
                 Silica.FullName = "Silica";
@@ -853,7 +832,7 @@ namespace Deuteros.Code
                 Silica.Mass = 1;
                 Silica.Production = false;
 
-                newGameData.ItemList.Add(Silica);
+                StaticGameData.ItemList.Add(Silica);
 
                 var mehFuel = new Item();
                 mehFuel.FullName = "Hydrogen Methanol Fuel";
@@ -873,7 +852,7 @@ namespace Deuteros.Code
                 mehFuel.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.hydrogen, 2));
                 mehFuel.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.methane, 2));
 
-                newGameData.ItemList.Add(mehFuel);
+                StaticGameData.ItemList.Add(mehFuel);
 
                 var hedFuel = new Item();
                 hedFuel.FullName = "Helium Deuterium Fuel";
@@ -892,59 +871,59 @@ namespace Deuteros.Code
                 hedFuel.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.helium, 2));
                 hedFuel.BuildRequirements.Add(new BuildRequirement(Enums.ItemTypes.deuterium, 2));
 
-                newGameData.ItemList.Add(hedFuel);
+                StaticGameData.ItemList.Add(hedFuel);
 
                 #endregion
 
                 #endregion
 
 
-                newGameData.Stars.Add(Enums.StellarBodies.the_sun, new Objects.Star(Enums.StellarBodies.the_sun)
+                StaticGameData.Stars.Add(Enums.StellarBodies.the_sun, new Objects.Star(Enums.StellarBodies.the_sun)
                 {
                     PlanetDistanceList = new List<int> { 37, 41, 53, 59, 68, 76, 85, 91, 98, 108, 112, 128, 128, 141, 146, 158, 162, 174, 181, 185, 197, 201 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.proxima, new Objects.Star(Enums.StellarBodies.proxima)
+                StaticGameData.Stars.Add(Enums.StellarBodies.proxima, new Objects.Star(Enums.StellarBodies.proxima)
                 {
                     PlanetDistanceList = new List<int> { 49, 63, 146, 158 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.centauri, new Objects.Star(Enums.StellarBodies.centauri)
+                StaticGameData.Stars.Add(Enums.StellarBodies.centauri, new Objects.Star(Enums.StellarBodies.centauri)
                 {
                     PlanetDistanceList = new List<int> { 37, 43, 82, 94, 132, 140, 162, 174 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.barnard, new Objects.Star(Enums.StellarBodies.barnard)
+                StaticGameData.Stars.Add(Enums.StellarBodies.barnard, new Objects.Star(Enums.StellarBodies.barnard)
                 {
                     PlanetDistanceList = new List<int> { 37, 41, 53, 59, 68, 76, 114, 126, 133, 139, 144, 160, 196, 204 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.lalande, new Objects.Star(Enums.StellarBodies.lalande)
+                StaticGameData.Stars.Add(Enums.StellarBodies.lalande, new Objects.Star(Enums.StellarBodies.lalande)
                 {
                     PlanetDistanceList = new List<int> { 50, 62, 81, 95 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.sirius, new Objects.Star(Enums.StellarBodies.sirius)
+                StaticGameData.Stars.Add(Enums.StellarBodies.sirius, new Objects.Star(Enums.StellarBodies.sirius)
                 {
                     PlanetDistanceList = new List<int> { 52, 60, 68, 76 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.cygni, new Objects.Star(Enums.StellarBodies.cygni)
+                StaticGameData.Stars.Add(Enums.StellarBodies.cygni, new Objects.Star(Enums.StellarBodies.cygni)
                 {
                     PlanetDistanceList = new List<int> { 37, 41, 53, 59, 67, 77, 84, 92, 114, 126, 128, 144, 146, 158, 179, 189 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.procyon, new Objects.Star(Enums.StellarBodies.procyon)
+                StaticGameData.Stars.Add(Enums.StellarBodies.procyon, new Objects.Star(Enums.StellarBodies.procyon)
                 {
                     PlanetDistanceList = new List<int> { 53, 59, 129, 143, 160, 173 }
                 });
 
-                newGameData.Stars.Add(Enums.StellarBodies.tau_ceti, new Objects.Star(Enums.StellarBodies.tau_ceti)
+                StaticGameData.Stars.Add(Enums.StellarBodies.tau_ceti, new Objects.Star(Enums.StellarBodies.tau_ceti)
                 {
                     PlanetDistanceList = new List<int> { 53, 57, 68, 76, 85, 91, 113, 127, 146, 158 }
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mercury, new Objects.Planet(Enums.StellarBodies.mercury, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mercury, new Objects.Planet(Enums.StellarBodies.mercury, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -962,7 +941,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.venus, new Objects.Planet(Enums.StellarBodies.venus, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.venus, new Objects.Planet(Enums.StellarBodies.venus, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -982,7 +961,7 @@ namespace Deuteros.Code
                 });
 
                 //TODO - Earth must be ordered as 0, but the order affects map layout.
-                newGameData.Planets.Add(Enums.StellarBodies.earth, new Objects.Earth(Enums.StellarBodies.earth, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.earth, new Objects.Earth(Enums.StellarBodies.earth, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1004,8 +983,8 @@ namespace Deuteros.Code
                 });
 
                 //Special Earth setup for a new game
-                ((Earth)newGameData.Planets[StellarBodies.earth]).Factory.Ground = true;
-                newGameData.Planets[StellarBodies.earth].PlanetResources.Derricks = 1;
+                ((Earth)StaticGameData.Planets[StellarBodies.earth]).Factory.Ground = true;
+                StaticGameData.Planets[StellarBodies.earth].PlanetResources.Derricks = 1;
 
                 var trainingData = new Objects.Training();
 
@@ -1037,9 +1016,9 @@ namespace Deuteros.Code
                 trainingData.ReferenceLevelMultiplier = 1.0;
                 trainingData.ReferenceDuration = 58.0;
 
-                ((Earth)newGameData.Planets[StellarBodies.earth]).TrainingData = trainingData;
+                ((Earth)StaticGameData.Planets[StellarBodies.earth]).TrainingData = trainingData;
 
-                newGameData.Planets.Add(Enums.StellarBodies.the_moon, new Objects.Planet(Enums.StellarBodies.the_moon, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.the_moon, new Objects.Planet(Enums.StellarBodies.the_moon, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.earth,
@@ -1057,7 +1036,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mars, new Objects.Planet(Enums.StellarBodies.mars, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mars, new Objects.Planet(Enums.StellarBodies.mars, 3)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1074,7 +1053,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.phobos, new Objects.Planet(Enums.StellarBodies.phobos, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.phobos, new Objects.Planet(Enums.StellarBodies.phobos, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.mars,
@@ -1087,7 +1066,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.deimos, new Objects.Planet(Enums.StellarBodies.deimos, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.deimos, new Objects.Planet(Enums.StellarBodies.deimos, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.mars,
@@ -1100,7 +1079,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.asteroids, new Objects.Planet(Enums.StellarBodies.asteroids, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.asteroids, new Objects.Planet(Enums.StellarBodies.asteroids, 4)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1121,7 +1100,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.asteroid
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.jupiter, new Objects.Planet(Enums.StellarBodies.jupiter, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.jupiter, new Objects.Planet(Enums.StellarBodies.jupiter, 5)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1136,7 +1115,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.giant
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.amalthea, new Objects.Planet(Enums.StellarBodies.amalthea, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.amalthea, new Objects.Planet(Enums.StellarBodies.amalthea, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1149,7 +1128,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.io, new Objects.Planet(Enums.StellarBodies.io, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.io, new Objects.Planet(Enums.StellarBodies.io, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1163,7 +1142,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.europa, new Objects.Planet(Enums.StellarBodies.europa, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.europa, new Objects.Planet(Enums.StellarBodies.europa, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1177,7 +1156,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.ganymede, new Objects.Planet(Enums.StellarBodies.ganymede, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.ganymede, new Objects.Planet(Enums.StellarBodies.ganymede, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1195,7 +1174,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.callisto, new Objects.Planet(Enums.StellarBodies.callisto, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.callisto, new Objects.Planet(Enums.StellarBodies.callisto, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1213,7 +1192,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.leda, new Objects.Planet(Enums.StellarBodies.leda, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.leda, new Objects.Planet(Enums.StellarBodies.leda, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1232,7 +1211,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.himalia, new Objects.Planet(Enums.StellarBodies.himalia, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.himalia, new Objects.Planet(Enums.StellarBodies.himalia, 6)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1246,7 +1225,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.elara, new Objects.Planet(Enums.StellarBodies.elara, 7)
+                StaticGameData.Planets.Add(Enums.StellarBodies.elara, new Objects.Planet(Enums.StellarBodies.elara, 7)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1259,7 +1238,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pasiphae, new Objects.Planet(Enums.StellarBodies.pasiphae, 8)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pasiphae, new Objects.Planet(Enums.StellarBodies.pasiphae, 8)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jupiter,
@@ -1272,7 +1251,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.saturn, new Objects.Planet(Enums.StellarBodies.saturn, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.saturn, new Objects.Planet(Enums.StellarBodies.saturn, 6)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1286,7 +1265,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.rings
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mimas, new Objects.Planet(Enums.StellarBodies.mimas, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mimas, new Objects.Planet(Enums.StellarBodies.mimas, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1299,7 +1278,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.encaladus, new Objects.Planet(Enums.StellarBodies.encaladus, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.encaladus, new Objects.Planet(Enums.StellarBodies.encaladus, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1316,7 +1295,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.tethys, new Objects.Planet(Enums.StellarBodies.tethys, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.tethys, new Objects.Planet(Enums.StellarBodies.tethys, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1335,7 +1314,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.dione, new Objects.Planet(Enums.StellarBodies.dione, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.dione, new Objects.Planet(Enums.StellarBodies.dione, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1348,7 +1327,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.rhea, new Objects.Planet(Enums.StellarBodies.rhea, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.rhea, new Objects.Planet(Enums.StellarBodies.rhea, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1365,7 +1344,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.titan, new Objects.Planet(Enums.StellarBodies.titan, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.titan, new Objects.Planet(Enums.StellarBodies.titan, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1383,7 +1362,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.hyperion, new Objects.Planet(Enums.StellarBodies.hyperion, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.hyperion, new Objects.Planet(Enums.StellarBodies.hyperion, 6)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1400,7 +1379,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.iapetus, new Objects.Planet(Enums.StellarBodies.iapetus, 7)
+                StaticGameData.Planets.Add(Enums.StellarBodies.iapetus, new Objects.Planet(Enums.StellarBodies.iapetus, 7)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1413,7 +1392,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.phoebe, new Objects.Planet(Enums.StellarBodies.phoebe, 8)
+                StaticGameData.Planets.Add(Enums.StellarBodies.phoebe, new Objects.Planet(Enums.StellarBodies.phoebe, 8)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.saturn,
@@ -1432,7 +1411,7 @@ namespace Deuteros.Code
 )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.uranus, new Objects.Planet(Enums.StellarBodies.uranus, 7)
+                StaticGameData.Planets.Add(Enums.StellarBodies.uranus, new Objects.Planet(Enums.StellarBodies.uranus, 7)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1453,7 +1432,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.miranda, new Objects.Planet(Enums.StellarBodies.miranda, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.miranda, new Objects.Planet(Enums.StellarBodies.miranda, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
@@ -1470,7 +1449,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.ariel, new Objects.Planet(Enums.StellarBodies.ariel, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.ariel, new Objects.Planet(Enums.StellarBodies.ariel, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
@@ -1487,7 +1466,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.umbriel, new Objects.Planet(Enums.StellarBodies.umbriel, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.umbriel, new Objects.Planet(Enums.StellarBodies.umbriel, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
@@ -1501,7 +1480,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.titania, new Objects.Planet(Enums.StellarBodies.titania, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.titania, new Objects.Planet(Enums.StellarBodies.titania, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
@@ -1520,7 +1499,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.oberon, new Objects.Planet(Enums.StellarBodies.oberon, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.oberon, new Objects.Planet(Enums.StellarBodies.oberon, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
@@ -1539,7 +1518,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.neptune, new Objects.Planet(Enums.StellarBodies.neptune, 8)
+                StaticGameData.Planets.Add(Enums.StellarBodies.neptune, new Objects.Planet(Enums.StellarBodies.neptune, 8)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1560,7 +1539,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.triton, new Objects.Planet(Enums.StellarBodies.triton, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.triton, new Objects.Planet(Enums.StellarBodies.triton, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.neptune,
@@ -1579,7 +1558,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.neried, new Objects.Planet(Enums.StellarBodies.neried, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.neried, new Objects.Planet(Enums.StellarBodies.neried, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.neptune,
@@ -1593,7 +1572,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.nthree, new Objects.Planet(Enums.StellarBodies.nthree, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.nthree, new Objects.Planet(Enums.StellarBodies.nthree, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.neptune,
@@ -1606,7 +1585,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.nfour, new Objects.Planet(Enums.StellarBodies.nfour, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.nfour, new Objects.Planet(Enums.StellarBodies.nfour, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.neptune,
@@ -1618,7 +1597,7 @@ namespace Deuteros.Code
     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pluto, new Objects.Planet(Enums.StellarBodies.pluto, 9)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pluto, new Objects.Planet(Enums.StellarBodies.pluto, 9)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1638,7 +1617,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.charon, new Objects.Planet(Enums.StellarBodies.charon, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.charon, new Objects.Planet(Enums.StellarBodies.charon, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.pluto,
@@ -1651,7 +1630,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.decuria, new Objects.Planet(Enums.StellarBodies.decuria, 10)
+                StaticGameData.Planets.Add(Enums.StellarBodies.decuria, new Objects.Planet(Enums.StellarBodies.decuria, 10)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
@@ -1668,7 +1647,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.atlantic, new Objects.Planet(Enums.StellarBodies.atlantic, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.atlantic, new Objects.Planet(Enums.StellarBodies.atlantic, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.proxima,
@@ -1691,7 +1670,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pacific, new Objects.Planet(Enums.StellarBodies.pacific, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pacific, new Objects.Planet(Enums.StellarBodies.pacific, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.proxima,
@@ -1713,7 +1692,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.barent, new Objects.Planet(Enums.StellarBodies.barent, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.barent, new Objects.Planet(Enums.StellarBodies.barent, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.pacific,
@@ -1728,7 +1707,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.baltic, new Objects.Planet(Enums.StellarBodies.baltic, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.baltic, new Objects.Planet(Enums.StellarBodies.baltic, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.pacific,
@@ -1743,7 +1722,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chiron, new Objects.Planet(Enums.StellarBodies.chiron, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chiron, new Objects.Planet(Enums.StellarBodies.chiron, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.centauri,
@@ -1765,7 +1744,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cercops, new Objects.Planet(Enums.StellarBodies.cercops, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cercops, new Objects.Planet(Enums.StellarBodies.cercops, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.centauri,
@@ -1786,7 +1765,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive_rings
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.circe, new Objects.Planet(Enums.StellarBodies.circe, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.circe, new Objects.Planet(Enums.StellarBodies.circe, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cercops,
@@ -1801,7 +1780,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chimaera, new Objects.Planet(Enums.StellarBodies.chimaera, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chimaera, new Objects.Planet(Enums.StellarBodies.chimaera, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cercops,
@@ -1816,7 +1795,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cerberus, new Objects.Planet(Enums.StellarBodies.cerberus, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cerberus, new Objects.Planet(Enums.StellarBodies.cerberus, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.centauri,
@@ -1838,7 +1817,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cronus, new Objects.Planet(Enums.StellarBodies.cronus, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cronus, new Objects.Planet(Enums.StellarBodies.cronus, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cerberus,
@@ -1855,7 +1834,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chloe, new Objects.Planet(Enums.StellarBodies.chloe, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chloe, new Objects.Planet(Enums.StellarBodies.chloe, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cerberus,
@@ -1871,7 +1850,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.calchas, new Objects.Planet(Enums.StellarBodies.calchas, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.calchas, new Objects.Planet(Enums.StellarBodies.calchas, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cerberus,
@@ -1886,7 +1865,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cadmus, new Objects.Planet(Enums.StellarBodies.cadmus, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cadmus, new Objects.Planet(Enums.StellarBodies.cadmus, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cerberus,
@@ -1901,7 +1880,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.creon, new Objects.Planet(Enums.StellarBodies.creon, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.creon, new Objects.Planet(Enums.StellarBodies.creon, 3)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.centauri,
@@ -1919,7 +1898,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cybele, new Objects.Planet(Enums.StellarBodies.cybele, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cybele, new Objects.Planet(Enums.StellarBodies.cybele, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.creon,
@@ -1935,7 +1914,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cupid, new Objects.Planet(Enums.StellarBodies.cupid, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cupid, new Objects.Planet(Enums.StellarBodies.cupid, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.creon,
@@ -1952,7 +1931,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mycenae, new Objects.Planet(Enums.StellarBodies.mycenae, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mycenae, new Objects.Planet(Enums.StellarBodies.mycenae, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -1974,7 +1953,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.tyre, new Objects.Planet(Enums.StellarBodies.tyre, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.tyre, new Objects.Planet(Enums.StellarBodies.tyre, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -1991,7 +1970,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.ur, new Objects.Planet(Enums.StellarBodies.ur, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.ur, new Objects.Planet(Enums.StellarBodies.ur, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.tyre,
@@ -2006,7 +1985,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.thebes, new Objects.Planet(Enums.StellarBodies.thebes, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.thebes, new Objects.Planet(Enums.StellarBodies.thebes, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -2023,7 +2002,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.tanis, new Objects.Planet(Enums.StellarBodies.tanis, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.tanis, new Objects.Planet(Enums.StellarBodies.tanis, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2043,7 +2022,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.memphis, new Objects.Planet(Enums.StellarBodies.memphis, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.memphis, new Objects.Planet(Enums.StellarBodies.memphis, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2061,7 +2040,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.karnak, new Objects.Planet(Enums.StellarBodies.karnak, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.karnak, new Objects.Planet(Enums.StellarBodies.karnak, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2080,7 +2059,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.gizeh, new Objects.Planet(Enums.StellarBodies.gizeh, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.gizeh, new Objects.Planet(Enums.StellarBodies.gizeh, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2095,7 +2074,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.calah, new Objects.Planet(Enums.StellarBodies.calah, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.calah, new Objects.Planet(Enums.StellarBodies.calah, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2114,7 +2093,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.noria, new Objects.Planet(Enums.StellarBodies.noria, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.noria, new Objects.Planet(Enums.StellarBodies.noria, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2129,7 +2108,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.abydos, new Objects.Planet(Enums.StellarBodies.abydos, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.abydos, new Objects.Planet(Enums.StellarBodies.abydos, 6)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2144,7 +2123,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.saqqara, new Objects.Planet(Enums.StellarBodies.saqqara, 7)
+                StaticGameData.Planets.Add(Enums.StellarBodies.saqqara, new Objects.Planet(Enums.StellarBodies.saqqara, 7)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.thebes,
@@ -2161,7 +2140,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pompeii, new Objects.Planet(Enums.StellarBodies.pompeii, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pompeii, new Objects.Planet(Enums.StellarBodies.pompeii, 3)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -2178,7 +2157,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.petra, new Objects.Planet(Enums.StellarBodies.petra, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.petra, new Objects.Planet(Enums.StellarBodies.petra, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.pompeii,
@@ -2193,7 +2172,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.palmyra, new Objects.Planet(Enums.StellarBodies.palmyra, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.palmyra, new Objects.Planet(Enums.StellarBodies.palmyra, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.pompeii,
@@ -2208,7 +2187,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.jericho, new Objects.Planet(Enums.StellarBodies.jericho, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.jericho, new Objects.Planet(Enums.StellarBodies.jericho, 4)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -2225,7 +2204,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.babylon, new Objects.Planet(Enums.StellarBodies.babylon, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.babylon, new Objects.Planet(Enums.StellarBodies.babylon, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jericho,
@@ -2245,7 +2224,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.troy, new Objects.Planet(Enums.StellarBodies.troy, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.troy, new Objects.Planet(Enums.StellarBodies.troy, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jericho,
@@ -2260,7 +2239,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.carthage, new Objects.Planet(Enums.StellarBodies.carthage, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.carthage, new Objects.Planet(Enums.StellarBodies.carthage, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.jericho,
@@ -2275,7 +2254,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.crete, new Objects.Planet(Enums.StellarBodies.crete, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.crete, new Objects.Planet(Enums.StellarBodies.crete, 5)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -2293,7 +2272,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.knossos, new Objects.Planet(Enums.StellarBodies.knossos, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.knossos, new Objects.Planet(Enums.StellarBodies.knossos, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2309,7 +2288,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.delphi, new Objects.Planet(Enums.StellarBodies.delphi, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.delphi, new Objects.Planet(Enums.StellarBodies.delphi, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2325,7 +2304,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.ephesus, new Objects.Planet(Enums.StellarBodies.ephesus, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.ephesus, new Objects.Planet(Enums.StellarBodies.ephesus, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2341,7 +2320,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.corinth, new Objects.Planet(Enums.StellarBodies.corinth, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.corinth, new Objects.Planet(Enums.StellarBodies.corinth, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2357,7 +2336,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.athens, new Objects.Planet(Enums.StellarBodies.athens, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.athens, new Objects.Planet(Enums.StellarBodies.athens, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2374,7 +2353,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.olympia, new Objects.Planet(Enums.StellarBodies.olympia, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.olympia, new Objects.Planet(Enums.StellarBodies.olympia, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.crete,
@@ -2390,7 +2369,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mari, new Objects.Planet(Enums.StellarBodies.mari, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mari, new Objects.Planet(Enums.StellarBodies.mari, 6)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.barnard,
@@ -2412,7 +2391,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cuzco, new Objects.Planet(Enums.StellarBodies.cuzco, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cuzco, new Objects.Planet(Enums.StellarBodies.cuzco, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.mari,
@@ -2429,7 +2408,7 @@ namespace Deuteros.Code
                 });
 
 
-                newGameData.Planets.Add(Enums.StellarBodies.nero, new Objects.Planet(Enums.StellarBodies.nero, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.nero, new Objects.Planet(Enums.StellarBodies.nero, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.lalande,
@@ -2451,7 +2430,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.julius, new Objects.Planet(Enums.StellarBodies.julius, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.julius, new Objects.Planet(Enums.StellarBodies.julius, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.lalande,
@@ -2468,7 +2447,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.moon
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.septimus, new Objects.Planet(Enums.StellarBodies.septimus, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.septimus, new Objects.Planet(Enums.StellarBodies.septimus, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.julius,
@@ -2484,7 +2463,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.augustus, new Objects.Planet(Enums.StellarBodies.augustus, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.augustus, new Objects.Planet(Enums.StellarBodies.augustus, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.julius,
@@ -2500,7 +2479,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.claudius, new Objects.Planet(Enums.StellarBodies.claudius, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.claudius, new Objects.Planet(Enums.StellarBodies.claudius, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.julius,
@@ -2517,7 +2496,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.hadrian, new Objects.Planet(Enums.StellarBodies.hadrian, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.hadrian, new Objects.Planet(Enums.StellarBodies.hadrian, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.julius,
@@ -2533,7 +2512,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.romulus, new Objects.Planet(Enums.StellarBodies.romulus, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.romulus, new Objects.Planet(Enums.StellarBodies.romulus, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.sirius,
@@ -2555,7 +2534,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.remus, new Objects.Planet(Enums.StellarBodies.remus, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.remus, new Objects.Planet(Enums.StellarBodies.remus, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.sirius,
@@ -2577,8 +2556,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-
-                newGameData.Planets.Add(Enums.StellarBodies.helios, new Objects.Planet(Enums.StellarBodies.helios, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.helios, new Objects.Planet(Enums.StellarBodies.helios, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2595,7 +2573,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.lithos, new Objects.Planet(Enums.StellarBodies.lithos, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.lithos, new Objects.Planet(Enums.StellarBodies.lithos, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2614,7 +2592,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.burah, new Objects.Planet(Enums.StellarBodies.burah, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.burah, new Objects.Planet(Enums.StellarBodies.burah, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2631,7 +2609,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.alumen, new Objects.Planet(Enums.StellarBodies.alumen, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.alumen, new Objects.Planet(Enums.StellarBodies.alumen, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.burah,
@@ -2647,7 +2625,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.silex, new Objects.Planet(Enums.StellarBodies.silex, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.silex, new Objects.Planet(Enums.StellarBodies.silex, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.burah,
@@ -2666,7 +2644,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.sulfurum, new Objects.Planet(Enums.StellarBodies.sulfurum, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.sulfurum, new Objects.Planet(Enums.StellarBodies.sulfurum, 3)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2688,7 +2666,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chloros, new Objects.Planet(Enums.StellarBodies.chloros, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chloros, new Objects.Planet(Enums.StellarBodies.chloros, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.sulfurum,
@@ -2708,7 +2686,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.argos, new Objects.Planet(Enums.StellarBodies.argos, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.argos, new Objects.Planet(Enums.StellarBodies.argos, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.sulfurum,
@@ -2723,7 +2701,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.calx, new Objects.Planet(Enums.StellarBodies.calx, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.calx, new Objects.Planet(Enums.StellarBodies.calx, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.sulfurum,
@@ -2743,7 +2721,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.titanes, new Objects.Planet(Enums.StellarBodies.titanes, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.titanes, new Objects.Planet(Enums.StellarBodies.titanes, 4)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2760,7 +2738,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.moon
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.vanadis, new Objects.Planet(Enums.StellarBodies.vanadis, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.vanadis, new Objects.Planet(Enums.StellarBodies.vanadis, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2778,7 +2756,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chronos, new Objects.Planet(Enums.StellarBodies.chronos, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chronos, new Objects.Planet(Enums.StellarBodies.chronos, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2793,7 +2771,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.selene, new Objects.Planet(Enums.StellarBodies.selene, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.selene, new Objects.Planet(Enums.StellarBodies.selene, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2813,7 +2791,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.bromos, new Objects.Planet(Enums.StellarBodies.bromos, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.bromos, new Objects.Planet(Enums.StellarBodies.bromos, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2828,7 +2806,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.kryptos, new Objects.Planet(Enums.StellarBodies.kryptos, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.kryptos, new Objects.Planet(Enums.StellarBodies.kryptos, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2843,7 +2821,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.rubidos, new Objects.Planet(Enums.StellarBodies.rubidos, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.rubidos, new Objects.Planet(Enums.StellarBodies.rubidos, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.titanes,
@@ -2858,7 +2836,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.zargun, new Objects.Planet(Enums.StellarBodies.zargun, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.zargun, new Objects.Planet(Enums.StellarBodies.zargun, 5)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -2875,7 +2853,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.giant
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.niobe, new Objects.Planet(Enums.StellarBodies.niobe, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.niobe, new Objects.Planet(Enums.StellarBodies.niobe, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2890,7 +2868,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.kadmeia, new Objects.Planet(Enums.StellarBodies.kadmeia, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.kadmeia, new Objects.Planet(Enums.StellarBodies.kadmeia, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2905,7 +2883,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.tellus, new Objects.Planet(Enums.StellarBodies.tellus, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.tellus, new Objects.Planet(Enums.StellarBodies.tellus, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2922,7 +2900,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.iodes, new Objects.Planet(Enums.StellarBodies.iodes, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.iodes, new Objects.Planet(Enums.StellarBodies.iodes, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2939,7 +2917,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.xenos, new Objects.Planet(Enums.StellarBodies.xenos, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.xenos, new Objects.Planet(Enums.StellarBodies.xenos, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2954,7 +2932,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.caesius, new Objects.Planet(Enums.StellarBodies.caesius, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.caesius, new Objects.Planet(Enums.StellarBodies.caesius, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2969,7 +2947,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.rhenus, new Objects.Planet(Enums.StellarBodies.rhenus, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.rhenus, new Objects.Planet(Enums.StellarBodies.rhenus, 6)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zargun,
@@ -2984,7 +2962,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.osme, new Objects.Planet(Enums.StellarBodies.osme, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.osme, new Objects.Planet(Enums.StellarBodies.osme, 6)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -3001,7 +2979,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.iris, new Objects.Planet(Enums.StellarBodies.iris, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.iris, new Objects.Planet(Enums.StellarBodies.iris, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.osme,
@@ -3016,7 +2994,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.platina, new Objects.Planet(Enums.StellarBodies.platina, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.platina, new Objects.Planet(Enums.StellarBodies.platina, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.osme,
@@ -3031,7 +3009,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.aurum, new Objects.Planet(Enums.StellarBodies.aurum, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.aurum, new Objects.Planet(Enums.StellarBodies.aurum, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.osme,
@@ -3046,7 +3024,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.thallos, new Objects.Planet(Enums.StellarBodies.thallos, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.thallos, new Objects.Planet(Enums.StellarBodies.thallos, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.osme,
@@ -3062,7 +3040,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.astatos, new Objects.Planet(Enums.StellarBodies.astatos, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.astatos, new Objects.Planet(Enums.StellarBodies.astatos, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.osme,
@@ -3078,7 +3056,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.radius, new Objects.Planet(Enums.StellarBodies.radius, 7)
+                StaticGameData.Planets.Add(Enums.StellarBodies.radius, new Objects.Planet(Enums.StellarBodies.radius, 7)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.cygni,
@@ -3096,7 +3074,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.aktis, new Objects.Planet(Enums.StellarBodies.aktis, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.aktis, new Objects.Planet(Enums.StellarBodies.aktis, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.radius,
@@ -3112,7 +3090,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.protos, new Objects.Planet(Enums.StellarBodies.protos, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.protos, new Objects.Planet(Enums.StellarBodies.protos, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.radius,
@@ -3128,7 +3106,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.prasios, new Objects.Planet(Enums.StellarBodies.prasios, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.prasios, new Objects.Planet(Enums.StellarBodies.prasios, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.radius,
@@ -3145,7 +3123,7 @@ namespace Deuteros.Code
                 });
 
 
-                newGameData.Planets.Add(Enums.StellarBodies.cambrian, new Objects.Planet(Enums.StellarBodies.cambrian, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cambrian, new Objects.Planet(Enums.StellarBodies.cambrian, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.procyon,
@@ -3167,7 +3145,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.cainozoic, new Objects.Planet(Enums.StellarBodies.cainozoic, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.cainozoic, new Objects.Planet(Enums.StellarBodies.cainozoic, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.procyon,
@@ -3185,7 +3163,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.tertiary, new Objects.Planet(Enums.StellarBodies.tertiary, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.tertiary, new Objects.Planet(Enums.StellarBodies.tertiary, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3201,7 +3179,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.paleocene, new Objects.Planet(Enums.StellarBodies.paleocene, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.paleocene, new Objects.Planet(Enums.StellarBodies.paleocene, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3217,7 +3195,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.eocene, new Objects.Planet(Enums.StellarBodies.eocene, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.eocene, new Objects.Planet(Enums.StellarBodies.eocene, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3233,7 +3211,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.oligocene, new Objects.Planet(Enums.StellarBodies.oligocene, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.oligocene, new Objects.Planet(Enums.StellarBodies.oligocene, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3249,7 +3227,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.miocene, new Objects.Planet(Enums.StellarBodies.miocene, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.miocene, new Objects.Planet(Enums.StellarBodies.miocene, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3269,7 +3247,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pliocene, new Objects.Planet(Enums.StellarBodies.pliocene, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pliocene, new Objects.Planet(Enums.StellarBodies.pliocene, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.cainozoic,
@@ -3287,7 +3265,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.paleozoic, new Objects.Planet(Enums.StellarBodies.paleozoic, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.paleozoic, new Objects.Planet(Enums.StellarBodies.paleozoic, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.procyon,
@@ -3305,7 +3283,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive_rings
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.silurian, new Objects.Planet(Enums.StellarBodies.silurian, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.silurian, new Objects.Planet(Enums.StellarBodies.silurian, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.paleozoic,
@@ -3321,7 +3299,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.alpha, new Objects.Planet(Enums.StellarBodies.alpha, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.alpha, new Objects.Planet(Enums.StellarBodies.alpha, 0)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.tau_ceti,
@@ -3343,7 +3321,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.beta, new Objects.Planet(Enums.StellarBodies.beta, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.beta, new Objects.Planet(Enums.StellarBodies.beta, 1)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.tau_ceti,
@@ -3362,7 +3340,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.whirl
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.delta, new Objects.Planet(Enums.StellarBodies.delta, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.delta, new Objects.Planet(Enums.StellarBodies.delta, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.beta,
@@ -3377,7 +3355,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.gamma, new Objects.Planet(Enums.StellarBodies.gamma, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.gamma, new Objects.Planet(Enums.StellarBodies.gamma, 2)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.tau_ceti,
@@ -3394,7 +3372,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.lines
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.theta, new Objects.Planet(Enums.StellarBodies.theta, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.theta, new Objects.Planet(Enums.StellarBodies.theta, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.gamma,
@@ -3414,7 +3392,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.iota, new Objects.Planet(Enums.StellarBodies.iota, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.iota, new Objects.Planet(Enums.StellarBodies.iota, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.gamma,
@@ -3431,7 +3409,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.kappa, new Objects.Planet(Enums.StellarBodies.kappa, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.kappa, new Objects.Planet(Enums.StellarBodies.kappa, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.gamma,
@@ -3450,7 +3428,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.epsilon, new Objects.Planet(Enums.StellarBodies.epsilon, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.epsilon, new Objects.Planet(Enums.StellarBodies.epsilon, 3)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.tau_ceti,
@@ -3467,7 +3445,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.giant
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.lambda, new Objects.Planet(Enums.StellarBodies.lambda, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.lambda, new Objects.Planet(Enums.StellarBodies.lambda, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3482,7 +3460,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.mu, new Objects.Planet(Enums.StellarBodies.mu, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.mu, new Objects.Planet(Enums.StellarBodies.mu, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3497,7 +3475,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.nu, new Objects.Planet(Enums.StellarBodies.nu, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.nu, new Objects.Planet(Enums.StellarBodies.nu, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3512,7 +3490,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.xi, new Objects.Planet(Enums.StellarBodies.xi, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.xi, new Objects.Planet(Enums.StellarBodies.xi, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3528,7 +3506,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.omicron, new Objects.Planet(Enums.StellarBodies.omicron, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.omicron, new Objects.Planet(Enums.StellarBodies.omicron, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3544,7 +3522,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.pi, new Objects.Planet(Enums.StellarBodies.pi, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.pi, new Objects.Planet(Enums.StellarBodies.pi, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.epsilon,
@@ -3560,7 +3538,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.zeta, new Objects.Planet(Enums.StellarBodies.zeta, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.zeta, new Objects.Planet(Enums.StellarBodies.zeta, 4)
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.tau_ceti,
@@ -3578,7 +3556,7 @@ namespace Deuteros.Code
                     PlanetStyle = PlanetStyle.massive_rings
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.rho, new Objects.Planet(Enums.StellarBodies.rho, 0)
+                StaticGameData.Planets.Add(Enums.StellarBodies.rho, new Objects.Planet(Enums.StellarBodies.rho, 0)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3594,7 +3572,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.sigma, new Objects.Planet(Enums.StellarBodies.sigma, 1)
+                StaticGameData.Planets.Add(Enums.StellarBodies.sigma, new Objects.Planet(Enums.StellarBodies.sigma, 1)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3610,7 +3588,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.upsilon, new Objects.Planet(Enums.StellarBodies.upsilon, 2)
+                StaticGameData.Planets.Add(Enums.StellarBodies.upsilon, new Objects.Planet(Enums.StellarBodies.upsilon, 2)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3630,7 +3608,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.phi, new Objects.Planet(Enums.StellarBodies.phi, 3)
+                StaticGameData.Planets.Add(Enums.StellarBodies.phi, new Objects.Planet(Enums.StellarBodies.phi, 3)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3648,7 +3626,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.chi, new Objects.Planet(Enums.StellarBodies.chi, 4)
+                StaticGameData.Planets.Add(Enums.StellarBodies.chi, new Objects.Planet(Enums.StellarBodies.chi, 4)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3666,7 +3644,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.psi, new Objects.Planet(Enums.StellarBodies.psi, 5)
+                StaticGameData.Planets.Add(Enums.StellarBodies.psi, new Objects.Planet(Enums.StellarBodies.psi, 5)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3682,7 +3660,7 @@ namespace Deuteros.Code
                     )
                 });
 
-                newGameData.Planets.Add(Enums.StellarBodies.omega, new Objects.Planet(Enums.StellarBodies.omega, 6)
+                StaticGameData.Planets.Add(Enums.StellarBodies.omega, new Objects.Planet(Enums.StellarBodies.omega, 6)
                 {
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.zeta,
@@ -3699,45 +3677,43 @@ namespace Deuteros.Code
                 });
 
 
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.iron] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.titanium] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.aluminium] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.carbon] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.copper] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.hydrogen] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.deuterium] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.methane] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.helium] = 4;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.paladium] = 1;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.platinum] = 2;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.silver] = 2;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.gold] = 3;
-                newGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.silica] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.iron] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.titanium] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.aluminium] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.carbon] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.copper] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.hydrogen] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.deuterium] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.methane] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.helium] = 4;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.paladium] = 1;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.platinum] = 2;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.silver] = 2;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.gold] = 3;
+                StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.silica] = 1;
 
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.iron] = 2;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.titanium] = 2;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.aluminium] = 2;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.carbon] = 2;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.copper] = 2;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.hydrogen] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.deuterium] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.methane] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.helium] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.paladium] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.platinum] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silver] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.gold] = 1;
-                newGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silica] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.iron] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.titanium] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.aluminium] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.carbon] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.copper] = 2;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.hydrogen] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.deuterium] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.methane] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.helium] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.paladium] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.platinum] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silver] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.gold] = 1;
+                StaticGameData.ResourceRate_Per_Derrick[Enums.ItemTypes.silica] = 2;
 
-                var saveData = Utility.Serialization.WriteObject<Deuteros.Code.CoreData>(newGameData);
+                var saveData = Utility.Serialization.WriteObject<Deuteros.Code.Objects.GameData.BaseData>(StaticGameData);
                 System.IO.File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "Data\\GameData.dat", saveData);
-
-                return newGameData;
             }
             else
             {
                 var fileData = System.IO.File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "Data\\GameData.dat");
-                return Utility.Serialization.ReadObject<Deuteros.Code.CoreData>(fileData);
+                StaticGameData = Utility.Serialization.ReadObject<Deuteros.Code.Objects.GameData.BaseData>(fileData);
             }
         }
     }

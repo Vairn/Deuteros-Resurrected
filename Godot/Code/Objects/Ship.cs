@@ -25,48 +25,60 @@ namespace Deuteros.Code.Objects
         public bool LocationView { get; set; }
         public Enums.ItemTypes FuelType { get; set; }
         public List<ShipModule> Modules { get; set; }
+        public ACC ACC { get; set; }
 
-        public virtual void Dock()
+        public void Dock()
         {
-            if (this.ShipState == Ship_States.UnDocked && GameCore.SingletonInstance.GameData.Planets[this.PlanetLocation].Station.Built)
+            if (ShipState == Ship_States.UnDocked && GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Station.Built)
             {
-                this.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-                this.ShipState = Ship_States.Docking;
+                StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
+                ShipState = Ship_States.Docking;
             }
         }
 
-        public virtual void Land()
+        public void Land()
         {
-            if (this.ShipType == Ship_Types.Shuttle && this.ShipState == Ship_States.UnDocked)
+            if (ShipType == Ship_Types.Shuttle && ShipState == Ship_States.UnDocked)
             {
-                this.ShipState = Ship_States.Landing;
-                this.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-
+                ShipState = Ship_States.Landing;
+                StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
             }
         }
 
-
-        public virtual void TakeOff()
+        public void TakeOff()
         {
-            if (this.Engine && this.Fuel > 0)
-                if (this.ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
+            if (Engine && Fuel > 0)
+                if (ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
                 {
                     ((Shuttle)this).OnGround = false;
-                    this.ShipState = Ship_States.TakingOff;
-                    this.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
+                    ShipState = Ship_States.TakingOff;
+                    StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
                 }
-                else if (this.ShipState == Ship_States.Docked)
+                else if (ShipState == Ship_States.Docked)
                 {
-                    this.ShipState = Ship_States.Launching;
-                    this.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
+                    ShipState = Ship_States.Launching;
+                    StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
                 }
+        }
+
+        public bool EngageEngine()
+        {
+            if (ShipState == Ship_States.UnDocked && Engine && DestinationPlanetLocation != PlanetLocation)
+            {
+                ShipState = Ship_States.InTransit;
+                StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
+                
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public virtual int TravelTimeRemain()
         {
             return 0;
         }
-
-        public Objects.ACC ACC { get; set; }
     }
 }

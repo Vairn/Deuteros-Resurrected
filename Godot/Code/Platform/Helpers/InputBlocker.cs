@@ -60,15 +60,8 @@ namespace Deuteros.Code.Platform.Helpers
                 {
                     if (((InputEventMouseButton)@event).ButtonIndex == MouseButton.Right && ((InputEventMouseButton)@event).Pressed)
                     {
-                        if (Deuteros.Code.GameCore.SingletonInstance.GameData.Planets.Values
-                            .Select(p => p.Station)
-                            .Where(s => s.BuildParts > 0).ToList().Count() > 0)
-                        {
-
-                            var sceneNameSplit = Enums.Scenes.Overview.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
-
-                            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", new List<Enums.SceneVariables>());
-                        }
+                        if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Values.Select(p => p.Station).Where(s => s.BuildParts > 0).ToList().Count() > 0)
+                            Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Overview, new List<Enums.SceneVariables>());
                     }
                 }
                 return;

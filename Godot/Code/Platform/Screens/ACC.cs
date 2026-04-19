@@ -1,7 +1,8 @@
-using Deuteros.Code.Objects;
 using Deuteros.Code.Platform.Base;
 using Deuteros.Code.Platform.Helpers;
 using Godot;
+using Newtonsoft.Json.Bson;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static Deuteros.Code.Enums;
@@ -30,7 +31,9 @@ namespace Deuteros.Code.Platform.Screens
 		Label SourceName { get; set; }
 		Label DestinationName { get; set; }
 
-		public override void _Ready()
+        public Action CloseWindow;
+
+        public override void _Ready()
 		{
 			GetNode<Node2D>("Window").GetNode<Label>("Background/Number").Text = "1";
 
@@ -71,9 +74,6 @@ namespace Deuteros.Code.Platform.Screens
 				}
 			}
 
-			SourceCycleButtons.ForEach(T => T.Visible = false);
-			DestinationCycleButtons.ForEach(T => T.Visible = false);
-
 			EngageButton.Pressed += EngageButton_Pressed;
 			DisengageButton.Pressed += DisengageButton_Pressed;
 			CycleButton.Pressed += CycleButton_Pressed;
@@ -87,27 +87,33 @@ namespace Deuteros.Code.Platform.Screens
 			CurrentACC.CycleMode = false;
 			CurrentACC.Active = false;
 			CurrentACC.CycleMode = false;
+
+			CurrentACC.DestinationItems = new List<ItemTypes>();
+			CurrentACC.SourceItems = new List<ItemTypes>();
+			CurrentACC.CurrentSource = ItemTypes.iron;
+			CurrentACC.CurrentDestination = ItemTypes.iron;
 		}
 
 		private void CycleButton_Pressed()
 		{
-			CurrentACC.Active = true;
-			CurrentACC.CycleMode = true;
-			DisplayShipInterior();
+            CurrentACC.Activate();
+            CurrentACC.CycleMode = true;
+
+            DisplayShipInterior();
 		}
 
 		private void DisengageButton_Pressed()
 		{
 			CurrentACC.Active = false;
 			CurrentACC.CycleMode = false;
+
 			DisplayShipInterior();
 		}
 
 		private void EngageButton_Pressed()
 		{
-			CurrentACC.Active = true;
-			CurrentACC.CycleMode = false;
 			CurrentACC.Activate();
+
 			DisplayShipInterior();
 		}
 
@@ -116,30 +122,35 @@ namespace Deuteros.Code.Platform.Screens
 			if (source)
 			{
 				if (CurrentACC.SourceItems.Contains(itemType))
+				{
 					CurrentACC.SourceItems.Remove(itemType);
+				}
 				else
+				{
 					CurrentACC.SourceItems.Add(itemType);
+
+					CurrentACC.CurrentSource = itemType;
+				}
 			}
 			else
 			{
 				if (CurrentACC.DestinationItems.Contains(itemType))
+				{
 					CurrentACC.DestinationItems.Remove(itemType);
+				}
 				else
+				{ 
 					CurrentACC.DestinationItems.Add(itemType);
+                    CurrentACC.CurrentDestination = itemType;
+                }
 			}
 
 			UpdateState();
 		}
 		private void DisplayShipInterior()
 		{
-			GameCore.SingletonInstance.ShipSelected = CurrentACC.Ship.ShipID;
-
-			//Double underscores in scene names represent a flag to pass to the scene
-			var sceneNameSplit = Enums.Scenes.ShipInterior.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
-
-			//Underscores in scene names represent a folder
-			Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", new List<SceneVariables>());
-		}
+			CloseWindow?.Invoke();
+        }
 
 		public void SetACC(Objects.ACC acc)
 		{
@@ -148,14 +159,19 @@ namespace Deuteros.Code.Platform.Screens
 
 		public void UpdateState()
 		{
-			HEDBlank.Visible = !GameCore.SingletonInstance.GameData.Unlocks.Contains(Game_Unlocks.Interstellar_Travel);
+			HEDBlank.Visible = !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Game_Unlocks.Interstellar_Travel);
 
-			SourceCycleButtons.ForEach(T => T.Visible = false);
-			DestinationCycleButtons.ForEach(T => T.Visible = false);
+            SourceCycleButtons.ForEach(T => T.Modulate = new Color(T.Modulate, 0f));
+            DestinationCycleButtons.ForEach(T => T.Modulate = new Color(T.Modulate, 0f));
 
-			for (int i = 0; i < 16; i++)
+            SourceName.Text = CurrentACC.Source.ToString();
+            DestinationName.Text = CurrentACC.Destination.ToString();
+
+			Warning.Visible = CurrentACC.Ship.Modules.Any(T => T.ModuleType == Module_Types.Supply);
+
+            for (int i = 0; i < 16; i++)
 			{
-				if (i == 16 && !GameCore.SingletonInstance.GameData.Unlocks.Contains(Game_Unlocks.Interstellar_Travel))
+				if (i == 15 && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Game_Unlocks.Interstellar_Travel))
 					continue;
 
 				if (CurrentACC.SourceItems.Contains(ResourceTypeList[i]))
@@ -169,16 +185,11 @@ namespace Deuteros.Code.Platform.Screens
 					DestinationButtons[i].TextureNormal = SpriteManager.LoadImage(NavSpriteBasePath + "Cross.png");
 
 				if (CurrentACC.CurrentSource == ResourceTypeList[i])
-					SourceCycleButtons[i].Visible = true;
+					SourceCycleButtons[i].Modulate = new Color(SourceCycleButtons[i].Modulate, 1f);
 
-				if (CurrentACC.CurrentDestination == ResourceTypeList[i])
-					DestinationCycleButtons[i].Visible = true;
-			}
-		}
-
-		public static void UpdateACC(uint previousDay, uint currentDay)
-		{
-
+            if (CurrentACC.CurrentDestination == ResourceTypeList[i])
+					DestinationCycleButtons[i].Modulate = new Color(DestinationCycleButtons[i].Modulate, 1f);
+        }
 		}
 	}
 }

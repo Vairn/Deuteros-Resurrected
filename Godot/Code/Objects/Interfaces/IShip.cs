@@ -23,9 +23,10 @@ namespace Deuteros.Code.Objects.Interfaces
         public bool LocationView { get; set; }
         public Enums.ItemTypes FuelType { get; set; }
         public List<ShipModule> Modules { get; set; }
-        public void TakeOff();
         public void Dock();
         public void Land();
+        public void TakeOff();
+        public bool EngageEngine();
         public int TravelTimeRemain();
         public Objects.ACC ACC { get; set; }
     }

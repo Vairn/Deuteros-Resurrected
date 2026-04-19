@@ -5,6 +5,10 @@ using Deuteros.Code;
 using Godot;
 using System;
 using System.Threading;
+using System.Linq;
+using Deuteros.Code.Platform.Screens;
+using static Deuteros.Code.Enums;
+using System.Collections.Generic;
 
 public partial class Settings : Node2D
 {
@@ -51,14 +55,24 @@ public partial class Settings : Node2D
     private void EarthStationTo7_Pressed()
     {
         var gameData = GameCore.SingletonInstance.GameData;
-        var earth = (Earth)gameData.Planets[Enums.StellarBodies.earth];
+        var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
         earth.Station.BuildParts = 7;
+
+        gameData.GetItem(Enums.ItemTypes.a__c__c).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.a__c__c).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+        gameData.GetItem(Enums.ItemTypes.a__c__c).Locked = false;
 
         GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
         GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
         GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;
 
-        if (!GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.First_Station_Segment))
+        earth.PlanetResources.Stores[Enums.ItemTypes.tool_pod] = 1;
+        earth.PlanetResources.Stores[Enums.ItemTypes.supply_pod] = 1;
+        earth.PlanetResources.Stores[Enums.ItemTypes.a__c__c] = 1;
+
+        GameCore.SingletonInstance.TriggerStationPiecePlaced(Enums.StellarBodies.earth);
+
+        if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
         {
             SkipToShuttles_Pressed();
         }
@@ -69,20 +83,19 @@ public partial class Settings : Node2D
         var gameData = GameCore.SingletonInstance.GameData;
 
         gameData.GetItem(Enums.ItemTypes.s_chassis).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.s_chassis).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.s_drive).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.s_drive).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.of_frame).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.of_frame).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.tool_pod).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.tool_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.supply_pod).Research.Researched = true;
+        gameData.GetItem(Enums.ItemTypes.supply_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
         gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.Researched = true;
-
-        gameData.GetItem(Enums.ItemTypes.s_chassis).Research.ResearchOrder = 2;
-        gameData.GetItem(Enums.ItemTypes.s_drive).Research.ResearchOrder = 3;
-        gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.ResearchOrder = 4;
-        gameData.GetItem(Enums.ItemTypes.of_frame).Research.ResearchOrder = 5;
-        gameData.GetItem(Enums.ItemTypes.tool_pod).Research.ResearchOrder = 6;
-        gameData.GetItem(Enums.ItemTypes.supply_pod).Research.ResearchOrder = 7;
-        gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.ResearchOrder = 8;
+        gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
 
         gameData.GetItem(Enums.ItemTypes.s_chassis).Locked = false;
         gameData.GetItem(Enums.ItemTypes.s_drive).Locked = false;
@@ -92,7 +105,7 @@ public partial class Settings : Node2D
         gameData.GetItem(Enums.ItemTypes.supply_pod).Locked = false;
         gameData.GetItem(Enums.ItemTypes.cryo_pod).Locked = false;
 
-        var earth = (Earth)gameData.Planets[Enums.StellarBodies.earth];
+        var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
 
         if (earth.ResearchStaff == null || earth.ResearchStaff.Count == 0)
         {
@@ -110,13 +123,40 @@ public partial class Settings : Node2D
             earth.Factory.Builder.Type = Enums.StaffType.Production;
         }
 
+        if (!earth.PlanetResources.Staff.Any(T => T != null && T.Type == Enums.StaffType.Marines))
+        {
+            var newMarine = new Staff();
+            newMarine.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
+            newMarine.Count = 41;
+            newMarine.Type = Enums.StaffType.Marines;
+
+            earth.PlanetResources.AddStaff(newMarine);
+        }
+
         earth.PlanetResources.Derricks = 8;
         earth.PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
         earth.PlanetResources.Stores[Enums.ItemTypes.s_drive] = 1;
         earth.PlanetResources.Stores[Enums.ItemTypes.of_frame] = 8;
 
-        GameCore.SingletonInstance.TriggerUnlockAdded(Enums.Game_Unlocks.Shuttle_Unlock);
-        GameCore.SingletonInstance.TriggerUnlockAdded(Enums.Game_Unlocks.First_Station_Segment);
+        var newShuttle = new Shuttle();
+        newShuttle.StartTravelDay = 0;
+        newShuttle.StarLocation = Enums.StellarBodies.the_sun;
+        newShuttle.Modules = new List<ShipModule>();
+        newShuttle.Modules.Add(new ShipModule());
+        newShuttle.ShipState = Ship_States.Docked;
+        newShuttle.Fuel = 250;
+        newShuttle.Engine = true;
+        newShuttle.FuelType = Enums.ItemTypes.meh_fuel;
+        newShuttle.OnGround = true;
+        newShuttle.Pilot = null;
+        newShuttle.PlanetLocation = Enums.StellarBodies.earth;
+        newShuttle.ShipType = Enums.Ship_Types.Shuttle;
+        newShuttle.LocationView = false;
+        newShuttle.Name = "Shuttle Craft";
+
+        GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newShuttle);
+
+        GameCore.SingletonInstance.TriggerShipCreated(newShuttle);
     }
 
     private void SoundToggle_ButtonUp()

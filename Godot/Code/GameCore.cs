@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Deuteros.Code.Objects.Interfaces;
 using Deuteros.Code.Platform;
 using static Deuteros.Code.Enums;
+using Deuteros.Code.Objects.GameData;
 
 namespace Deuteros.Code
 {
@@ -24,9 +25,10 @@ namespace Deuteros.Code
 		
 		public bool InfiniteResources { get; set; }
 
-		#endregion
+        #endregion
 
-		private List<Objects.MenuButton> EarthMenuButtons
+        #region menuButtonsConfig
+        private List<Objects.MenuButton> EarthMenuButtons
 		{
 			get
 			{
@@ -40,8 +42,8 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Ground
-						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
-						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
+						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
+						() => GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
 						"Shuttle"),
 					new Objects.MenuButton(Enums.Menu_Buttons.Training, Enums.Scenes.Earth_Training, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
@@ -89,7 +91,7 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Orbit
-						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null, 
+						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null, 
 						"Shuttle"),
 					null,
 					null,
@@ -137,8 +139,8 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Ground
-						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
-						() => GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
+						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == Enums.StellarBodies.earth).ShipID },
+						() => GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock),
 						"Shuttle"),
 					null,
 
@@ -172,12 +174,15 @@ namespace Deuteros.Code
 			}
 		}
 
-		private static GameCore _instance;
+        #endregion
+
+        private static GameCore _instance;
 		private Node _currentScreen;
 		private MainMenu _menuScreen;
 		private Unlocker _unlocker;
 		private InputBlocker _screenLocker;
 		private int _lockCount;
+		public Enums.Scenes currentScene;
 
 		public static GameCore SingletonInstance
 		{
@@ -244,18 +249,21 @@ namespace Deuteros.Code
 
 			SpriteManager.ImageCache = new Godot.Collections.Dictionary<string, Texture2D>();
 
-			GameData = CoreData.CreateNewGameFile();
+			GameData = new CoreData();
+
+			//TODO - Only for while building the project. Transitition to json config files before go-live.
+			CoreData.CreateBaseGameData();
+            GameData.ActiveSaveFile = CoreData.CreateNewSaveFile();
 
 			_screenLocker = GetNode<InputBlocker>("/root/Master/InputBlocker");
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Production.UpdateProduction;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ShipInterior.UpdateShips;
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.Research.UpdateResearch;
-			Deuteros.Code.GameCore.SingletonInstance.DayPassed += Code.Platform.Screens.ACC.UpdateACC;
 
 			Input.MouseMode = Input.MouseModeEnum.Hidden;
 
-			ChangeScene("IntroScreen.tscn", new List<Enums.SceneVariables>());
+			ChangeScene(Enums.Scenes.IntroScreen, new List<Enums.SceneVariables>());
 		}
 
 		private void TriggerDay(uint previousDay, uint currentDay)
@@ -295,7 +303,7 @@ namespace Deuteros.Code
 
 		public Deuteros.Code.Objects.Interfaces.IPlanet GetCurrentPlanet()
 		{
-			return GameData.Planets[GameData.CurrentPlanet];
+			return GameData.ActiveSaveFile.BaseGameData.Planets[GameData.ActiveSaveFile.CurrentPlanet];
 		}
 
 		// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -309,15 +317,15 @@ namespace Deuteros.Code
 
 		private void UpdateTime()
 		{
-			if (GameData.TimeSkip || GameData.TimeSkipDay)
+			if (GameData.ActiveSaveFile.TimeSkip || GameData.ActiveSaveFile.TimeSkipDay)
 			{
-				if (GameData.TimeSkipDay || Time.GetTicksMsec() - GameData.TimeSkipStart >= 500)
+				if (GameData.ActiveSaveFile.TimeSkipDay || Time.GetTicksMsec() - GameData.ActiveSaveFile.TimeSkipStart >= 500)
 				{
-					GameData.CurrentDay++;
-					TriggerDay(GameData.CurrentDay-1, GameData.CurrentDay);
+					GameData.ActiveSaveFile.CurrentDay++;
+					TriggerDay(GameData.ActiveSaveFile.CurrentDay -1, GameData.ActiveSaveFile.CurrentDay);
 
-					GameData.TimeSkipStart = Time.GetTicksMsec();
-					GameData.TimeSkipDay = false;
+					GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
+					GameData.ActiveSaveFile.TimeSkipDay = false;
 
 					QueueRedraw();
 				}
@@ -326,15 +334,20 @@ namespace Deuteros.Code
 
 		public void ShowBulletin(BulletinTypes bulletin)
 		{
-			GameCore.SingletonInstance.ChangeScene("Bulletins.tscn", new List<SceneVariables>());
+			GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Bulletins, new List<SceneVariables>());
 			_menuScreen.Location.Text = "News Bulletins";
 			((Bulletins)_currentScreen).DisplayBulletin(bulletin);
 		}
 
-		public void ChangeScene(string sceneName, List<Enums.SceneVariables> sceneVariables)
+		public void ChangeScene(Enums.Scenes sceneToLoad, List<Enums.SceneVariables> sceneVariables)
 		{
-			//This is a special case for the loading screen, only happens once on a new game
-			if (_currentScreen != null && _currentScreen.SceneFilePath.Contains("IntroScreen"))
+			currentScene = sceneToLoad;
+			SceneVariables = sceneVariables;
+
+            var newSceneName = sceneToLoad.ToString().Replace("_", "/") + ".tscn";
+
+            //This is a special case for the loading screen, only happens once on a new game
+            if (_currentScreen != null && _currentScreen.SceneFilePath.Contains("IntroScreen"))
 			{
 				var newMenuScene = GD.Load<PackedScene>("res://Screens/Base/MenuBase.tscn").Instantiate<MainMenu>();
 				GetNode<Node>("/root/Master/MainScene").AddChild(newMenuScene);
@@ -344,7 +357,7 @@ namespace Deuteros.Code
 			if (_currentScreen != null)
 				_currentScreen.QueueFree();
 
-			var newScene = GD.Load<PackedScene>("res://Screens/" + sceneName).Instantiate<BaseSubScene>();
+			var newScene = GD.Load<PackedScene>("res://Screens/" + newSceneName).Instantiate<BaseSubScene>();
 			newScene.SceneVariables = sceneVariables;
 			GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
 			_currentScreen = newScene;
@@ -354,24 +367,23 @@ namespace Deuteros.Code
 				_menuScreen.MenuButtons = OverviewMenuButtons;
 				_menuScreen.Location.Text = "MASTER CONTROL";
 				_menuScreen.Star.Text = GetCurrentPlanet().ParentStar.ToScreenString();
-				_menuScreen.SetupMenus();
-
-			}
-			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
+                _menuScreen.SetupMenus();
+            }
+            else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
 			{
 				_menuScreen.MenuButtons = EarthMenuButtons;
 				_menuScreen.Location.Text = "Earth City";
 				_menuScreen.Star.Text = "The Sun";
-				_menuScreen.SetupMenus();
-			}
-			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Orbit))
+                _menuScreen.SetupMenus();
+            }
+            else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Orbit))
 			{
 				_menuScreen.MenuButtons = EarthStationMenuButtons;
 				_menuScreen.Location.Text = "Earth Orbital";
 				_menuScreen.Star.Text = "The Sun";
-				_menuScreen.SetupMenus();
-			}
-			else if (_menuScreen != null && GetCurrentPlanet().PlanetId != Enums.StellarBodies.earth)
+                _menuScreen.SetupMenus();
+            }
+            else if (_menuScreen != null && GetCurrentPlanet().PlanetId != Enums.StellarBodies.earth)
 			{
 				_menuScreen.MenuButtons = StandardMenuButtons;
 
@@ -385,10 +397,10 @@ namespace Deuteros.Code
 				}
 
 				_menuScreen.Star.Text = GetCurrentPlanet().ParentStar.ToScreenString();
-				_menuScreen.SetupMenus();
-			}
+                _menuScreen.SetupMenus();
+            }
 
-			if (_currentScreen.GetType() == typeof(ShipInterior))
+            if (_currentScreen.GetType() == typeof(ShipInterior))
 			{
 				_menuScreen.Location.Text = ((ShipInterior)_currentScreen).Ship.Name;
 			}
@@ -442,7 +454,7 @@ namespace Deuteros.Code
 
 		public static PlanetType GetPlanet<PlanetType>(Enums.StellarBodies planet)
 		{
-			return (PlanetType)SingletonInstance.GameData.Planets[planet];
+			return (PlanetType)SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[planet];
 		}
 
 
@@ -450,12 +462,12 @@ namespace Deuteros.Code
 		{
 			get
 			{
-				return (Earth)SingletonInstance.GameData.Planets[Enums.StellarBodies.earth];
+				return (Earth)SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
 			}
 
 			set
 			{
-				SingletonInstance.GameData.Planets[Enums.StellarBodies.earth] = value;
+				SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth] = value;
 			}
 		}
 	}

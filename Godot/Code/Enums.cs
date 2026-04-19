@@ -301,9 +301,11 @@ namespace Deuteros.Code
             ShipBay,
             ShipInterior,
             ResourceMap,
-            Bulletin,
+            Bulletins,
             Overview,
-            None
+            None,
+            Station,
+            IntroScreen
         }
 
         //Variables to pass to scenes to notify them of button types

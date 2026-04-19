@@ -20,19 +20,25 @@ namespace Deuteros.Code.Platform
         {
             if (stellarBody == Enums.StellarBodies.earth && GameCore.SingletonInstance.GetCurrentPlanet().Station.BuildParts == 1)
             {
+                GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.First_Station_Segment);
+
                 GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.ios);
 
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;
             }
+            else if (stellarBody == Enums.StellarBodies.earth && GameCore.SingletonInstance.GetCurrentPlanet().Station.Built)
+            {
+                GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Space_Stations);
+            }
         }
 
         private void SingletonInstance_ShipCreated(Objects.Interfaces.IShip ship)
         {
-            if (ship.ShipType == Enums.Ship_Types.Shuttle && !GameCore.SingletonInstance.GameData.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
+            if (ship.ShipType == Enums.Ship_Types.Shuttle && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
             {
-                GameCore.SingletonInstance.GameData.Unlocks.Add(Enums.Game_Unlocks.Shuttle_Unlock);
+                GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Shuttle_Unlock);
                 
                 GameCore.SingletonInstance.TriggerUnlockAdded(Enums.Game_Unlocks.Shuttle_Unlock);
             }

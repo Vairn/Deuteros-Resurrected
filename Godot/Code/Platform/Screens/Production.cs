@@ -180,7 +180,7 @@ namespace Deuteros.Code.Platform.Screens
         private void RefreshButtons()
         {
             Buttons = Utility.Buttons.CreateButtons<ProductionButton, Item>(GetNode<GridContainer>("ProductionButtonGrid"),
-            GameCore.SingletonInstance.GameData.ItemList.Where(T => T.Production && !T.Locked
+            GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Production && !T.Locked
             && !T.AutoProduce
             ).Select(T => T).OrderBy(T => T.Research.ResearchOrder).ToDictionary(obj => obj.Research.ResearchOrder),
             this,
@@ -243,7 +243,7 @@ namespace Deuteros.Code.Platform.Screens
 
         public static void UpdateProduction(uint previousDay, uint currentDay)
         {
-            foreach (var planet in GameCore.SingletonInstance.GameData.Planets)
+            foreach (var planet in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets)
             {
                 var currentFactories = new List<Factory>() { planet.Value.Station.Factory };
                 var currentPlanet = (Planet)planet.Value;
@@ -266,6 +266,7 @@ namespace Deuteros.Code.Platform.Screens
                                 currentPlanet.AddItems(currentFactory.CurrentProductionItem().Product.ItemType, 1);
 
                                 currentFactory.Builder.ActionsTaken++;
+                                currentFactory.ProdCycle = 0;
 
                                 GameCore.SingletonInstance.TriggerProductionFinished(currentFactory);
 

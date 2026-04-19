@@ -5,14 +5,10 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Deuteros.Code.Platform.Helpers;
-using System.Security.Cryptography.X509Certificates;
 using Deuteros.Code.Objects.Interfaces;
-using Newtonsoft.Json.Linq;
-using System.Reflection;
 using static Deuteros.Code.Enums;
 using Deuteros.Code.Utility;
 using Deuteros.Code.Platform.Screens.ModuleScenes;
-using System.Numerics;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -64,7 +60,7 @@ namespace Deuteros.Code.Platform.Screens
 			//Setup some flags to make our lives easier
 			CurrentPlanet = GameCore.SingletonInstance.GetCurrentPlanet();
 
-			Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.ShipID == GameCore.SingletonInstance.ShipSelected);
+			Ship = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Single(T => T.ShipID == GameCore.SingletonInstance.ShipSelected);
 
 			TextLayout = GetNode<Control>("TextLayout");
 			StarMap = GetNode<Control>("StarMap");
@@ -152,11 +148,8 @@ namespace Deuteros.Code.Platform.Screens
 					sceneVariables.Add(Enums.SceneVariables.Ship);
 				}
 
-				//Double underscores in scene names represent a flag to pass to the scene
-				var sceneNameSplit = Enums.Scenes.ShipBay.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
-
 				//Underscores in scene names represent a folder
-				Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", sceneVariables);
+				Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipBay, sceneVariables);
 			}
 			else if (Ship.ShipState != Ship_States.Docked)
 			{
@@ -207,12 +200,9 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void Dock_Pressed()
 		{
-			if (Ship.ShipState == Ship_States.UnDocked && CurrentPlanet.Station.Built)
-			{
-				Ship.Dock();
-				UpdateState();
-			}
-		}
+			Ship.Dock();
+			UpdateState();
+        }
 
 		private void SmallLocation_Pressed()
 		{
@@ -228,18 +218,15 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void EngageEngine_Pressed()
 		{
-			if (Ship.ShipState == Ship_States.UnDocked && Ship.Engine && Ship.DestinationPlanetLocation != Ship.PlanetLocation)
+			if (Ship.EngageEngine())
 			{
-				Ship.ShipState = Ship_States.InTransit;
-				Ship.StartTravelDay = GameCore.SingletonInstance.GameData.CurrentDay;
-
 				CurrentPlanet = null;
-
-				UpdateState();
 			}
-		}
+        
+			UpdateState();
+        }
 
-		private void SetCourse_Pressed()
+        private void SetCourse_Pressed()
 		{
 			DestinationStarMap = GD.Load<PackedScene>("res://PreFabs/StarMap.tscn").Instantiate<StarMap>();
 			DestinationStarMap.ShowResources = false;
@@ -258,6 +245,7 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			ACCScreen = GD.Load<PackedScene>("res://PreFabs/ACC.tscn").Instantiate<ACC>();
 			ACCScreen.SetACC(Ship.ACC);
+			ACCScreen.CloseWindow = CloseACC;
 
 			ACC.AddChild(ACCScreen);
 
@@ -272,7 +260,7 @@ namespace Deuteros.Code.Platform.Screens
 		private void UpdateState()
 		{
 			if (CurrentPlanet == null && Ship.ShipState != Ship_States.InTransit)
-				CurrentPlanet = GameCore.SingletonInstance.GameData.Planets[Ship.PlanetLocation];
+				CurrentPlanet = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[Ship.PlanetLocation];
 
 			ShipName.Text = Ship.Name;
 
@@ -297,9 +285,9 @@ namespace Deuteros.Code.Platform.Screens
 
 			FuelValue.Text = Ship.Fuel.ToString();
 			if (Ship.Fuel>0)
-				FuelValue.AddThemeColorOverride("font_color", CoreData.Yellow);
+				FuelValue.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Yellow);
 			else
-				FuelValue.AddThemeColorOverride("font_color", CoreData.Red);
+				FuelValue.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
 
 			PilotName.Text = Ship.Pilot == null ? "None" : Ship.Pilot.GetLevelString() + "\n" + Ship.Pilot.Leader;
 			PilotCount.Text = Ship.Pilot == null ? "" : Ship.Pilot.Count.ToString();
@@ -309,7 +297,7 @@ namespace Deuteros.Code.Platform.Screens
 			if (!Ship.Engine)
 			{
 				EngineStatusValue.Text = "Not Installed";
-				EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
+				EngineStatusValue.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
 				EngageEngine.Visible = false;
 				DisengageEngine.Visible = false;
 			}
@@ -321,12 +309,12 @@ namespace Deuteros.Code.Platform.Screens
 				if (new List<Enums.Ship_States>() { Ship_States.Docking, Ship_States.Launching, Ship_States.Landing, Ship_States.TakingOff, Ship_States.InTransit }.Contains(Ship.ShipState))
 				{
 					EngineStatusValue.Text = "Engaged";
-					EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Green);
+					EngineStatusValue.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Green);
 				}
 				else
 				{
 					EngineStatusValue.Text = "Disengaged";
-					EngineStatusValue.AddThemeColorOverride("font_color", CoreData.Red);
+					EngineStatusValue.AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
 				}
 			}
 
@@ -352,13 +340,13 @@ namespace Deuteros.Code.Platform.Screens
 			{
 				if (Ship.Modules[i].ModuleType == Module_Types.None)
 				{
-					CargoValues[i].AddThemeColorOverride("font_color", CoreData.Green);
+					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Green);
 					CargoValues[i].Text = "free";
 					Modules[i].Visible = false;
 				}
 				else if (Ship.Modules[i].ModuleType == Module_Types.Supply)
 				{
-					CargoValues[i].AddThemeColorOverride("font_color", CoreData.Beige);
+					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Beige);
 					if (Ship.Modules[i].ItemCount > 0)
 						CargoValues[i].Text = Ship.Modules[i].ItemCount + " " + Ship.Modules[i].ItemStored.ToScreenString();
 					else
@@ -369,7 +357,7 @@ namespace Deuteros.Code.Platform.Screens
 				}
 				else if (Ship.Modules[i].ModuleType == Module_Types.Tool)
 				{
-					CargoValues[i].AddThemeColorOverride("font_color", CoreData.Green);
+					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Green);
 
 					if (Ship.Modules[i].ItemStored != ItemTypes.none)
 						CargoValues[i].Text = Ship.Modules[i].ItemStored.ToScreenString();
@@ -381,7 +369,7 @@ namespace Deuteros.Code.Platform.Screens
 				}
 				else if (Ship.Modules[i].ModuleType == Module_Types.Cryo)
 				{
-					CargoValues[i].AddThemeColorOverride("font_color", CoreData.Yellow);
+					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Yellow);
 
 					if (Ship.Modules[i].StaffStored != null)
 						CargoValues[i].Text = Ship.Modules[i].StaffStored.Type.ToScreenString();
@@ -403,7 +391,7 @@ namespace Deuteros.Code.Platform.Screens
 				CourseValue.Text = Ship.PlanetLocation.ToScreenString() + " To\n" + Ship.DestinationPlanetLocation.ToScreenString();
 			}
 
-			var currentDay = GameCore.SingletonInstance.GameData.CurrentDay + Ship.TravelTimeRemain();
+			var currentDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay + Ship.TravelTimeRemain();
 			var curDay = (currentDay % 1000).ToString().PadLeft(3, '0');
 			var outputYear = (3100 + Math.Floor((decimal)(currentDay / 1000))) + " " + curDay + ".00";
 
@@ -478,25 +466,26 @@ namespace Deuteros.Code.Platform.Screens
 					{
 						DestinationStarMap.Visible = false;
 
-						var newDestination = GameCore.SingletonInstance.GameData.Planets[DestinationStarMap.CurrentLocation];
+						var newDestination = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[DestinationStarMap.CurrentLocation];
 
+                        //Update the ACC
+                        //The ACC destination is the location, so set the source instead
+                        if (Ship.ACC.Destination == Ship.PlanetLocation)
+                            Ship.ACC.Source = newDestination.PlanetId;
+                        else
+                            Ship.ACC.Destination = newDestination.PlanetId;
+                        
 						Ship.DestinationPlanetLocation = newDestination.PlanetId;
 						Ship.DestinationStarLocation = newDestination.ParentStar;
 
 						StarMap.RemoveChild(DestinationStarMap);
-
-						UpdateState();
 					}
 
-					//We were locked into the star map, let's read the new destination
+					//We has the ACC open - No need to do anything, just close it
 					if (ACCScreen != null && ACCScreen.Visible == true)
 					{
-						ACCScreen.Visible = false;
-
-						ACC.RemoveChild(ACCScreen);
-
-						UpdateState();
-					}
+						CloseACC();
+                    }
 
 					cursor.Unlock();
 
@@ -507,8 +496,16 @@ namespace Deuteros.Code.Platform.Screens
 			}
 		}
 
-		//Triggered from gamecore
-		protected override void DayTick(uint previousDay, uint currentDay)
+		public void CloseACC()
+		{
+            ACCScreen.Visible = false;
+            ACC.RemoveChild(ACCScreen);
+
+			UpdateState();
+        }
+
+        //Triggered from gamecore
+        protected override void DayTick(uint previousDay, uint currentDay)
 		{
 			UpdateState();
 		}
@@ -517,21 +514,21 @@ namespace Deuteros.Code.Platform.Screens
 
 		public static void UpdateShips(uint previousDay, uint currentDay)
 		{
-			foreach (var ship in GameCore.SingletonInstance.GameData.Ships)
+			foreach (var ship in GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships)
 			{
 				if (ship.ShipState != Ship_States.Docked || ship.ShipState != Ship_States.UnDocked)
 				{
 					if (ship.ShipState == Ship_States.Launching)
 					{
 						ship.ShipState = Ship_States.UnDocked;
-						if (ship.ACC != null) ship.ACC.Update(Ship_States.Launching);
+						ship.ACC?.Update(Ship_States.Launching);
 					}
 					else if (ship.ShipState == Ship_States.TakingOff)
 					{
 						if (ship.TravelTimeRemain() == 0)
 						{
 							ship.ShipState = Ship_States.UnDocked;
-							if (ship.ACC != null) ship.ACC.Update(Ship_States.TakingOff);
+							ship.ACC?.Update(Ship_States.TakingOff);
 						}
 					}
 					else if (ship.ShipState == Ship_States.Landing)
@@ -540,7 +537,7 @@ namespace Deuteros.Code.Platform.Screens
 						{
 							ship.ShipState = Ship_States.Docked;
 							((Shuttle)ship).OnGround = true;
-							if (ship.ACC != null) ship.ACC.Update(Ship_States.Landing);
+							ship.ACC?.Update(Ship_States.Landing);
 						}
 					}
 					else if (ship.ShipState == Ship_States.InTransit)
@@ -548,24 +545,35 @@ namespace Deuteros.Code.Platform.Screens
 						if (ship.TravelTimeRemain() == 0)
 						{
 							ship.ShipState = Ship_States.UnDocked;
+
+							var tempDestPlanet = ship.PlanetLocation;
+							var tempDestStar = ship.StarLocation;
+
 							ship.PlanetLocation = ship.DestinationPlanetLocation;
 							ship.StarLocation = ship.DestinationStarLocation;
-							if (ship.ACC != null) ship.ACC.Update(Ship_States.InTransit);
-						}
 
+							ship.DestinationPlanetLocation = tempDestPlanet;
+							ship.DestinationStarLocation = tempDestStar;
+
+							ship.ACC?.Update(Ship_States.InTransit);
+						}
 					}
 					else if (ship.ShipState == Ship_States.Docking)
 					{
-						if (ship.ShipType == Ship_Types.Shuttle || !GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == ship.PlanetLocation && T.ShipType != Ship_Types.Shuttle && T.ShipState == Ship_States.Docked))
+						if (ship.ShipType == Ship_Types.Shuttle || !GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Any(T => T.PlanetLocation == ship.PlanetLocation && T.ShipType != Ship_Types.Shuttle && T.ShipState == Ship_States.Docked))
 						{
 							ship.ShipState = Ship_States.Docked;
-							if (ship.ACC != null) ship.ACC.Update(Ship_States.Docking);
+							ship.ACC?.Update(Ship_States.Docking);
 						}
 					}
 				}
+				else if (ship.ShipState == Ship_States.Docked)
+				{
+					//The ship is docked, and we're not updating it - Might be waiting for fuel
+					ship.ACC?.Update(Ship_States.Docked);
+				}
 			}
 		}
-
 		#endregion
 	}
 }

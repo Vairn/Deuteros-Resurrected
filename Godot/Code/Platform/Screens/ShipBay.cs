@@ -146,7 +146,7 @@ namespace Deuteros.Code.Platform.Screens
 			TorsoInstances[4].ModuleChanged += ShipBay_ModuleChanged;
 			TorsoInstances[4].ModuleOpened += ShipBay_ModuleOpened;
 
-			foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
+			foreach (var mineral in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
 				GetNode<Button>("CargoService/Buttons/" + mineral.ItemType.ToScreenString()).Pressed += () => SelectMineral(mineral.ItemType);
 
 			Nav_Cockpit.Pressed += NavCockpitPressed;
@@ -205,11 +205,8 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
-			//Double underscores in scene names represent a flag to pass to the scene
-			var sceneNameSplit = Enums.Scenes.ShipInterior.ToString().Split(new string[] { "__" }, System.StringSplitOptions.None);
-
 			//Underscores in scene names represent a folder
-			Deuteros.Code.GameCore.SingletonInstance.ChangeScene(sceneNameSplit[0].Replace("_", "/") + ".tscn", new List<SceneVariables>());
+			Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
 		}
 
 		private void FuelGaugePlus_Pressed()
@@ -241,7 +238,7 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void DismantleShip()
 		{
-			GameCore.SingletonInstance.GameData.Ships.Remove(Ship);
+			GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Remove(Ship);
 
 			UpdateState();
 			RefreshButtons();
@@ -267,7 +264,7 @@ namespace Deuteros.Code.Platform.Screens
 				newShuttle.LocationView = false;
 				newShuttle.Name = "Shuttle Craft";
 
-				GameCore.SingletonInstance.GameData.Ships.Add(newShuttle);
+				GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newShuttle);
 
 				GameCore.SingletonInstance.TriggerShipCreated(newShuttle);
 
@@ -295,9 +292,9 @@ namespace Deuteros.Code.Platform.Screens
 				newIOS.DestinationPlanetLocation = CurrentPlanet.PlanetId;
 				newIOS.DestinationStarLocation = CurrentPlanet.ParentStar;
 				newIOS.LocationView = false;
-				newIOS.Name = "IOS3" + GameCore.SingletonInstance.GameData.IOSCount.ToString().PadLeft(5, '0');
+				newIOS.Name = "IOS3" + GameCore.SingletonInstance.GameData.ActiveSaveFile.IOSCount.ToString().PadLeft(5, '0');
 
-				GameCore.SingletonInstance.GameData.Ships.Add(newIOS);
+				GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newIOS);
 
 				GameCore.SingletonInstance.TriggerShipCreated(newIOS);
 
@@ -325,9 +322,9 @@ namespace Deuteros.Code.Platform.Screens
 				newSCG.DestinationPlanetLocation = CurrentPlanet.PlanetId;
 				newSCG.DestinationStarLocation = CurrentPlanet.ParentStar;
 				newSCG.LocationView = false;
-				newSCG.Name = "SCG3" + GameCore.SingletonInstance.GameData.SCGCount.ToString().PadLeft(5, '0');
+				newSCG.Name = "SCG3" + GameCore.SingletonInstance.GameData.ActiveSaveFile.SCGCount.ToString().PadLeft(5, '0');
 
-				GameCore.SingletonInstance.GameData.Ships.Add(newSCG);
+				GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newSCG);
 
 				GameCore.SingletonInstance.TriggerShipCreated(newSCG);
 
@@ -456,7 +453,7 @@ namespace Deuteros.Code.Platform.Screens
 		private void UpdateState()
 		{
 			//Detect if there is a ship present
-			ShipPresent = GameCore.SingletonInstance.GameData.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
+			ShipPresent = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
 			(
 			(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle))
 			|| (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship))
@@ -514,7 +511,7 @@ namespace Deuteros.Code.Platform.Screens
 
 				EngineInstance.SpriteHolder.Visible = true;
 
-				Ship = GameCore.SingletonInstance.GameData.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
+				Ship = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Single(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
 				(
 				(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle))
 				|| (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship)
@@ -760,7 +757,7 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void UpdateEquipmentStock()
 		{
-			var equipmentList = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
+			var equipmentList = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
 
 			for (int i = 0; i < 11; i++)
 			{
@@ -788,14 +785,14 @@ namespace Deuteros.Code.Platform.Screens
 			{
 				var itemIndex = Array.FindIndex<Item>(equipmentList, T => T.ItemType == Ship.Modules[ScreenState - 1].ItemStored);
 
-				EquipmentStockNameLabels[itemIndex].AddThemeColorOverride("font_color", CoreData.Red);
-				EquipmentStockCountLabels[itemIndex].AddThemeColorOverride("font_color", CoreData.Red);
+				EquipmentStockNameLabels[itemIndex].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
+				EquipmentStockCountLabels[itemIndex].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
 			}
 		}
 
 		private void SelectEquipment(int itemIndex)
 		{
-			var equipmentList = GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
+			var equipmentList = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.ItemCategory == ItemCategory.item && T.Research.Researched && T.ToolPod).OrderBy(T => T.Research.ResearchOrder).ToArray();
 
 			var itemType = equipmentList[itemIndex].ItemType;
 
@@ -842,9 +839,9 @@ namespace Deuteros.Code.Platform.Screens
 		private void UpdateCargoService()
 		{
 			if (Ship.Modules[ScreenState - 1].ItemCount > 0)
-				GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", CoreData.Red);
+				GetNode<Label>("CargoService/Labels/MineralName" + Ship.Modules[ScreenState - 1].ItemStored.ToScreenString()).AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Red);
 
-			foreach (var mineral in GameCore.SingletonInstance.GameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
+			foreach (var mineral in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.ItemCategory == ItemCategory.resource))
 				GetNode<Label>("CargoService/Labels/MineralCount" + mineral.ItemType.ToScreenString()).Text = ResourceList.Stores[mineral.ItemType].ToString();
 		}
 

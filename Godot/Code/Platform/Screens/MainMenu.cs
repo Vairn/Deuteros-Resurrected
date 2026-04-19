@@ -1,3 +1,4 @@
+using Deuteros.Code.Objects;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,11 @@ namespace Deuteros.Code.Platform.Screens
 		public Label Time { get; set; }
 		public List<Objects.MenuButton> MenuButtons { get; set; }
 
-		// Called when the node enters the scene tree for the first time.
-		public override void _Ready()
+        public AnimatedSprite2D EarthAnimation { get; set; }
+        public AnimatedSprite2D MasterControlAnimation { get; set; }
+
+        // Called when the node enters the scene tree for the first time.
+        public override void _Ready()
 		{
 			MenuButtons = new List<Objects.MenuButton>();
 			HoverInfo = GetNode<Label>("HoverInfo");
@@ -21,15 +25,18 @@ namespace Deuteros.Code.Platform.Screens
 			Star = GetNode<Label>("Boxes/StarName/Star");
 			Time = GetNode<Label>("Time/TimeBox/Time");
 
-			GameCore.SingletonInstance.UnlockAdded += SingletonInstance_UnlockAdded;
+			EarthAnimation = GetNode<AnimatedSprite2D>("Top/Earth/EarthAnimation");
+            MasterControlAnimation = GetNode<AnimatedSprite2D>("Top/MasterControl/MasterControlAnimation");
 
-			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentDay);
+            GameCore.SingletonInstance.UnlockAdded += SingletonInstance_UnlockAdded;
+
+			UpdateTime(Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay, Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay);
 
 			Deuteros.Code.GameCore.SingletonInstance.DayPassed += DayTick;
 
-			if (Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
+			if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet.ToString().ToUpperInvariant() != Location.Text)
 			{
-				Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.CurrentPlanet.ToString().ToUpperInvariant();
+				Location.Text = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet.ToString().ToUpperInvariant();
 			}
 
 			base._Ready();
@@ -51,7 +58,7 @@ namespace Deuteros.Code.Platform.Screens
 		//Triggered from gamecore
 		public void DayTick(uint previousDay, uint currentDay)
 		{
-			UpdateTime(previousDay, currentDay);
+            UpdateTime(previousDay, currentDay);
 		}
 
 		private void UpdateTime(uint previousDay, uint currentDay)
@@ -64,6 +71,20 @@ namespace Deuteros.Code.Platform.Screens
 
 		public void SetupMenus()
 		{
+            if (GameCore.SingletonInstance.currentScene == Enums.Scenes.Earth_Training ||
+                GameCore.SingletonInstance.currentScene == Enums.Scenes.Earth_Ground ||
+                GameCore.SingletonInstance.currentScene == Enums.Scenes.Earth_Research ||
+                (GameCore.SingletonInstance.GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && GameCore.SingletonInstance.SceneVariables.Contains(Enums.SceneVariables.Ground))
+                )
+                EarthAnimation.Play("animation");
+            else
+                EarthAnimation.Play("static");
+
+            if (GameCore.SingletonInstance.currentScene == Enums.Scenes.Overview)
+                MasterControlAnimation.Play("animation");
+            else
+                MasterControlAnimation.Play("static");
+            
 			var column = "A";
 			var row = 1;
 
