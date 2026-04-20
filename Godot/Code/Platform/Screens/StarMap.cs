@@ -226,11 +226,11 @@ namespace Deuteros.Code.Platform.Screens
             StarSystemGoBack.Visible = GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Interstellar_Travel);
 
             if (SelectedMoon != Enums.StellarBodies.none)
-                SelectedLocationLabel.Text = SelectedMoon.ToScreenString();
+                SelectedLocationLabel.Text = SelectedMoon.ToScreenString(" ");
             else if (SelectedPlanet != Enums.StellarBodies.none)
-                SelectedLocationLabel.Text = SelectedPlanet.ToScreenString();
+                SelectedLocationLabel.Text = SelectedPlanet.ToScreenString(" ");
             else
-                SelectedLocationLabel.Text = SelectedStar.ToScreenString();
+                SelectedLocationLabel.Text = SelectedStar.ToScreenString(" ");
 
             //This is the star map
             if (CurrentLocation == Enums.StellarBodies.none)
@@ -239,7 +239,7 @@ namespace Deuteros.Code.Platform.Screens
                 StarSystemHolder.Visible = false;
                 StarMapHolder.Visible = true;
 
-                SunLabel.Text = SelectedStar.ToScreenString();
+                SunLabel.Text = SelectedStar.ToScreenString(" ");
 
                 var starData = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Stars[SelectedStar];
 
@@ -258,7 +258,7 @@ namespace Deuteros.Code.Platform.Screens
 
                 StarSystem = SpriteManager.LoadImageToTextureRect(StarMapSpriteBasePath + "//Star_" + CurrentLocation.ToScreenString("_") + ".png", StarSystem);
 
-                SunLabel.Text = CurrentLocation.ToScreenString();
+                SunLabel.Text = CurrentLocation.ToScreenString(" ");
 
                 for (int i = 0; i < 11; i++)
                 {
@@ -281,7 +281,7 @@ namespace Deuteros.Code.Platform.Screens
                 //A planet is selected, show the deposits and set text
                 if (SelectedPlanet != Enums.StellarBodies.none)
                 {
-                    PlanetLabel.Text = SelectedPlanet.ToScreenString();
+                    PlanetLabel.Text = SelectedPlanet.ToScreenString(" ");
 
                     ShowDeposits(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedPlanet]);
                 }
@@ -311,7 +311,7 @@ namespace Deuteros.Code.Platform.Screens
                 PlanetGoBackAction = () => PlanetGoBack_Pressed(currentPlanet.ParentStar);
                 PlanetGoBack.Pressed += PlanetGoBackAction;
 
-                PlanetLabel.Text = SelectedPlanet.ToScreenString();
+                PlanetLabel.Text = SelectedPlanet.ToScreenString(" ");
 
                 var moonList = currentPlanet.IsMoon
                     //If this is a moon, grab the moonlist from the parent planet
@@ -343,7 +343,7 @@ namespace Deuteros.Code.Platform.Screens
                 //A moon is selected, show the deposits and set text
                 if (SelectedMoon != Enums.StellarBodies.none)
                 {
-                    MoonLabel.Text = SelectedMoon.ToScreenString();
+                    MoonLabel.Text = SelectedMoon.ToScreenString(" ");
                     ShowDeposits(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[SelectedMoon]);
                 }
                 //Show the planetary deposits
@@ -360,7 +360,7 @@ namespace Deuteros.Code.Platform.Screens
 
             for (int i = 0; i < selectedPlanet.PlanetResources.Materials.Count(); i++)
             {
-                DepositLabels[i].Text = selectedPlanet.PlanetResources.Materials[i].MaterialType.ToScreenString();
+                DepositLabels[i].Text = selectedPlanet.PlanetResources.Materials[i].MaterialType.ToScreenString(" ");
             }
         }
     }

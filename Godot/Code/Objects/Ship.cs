@@ -48,7 +48,21 @@ namespace Deuteros.Code.Objects
         public void TakeOff()
         {
             if (Engine && Fuel > 0)
-                if (ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
+
+                //clear the Shuttle/Ship State to prevent scrolling in ship bay when ship is not there
+                if (ShipType == Ship_Types.Shuttle)
+                {
+                    if (((Shuttle)this).OnGround == true)
+                        GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].ShuttleState = 0;
+                    else
+                        GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Station.ShuttleState = 0;
+                }
+                else
+                {
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Station.StarShipState = 0;
+                }
+
+            if (ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
                 {
                     ((Shuttle)this).OnGround = false;
                     ShipState = Ship_States.TakingOff;

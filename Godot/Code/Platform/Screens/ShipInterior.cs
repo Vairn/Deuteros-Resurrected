@@ -142,8 +142,10 @@ namespace Deuteros.Code.Platform.Screens
 					sceneVariables.Add(Enums.SceneVariables.Shuttle);
 				}
 				else if (Ship.ShipType != Ship_Types.Shuttle)
-				{ 
-					CurrentPlanet.Station.StarShipState = modulePressed + 1;
+				{
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = Ship.PlanetLocation;
+
+                    CurrentPlanet.Station.StarShipState = modulePressed + 1;
 					sceneVariables.Add(Enums.SceneVariables.Orbit);
 					sceneVariables.Add(Enums.SceneVariables.Ship);
 				}
@@ -202,7 +204,7 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			Ship.Dock();
 			UpdateState();
-        }
+		}
 
 		private void SmallLocation_Pressed()
 		{
@@ -222,11 +224,11 @@ namespace Deuteros.Code.Platform.Screens
 			{
 				CurrentPlanet = null;
 			}
-        
+		
 			UpdateState();
-        }
+		}
 
-        private void SetCourse_Pressed()
+		private void SetCourse_Pressed()
 		{
 			DestinationStarMap = GD.Load<PackedScene>("res://PreFabs/StarMap.tscn").Instantiate<StarMap>();
 			DestinationStarMap.ShowResources = false;
@@ -265,23 +267,23 @@ namespace Deuteros.Code.Platform.Screens
 			ShipName.Text = Ship.Name;
 
 			if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.Landing)
-				Status.Text = "Landing On\n" + Ship.PlanetLocation;
+				Status.Text = "Landing On\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.TakingOff)
-				Status.Text = "Climbing From\n" + Ship.PlanetLocation;
+				Status.Text = "Climbing From\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.GetType() == typeof(Shuttle) && ((Shuttle)Ship).OnGround)
-				Status.Text = "In Ground Bay\n" + Ship.PlanetLocation;
+				Status.Text = "In Ground Bay\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Launching)
-				Status.Text = "Launching From\n" + Ship.PlanetLocation;
+				Status.Text = "Launching From\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Launching)
-				Status.Text = "Docking With\n" + Ship.PlanetLocation;
+				Status.Text = "Docking With\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Docked)
-				Status.Text = "Docked Above\n" + Ship.PlanetLocation;
+				Status.Text = "Docked Above\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.InTransit)
-				Status.Text = "In Transit To\n" + Ship.DestinationPlanetLocation;
+				Status.Text = "In Transit To\n" + Ship.DestinationPlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Docking)
-				Status.Text = "Docking With\n" + Ship.PlanetLocation;
+				Status.Text = "Docking With\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else
-				Status.Text = "Orbitting\n" + Ship.PlanetLocation;
+				Status.Text = "Orbitting\n" + Ship.PlanetLocation.ToScreenString(" ");
 
 			FuelValue.Text = Ship.Fuel.ToString();
 			if (Ship.Fuel>0)
@@ -348,7 +350,7 @@ namespace Deuteros.Code.Platform.Screens
 				{
 					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Beige);
 					if (Ship.Modules[i].ItemCount > 0)
-						CargoValues[i].Text = Ship.Modules[i].ItemCount + " " + Ship.Modules[i].ItemStored.ToScreenString();
+						CargoValues[i].Text = Ship.Modules[i].ItemCount + " " + Ship.Modules[i].ItemStored.ToScreenString(" ");
 					else
 						CargoValues[i].Text = "Empty";
 
@@ -360,7 +362,7 @@ namespace Deuteros.Code.Platform.Screens
 					CargoValues[i].AddThemeColorOverride("font_color", GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Green);
 
 					if (Ship.Modules[i].ItemStored != ItemTypes.none)
-						CargoValues[i].Text = Ship.Modules[i].ItemStored.ToScreenString();
+						CargoValues[i].Text = Ship.Modules[i].ItemStored.ToScreenString(" ");
 					else
 						CargoValues[i].Text = "Empty";
 
@@ -388,7 +390,7 @@ namespace Deuteros.Code.Platform.Screens
 			}
 			else
 			{
-				CourseValue.Text = Ship.PlanetLocation.ToScreenString() + " To\n" + Ship.DestinationPlanetLocation.ToScreenString();
+				CourseValue.Text = Ship.PlanetLocation.ToScreenString(" ") + " To\n" + Ship.DestinationPlanetLocation.ToScreenString(" ");
 			}
 
 			var currentDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay + Ship.TravelTimeRemain();
@@ -468,13 +470,16 @@ namespace Deuteros.Code.Platform.Screens
 
 						var newDestination = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[DestinationStarMap.CurrentLocation];
 
-                        //Update the ACC
-                        //The ACC destination is the location, so set the source instead
-                        if (Ship.ACC.Destination == Ship.PlanetLocation)
-                            Ship.ACC.Source = newDestination.PlanetId;
-                        else
-                            Ship.ACC.Destination = newDestination.PlanetId;
-                        
+						//Update the ACC
+						//The ACC destination is the location, so set the source instead
+						if (Ship.ACC != null)
+						{
+							if (Ship.ACC.Destination == Ship.PlanetLocation)
+								Ship.ACC.Source = newDestination.PlanetId;
+							else
+								Ship.ACC.Destination = newDestination.PlanetId;
+						}
+						
 						Ship.DestinationPlanetLocation = newDestination.PlanetId;
 						Ship.DestinationStarLocation = newDestination.ParentStar;
 
@@ -485,7 +490,7 @@ namespace Deuteros.Code.Platform.Screens
 					if (ACCScreen != null && ACCScreen.Visible == true)
 					{
 						CloseACC();
-                    }
+					}
 
 					cursor.Unlock();
 
@@ -498,14 +503,14 @@ namespace Deuteros.Code.Platform.Screens
 
 		public void CloseACC()
 		{
-            ACCScreen.Visible = false;
-            ACC.RemoveChild(ACCScreen);
+			ACCScreen.Visible = false;
+			ACC.RemoveChild(ACCScreen);
 
 			UpdateState();
-        }
+		}
 
-        //Triggered from gamecore
-        protected override void DayTick(uint previousDay, uint currentDay)
+		//Triggered from gamecore
+		protected override void DayTick(uint previousDay, uint currentDay)
 		{
 			UpdateState();
 		}

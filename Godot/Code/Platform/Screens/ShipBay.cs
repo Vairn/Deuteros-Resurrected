@@ -12,6 +12,7 @@ using System.Reflection;
 using static Deuteros.Code.Enums;
 using Deuteros.Code.Utility;
 using System.ComponentModel.Design;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -203,10 +204,13 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void OpenShipInterior_Pressed()
 		{
-			GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
+			if (Ship != null)
+			{
+				GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
-			//Underscores in scene names represent a folder
-			Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
+				//Underscores in scene names represent a folder
+				Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
+			}
 		}
 
 		private void FuelGaugePlus_Pressed()
@@ -453,9 +457,9 @@ namespace Deuteros.Code.Platform.Screens
 		private void UpdateState()
 		{
 			//Detect if there is a ship present
-			ShipPresent = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked &&
+			ShipPresent = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked && 
 			(
-			(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle))
+			(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle) && (!Earth || Ground == ((Shuttle)T).OnGround))
 			|| (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship))
 			)
 			);
@@ -696,7 +700,9 @@ namespace Deuteros.Code.Platform.Screens
 		private bool ShipBay_ModuleChanged(Enums.Module_Types moduleType, int torsoSection)
 		{
 			var currentModule = Ship.Modules[torsoSection];
-			var currentStore = Ground ? CurrentPlanet.PlanetResources.Stores : CurrentPlanet.Station.Resources.Stores;
+			var oldType = currentModule.ModuleType;
+
+            var currentStore = Ground ? CurrentPlanet.PlanetResources.Stores : CurrentPlanet.Station.Resources.Stores;
 
 			if (currentModule.ModuleType == Enums.Module_Types.Supply && (currentModule.ItemCount > 0 || moduleType == Module_Types.Supply))
 				return false;
@@ -713,7 +719,34 @@ namespace Deuteros.Code.Platform.Screens
 			else
 				Ship.Modules[torsoSection].ModuleType = moduleType;
 
-			return true;
+
+            switch (moduleType)
+            {
+                case Module_Types.Supply:
+					currentStore[ItemTypes.supply_pod] -= 1;
+                    break;
+                case Module_Types.Tool:
+					currentStore[ItemTypes.tool_pod] -= 1;
+                    break;
+                case Module_Types.Cryo:
+					currentStore[ItemTypes.cryo_pod] -= 1;
+                    break;
+            }
+
+            switch (oldType)
+			{
+                case Module_Types.Supply:
+					currentStore[ItemTypes.supply_pod] += 1;
+                    break;
+                case Module_Types.Tool:
+					currentStore[ItemTypes.tool_pod] += 1;
+                    break;
+                case Module_Types.Cryo:
+					currentStore[ItemTypes.cryo_pod] += 1;
+                    break;
+            }
+
+            return true;
 		}
 
 		private void ShipBay_ModuleOpened(int torsoSection)
