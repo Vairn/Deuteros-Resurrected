@@ -1,5 +1,6 @@
 using Deuteros.Code;
 using Deuteros.Code.Objects;
+using Deuteros.Code.Objects.GameData;
 using Deuteros.Code.Objects.Interfaces;
 using Deuteros.Code.Platform.Base;
 using Deuteros.Code.Platform.Helpers;
@@ -74,6 +75,7 @@ public partial class Overview : BaseSubScene
         var iosList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.IOS).ToList();
 
         GameCore.SingletonInstance.ShipSelected = iosList[buttonPressed].ShipID;
+        GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = iosList[buttonPressed].PlanetLocation;
 
         //Underscores in scene names represent a folder
         Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
@@ -85,6 +87,7 @@ public partial class Overview : BaseSubScene
         var scgList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.SCG).ToList();
 
         GameCore.SingletonInstance.ShipSelected = scgList[buttonPressed].ShipID;
+		GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = scgList[buttonPressed].PlanetLocation;
 
         //Underscores in scene names represent a folder
         Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
@@ -115,14 +118,18 @@ public partial class Overview : BaseSubScene
 		{
 			var curStationButton = StationButtons[stationCount];
 
-			curStationButton.Visible = true;
+			if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[station.PlanetId].ActiveMethanoid)
+			{
 
-			if (!station.Built)
-				curStationButton.TextureNormal = SpriteManager.LoadImage(SpriteBasePath + "Station_UnderConstruction.png");
-			else
-				curStationButton.TextureNormal = SpriteManager.LoadImage(SpriteBasePath + "Station_" + Math.Floor((decimal)(station.Factory.ProdCycle / 2)) + ".png");
+				curStationButton.Visible = true;
 
-			stationCount++;
+				if (!station.Built)
+					curStationButton.TextureNormal = SpriteManager.LoadImage(SpriteBasePath + "Station_UnderConstruction.png");
+				else
+					curStationButton.TextureNormal = SpriteManager.LoadImage(SpriteBasePath + "Station_" + Math.Floor((decimal)(station.Factory.ProdCycle / 2)) + ".png");
+
+				stationCount++;
+			}
 		}
 
 		foreach (InterStellarShip ios in iosList)

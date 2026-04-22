@@ -60,7 +60,7 @@ namespace Deuteros.Code.Platform.Helpers
                 {
                     if (((InputEventMouseButton)@event).ButtonIndex == MouseButton.Right && ((InputEventMouseButton)@event).Pressed)
                     {
-                        if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Values.Select(p => p.Station).Where(s => s.BuildParts > 0).ToList().Count() > 0)
+                        if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Values.Select(p => p).Where(p => p.Station.BuildParts > 0 && !p.ActiveMethanoid).ToList().Count() > 0)
                             Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Overview, new List<Enums.SceneVariables>());
                     }
                 }

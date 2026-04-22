@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Deuteros.Code.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,7 +52,19 @@ namespace Deuteros.Code.Platform
 
         private void SingletonInstance_ProductionFinished(Objects.Factory factory)
         {
-            
+            if (factory.CurrentProductionItem().Product.ItemType == Enums.ItemTypes.i_chassis && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.IOS_Attachments))
+            {
+                GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.IOS_Attachments);
+
+                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.ios_attachments);
+
+                GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__m__a).Research.Locked = false;
+                GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__o__c).Research.Locked = false;
+                GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.bandaid).Research.Locked = false;
+                GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.grapple).Research.Locked = false;
+                GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.r_frame).Research.Locked = false;
+            }
+
         }
     }
 }

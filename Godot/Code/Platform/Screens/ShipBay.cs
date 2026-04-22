@@ -459,7 +459,7 @@ namespace Deuteros.Code.Platform.Screens
 			//Detect if there is a ship present
 			ShipPresent = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Any(T => T.PlanetLocation == CurrentPlanet.PlanetId && T.ShipState == Ship_States.Docked && 
 			(
-			(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle) && (!Earth || Ground == ((Shuttle)T).OnGround))
+			(T.ShipType == Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Shuttle) && (Ground == ((Shuttle)T).OnGround))
 			|| (T.ShipType != Ship_Types.Shuttle && SceneVariables.Contains(Enums.SceneVariables.Ship))
 			)
 			);

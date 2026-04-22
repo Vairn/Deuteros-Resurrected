@@ -16,6 +16,7 @@ namespace Deuteros.Code.Objects
         public Enums.StellarBodies DestinationPlanetLocation { get; set; }
         public Enums.StellarBodies DestinationStarLocation { get; set; }
         public uint StartTravelDay { get; set; }
+        public uint StartRepairDay { get; set; }
         public Enums.Ship_Types ShipType { get; set; }
         public Enums.Ship_States ShipState { get; set; }
         public bool Engine { get; set; }
@@ -47,7 +48,7 @@ namespace Deuteros.Code.Objects
 
         public void TakeOff()
         {
-            if (Engine && Fuel > 0)
+            if (Engine && Fuel > 0 && ShipState!=Ship_States.CrewRepairing)
 
                 //clear the Shuttle/Ship State to prevent scrolling in ship bay when ship is not there
                 if (ShipType == Ship_Types.Shuttle)

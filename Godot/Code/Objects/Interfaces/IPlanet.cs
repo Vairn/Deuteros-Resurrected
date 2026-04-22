@@ -18,6 +18,8 @@ namespace Deuteros.Code.Objects.Interfaces
         public int StarShipState { get; set; }
         public int Order { get; set; }
         public List<int> MoonList { get; set; }
+        public int BaseBuildParts { get; set; }
+        public bool BaseDamaged { get; set; }
 
         public string PlanetImageName();
     }

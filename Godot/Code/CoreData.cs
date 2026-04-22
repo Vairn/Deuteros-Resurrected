@@ -5,6 +5,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 using static Deuteros.Code.Enums;
 
@@ -965,6 +966,7 @@ namespace Deuteros.Code
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    BaseBuildParts = 2,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1023,6 +1025,8 @@ namespace Deuteros.Code
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.earth,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    BaseBuildParts = 2,
+                    BaseDamaged = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                         new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1104,6 +1108,7 @@ namespace Deuteros.Code
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.hydrogen, 1),
@@ -1113,7 +1118,7 @@ namespace Deuteros.Code
                     MoonList = new List<int> { 1, 2, 3, 4, 6, 7, 8, 9, 10 },
                     PlanetColor = PlanetColor.yellow,
                     PlanetStyle = PlanetStyle.giant
-                });
+                }) ;
 
                 StaticGameData.Planets.Add(Enums.StellarBodies.amalthea, new Objects.Planet(Enums.StellarBodies.amalthea, 0)
                 {
@@ -1415,6 +1420,7 @@ namespace Deuteros.Code
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1485,6 +1491,7 @@ namespace Deuteros.Code
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.uranus,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1522,6 +1529,7 @@ namespace Deuteros.Code
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.iron, 1),
@@ -1544,6 +1552,7 @@ namespace Deuteros.Code
                     IsMoon = true,
                     MoonParentPlanetId = Enums.StellarBodies.neptune,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.titanium, 1),
@@ -1601,6 +1610,7 @@ namespace Deuteros.Code
                 {
                     IsMoon = false,
                     ParentStar = Enums.StellarBodies.the_sun,
+                    ActiveMethanoid = true,
                     PlanetResources = new Objects.PlanetResource(new List<Objects.Material>()
                         {
                             new Objects.Material(Enums.ItemTypes.carbon, 1),
@@ -3676,6 +3686,18 @@ namespace Deuteros.Code
                     )
                 });
 
+                //set up all methanoid owned planets
+                foreach (IPlanet p in StaticGameData.Planets.Values)
+                {
+                    if (p.ActiveMethanoid)
+                    {
+                        p.Station.BuildParts = 8;
+                        p.Station.Built = true;
+                        p.PlanetResources.Derricks = 2;
+                        p.BaseBuildParts = 2;
+                        p.BaseDamaged = false;
+                    }
+                }
 
                 StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.iron] = 1;
                 StaticGameData.ResourceLevels_Survey_Multiplier[Enums.ItemTypes.titanium] = 1;

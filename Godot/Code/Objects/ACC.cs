@@ -150,7 +150,12 @@ namespace Deuteros.Code.Objects
                     Ship.TakeOff();
                 }
             }
-            else if (Ship.ShipState == Ship_States.UnDocked && oldState == Ship_States.TakingOff)
+            else if (Ship.ShipState == Ship_States.UnDocked && oldState == Ship_States.InTransit)
+            {
+                Ship.Dock();
+            }
+            else 
+            if (Ship.ShipState == Ship_States.UnDocked && oldState == Ship_States.TakingOff)
             {
                 Ship.Dock();
             }
@@ -162,7 +167,7 @@ namespace Deuteros.Code.Objects
                 }
                 else
                 {
-                    Ship.Land();
+                    Ship.EngageEngine();
                 }
 
             }

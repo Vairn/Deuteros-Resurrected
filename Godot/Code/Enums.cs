@@ -357,6 +357,7 @@ namespace Deuteros.Code
             First_Station_Segment,
             Shuttle_Unlock,
             Space_Stations,
+            IOS_Attachments,
             Interstellar_Travel
         }
 
@@ -386,7 +387,8 @@ namespace Deuteros.Code
             TakingOff = 400,
             Launching = 500,
             Docked = 600,
-            UnDocked = 700
+            UnDocked = 700,
+            CrewRepairing = 800
         }
 
         public enum Module_Types

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static Deuteros.Code.Enums;
 
 namespace Deuteros.Code.Objects
 {
@@ -26,6 +27,22 @@ namespace Deuteros.Code.Objects
                 return 5 - (int)(GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - StartTravelDay);
             else
                 return 0;
+        }
+
+        public void CompleteRepairs()
+        {
+            if ( ShipState == Enums.Ship_States.CrewRepairing)
+            {
+                if (GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - StartRepairDay >= 2)
+                {
+                    Modules[0].ItemStored = ItemTypes.none;
+                    Modules[0].ItemCount = 0;
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].BaseDamaged = false;
+
+                    ShipState = Enums.Ship_States.Docked;
+                }
+            }
+
         }
     }
 }

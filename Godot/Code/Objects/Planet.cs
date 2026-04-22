@@ -23,6 +23,8 @@ namespace Deuteros.Code.Objects
         public int StarShipState { get; set; }
         public int Order { get; set; }
         public List<int> MoonList { get; set; }
+        public int BaseBuildParts { get; set; }
+        public bool BaseDamaged { get; set; }
 
         public Planet(Enums.StellarBodies planetId, int order)
         {
@@ -57,7 +59,7 @@ namespace Deuteros.Code.Objects
 
             var randomGen = new Random((int)Time.GetTicksMsec());
 
-            if (PlanetResources.Derricks > 0)
+            if (PlanetResources.Derricks > 0 && BaseBuildParts == 2 && !BaseDamaged)
             {
                 foreach (var material in PlanetResources.Materials)
                 {

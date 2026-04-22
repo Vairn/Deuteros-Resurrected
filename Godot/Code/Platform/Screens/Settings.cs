@@ -12,166 +12,170 @@ using System.Collections.Generic;
 
 public partial class Settings : Node2D
 {
-    public Button SoundToggle { get; set; }
-    public Button SkipToShuttles { get; set; }
-    public Button EarthStationTo7 { get; set; }
-    public Button MaxResources { get; set; }
-    public Label MaxResourcesText { get; set; }
-    public Label SoundToggleText { get; set; }
-    public bool SoundOn { get; set; }
-    public int BusMasterIndex { get; set; }
+	public Button SoundToggle { get; set; }
+	public Button SkipToShuttles { get; set; }
+	public Button EarthStationTo7 { get; set; }
+	public Button MaxResources { get; set; }
+	public Label MaxResourcesText { get; set; }
+	public Label SoundToggleText { get; set; }
+	public bool SoundOn { get; set; }
+	public int BusMasterIndex { get; set; }
 
-    public override void _Ready()
-    {
-        BusMasterIndex = AudioServer.GetBusIndex("Master");
+	public override void _Ready()
+	{
+		BusMasterIndex = AudioServer.GetBusIndex("Master");
 
-        SkipToShuttles = (Button)GetNode("SkipToShuttles");
-        EarthStationTo7 = (Button)GetNode("EarthStationTo7");
-        MaxResources = (Button)GetNode("MaxResources");
-        SoundToggle = (Button)GetNode("SoundToggle");
-        SoundToggle.Connect("button_up", new Callable(this, nameof(SoundToggle_ButtonUp)));
+		SkipToShuttles = (Button)GetNode("SkipToShuttles");
+		EarthStationTo7 = (Button)GetNode("EarthStationTo7");
+		MaxResources = (Button)GetNode("MaxResources");
+		SoundToggle = (Button)GetNode("SoundToggle");
+		SoundToggle.Connect("button_up", new Callable(this, nameof(SoundToggle_ButtonUp)));
 
 
-        SkipToShuttles.Pressed += SkipToShuttles_Pressed;
-        EarthStationTo7.Pressed += EarthStationTo7_Pressed;
-        MaxResources.Pressed += MaxResources_Pressed;
+		SkipToShuttles.Pressed += SkipToShuttles_Pressed;
+		EarthStationTo7.Pressed += EarthStationTo7_Pressed;
+		MaxResources.Pressed += MaxResources_Pressed;
 
-        SoundToggleText = (Label)GetNode("SoundToggle/SoundToggleText");
-        MaxResourcesText = (Label)GetNode("MaxResources/MaxResourcesText");
+		SoundToggleText = (Label)GetNode("SoundToggle/SoundToggleText");
+		MaxResourcesText = (Label)GetNode("MaxResources/MaxResourcesText");
 
-        SoundOn = !AudioServer.IsBusMute(BusMasterIndex);
-        SoundToggleText.Text = SoundOn ? "ON" : "OFF";
+		SoundOn = !AudioServer.IsBusMute(BusMasterIndex);
+		SoundToggleText.Text = SoundOn ? "ON" : "OFF";
 
-        base._Ready();
-    }
+		base._Ready();
+	}
 
-    private void MaxResources_Pressed()
-    {
-        GameCore.SingletonInstance.InfiniteResources = !GameCore.SingletonInstance.InfiniteResources;
+	private void MaxResources_Pressed()
+	{
+		GameCore.SingletonInstance.InfiniteResources = !GameCore.SingletonInstance.InfiniteResources;
 
-        MaxResourcesText.Text = GameCore.SingletonInstance.InfiniteResources ? "On" : "Off";
-    }
+		MaxResourcesText.Text = GameCore.SingletonInstance.InfiniteResources ? "On" : "Off";
+	}
 
-    private void EarthStationTo7_Pressed()
-    {
-        var gameData = GameCore.SingletonInstance.GameData;
-        var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
-        earth.Station.BuildParts = 7;
+	private void EarthStationTo7_Pressed()
+	{
+		var gameData = GameCore.SingletonInstance.GameData;
+		var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
+		earth.Station.BuildParts = 7;
 
-        gameData.GetItem(Enums.ItemTypes.a__c__c).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.a__c__c).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.a__c__c).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.a__c__c).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.a__c__c).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.a__c__c).Locked = false;
 
-        GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
-        GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
-        GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;
 
-        earth.PlanetResources.Stores[Enums.ItemTypes.tool_pod] = 1;
-        earth.PlanetResources.Stores[Enums.ItemTypes.supply_pod] = 1;
-        earth.PlanetResources.Stores[Enums.ItemTypes.a__c__c] = 1;
+		earth.PlanetResources.Stores[Enums.ItemTypes.tool_pod] = 1;
+		earth.PlanetResources.Stores[Enums.ItemTypes.supply_pod] = 1;
+		earth.PlanetResources.Stores[Enums.ItemTypes.a__c__c] = 1;
 
-        GameCore.SingletonInstance.TriggerStationPiecePlaced(Enums.StellarBodies.earth);
+		GameCore.SingletonInstance.TriggerStationPiecePlaced(Enums.StellarBodies.earth);
 
-        if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
-        {
-            SkipToShuttles_Pressed();
-        }
-    }
+		if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Shuttle_Unlock))
+		{
+			SkipToShuttles_Pressed();
+		}
+	}
 
-    private void SkipToShuttles_Pressed()
-    {
-        var gameData = GameCore.SingletonInstance.GameData;
+	private void SkipToShuttles_Pressed()
+	{
+		var gameData = GameCore.SingletonInstance.GameData;
 
-        gameData.GetItem(Enums.ItemTypes.s_chassis).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.s_chassis).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.s_drive).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.s_drive).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.of_frame).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.of_frame).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.tool_pod).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.tool_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.supply_pod).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.supply_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
-        gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.Researched = true;
-        gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.s_chassis).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.s_chassis).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.s_drive).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.s_drive).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.meh_fuel).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.of_frame).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.of_frame).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.tool_pod).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.tool_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.supply_pod).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.supply_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+		gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.Researched = true;
+		gameData.GetItem(Enums.ItemTypes.cryo_pod).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
 
-        gameData.GetItem(Enums.ItemTypes.s_chassis).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.s_drive).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.meh_fuel).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.of_frame).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.tool_pod).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.supply_pod).Locked = false;
-        gameData.GetItem(Enums.ItemTypes.cryo_pod).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.s_chassis).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.s_drive).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.meh_fuel).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.of_frame).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.tool_pod).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.supply_pod).Locked = false;
+		gameData.GetItem(Enums.ItemTypes.cryo_pod).Locked = false;
 
-        var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
+		var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
 
-        if (earth.ResearchStaff == null || earth.ResearchStaff.Count == 0)
-        {
-            earth.ResearchStaff = new Staff();
-            earth.ResearchStaff.Leader = "Von Braun";
-            earth.ResearchStaff.Count = 200;
+		if (earth.ResearchStaff == null || earth.ResearchStaff.Count == 0)
+		{
+			earth.ResearchStaff = new Staff();
+			earth.ResearchStaff.Leader = "Von Braun";
+			earth.ResearchStaff.Count = 250;
+			earth.ResearchStaff.ActionsTaken = 20;
+
             earth.ResearchStaff.Type = Enums.StaffType.Research;
-        }
+		}
 
-        if (earth.Factory.Builder == null || earth.Factory.Builder.Count == 0)
-        {
-            earth.Factory.Builder = new Staff();
-            earth.Factory.Builder.Leader = "Bob";
-            earth.Factory.Builder.Count = 200;
+		if (earth.Factory.Builder == null || earth.Factory.Builder.Count == 0)
+		{
+			earth.Factory.Builder = new Staff();
+			earth.Factory.Builder.Leader = "Bob";
+			earth.Factory.Builder.Count = 200;
+			earth.Factory.Builder.ActionsTaken = 20;
             earth.Factory.Builder.Type = Enums.StaffType.Production;
-        }
+		}
 
-        if (!earth.PlanetResources.Staff.Any(T => T != null && T.Type == Enums.StaffType.Marines))
-        {
-            var newMarine = new Staff();
-            newMarine.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
-            newMarine.Count = 41;
+		if (!earth.PlanetResources.Staff.Any(T => T != null && T.Type == Enums.StaffType.Marines))
+		{
+			var newMarine = new Staff();
+			newMarine.Leader = GameCore.SingletonInstance.GameData.GetNextPersonName();
+			newMarine.Count = 41;
+			newMarine.ActionsTaken = 30;
             newMarine.Type = Enums.StaffType.Marines;
 
-            earth.PlanetResources.AddStaff(newMarine);
-        }
+			earth.PlanetResources.AddStaff(newMarine);
+		}
 
-        earth.PlanetResources.Derricks = 8;
-        earth.PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
-        earth.PlanetResources.Stores[Enums.ItemTypes.s_drive] = 1;
-        earth.PlanetResources.Stores[Enums.ItemTypes.of_frame] = 8;
+		earth.PlanetResources.Derricks = 8;
+		earth.PlanetResources.Stores[Enums.ItemTypes.s_chassis] = 1;
+		earth.PlanetResources.Stores[Enums.ItemTypes.s_drive] = 1;
+		earth.PlanetResources.Stores[Enums.ItemTypes.of_frame] = 8;
 
-        var newShuttle = new Shuttle();
-        newShuttle.StartTravelDay = 0;
-        newShuttle.StarLocation = Enums.StellarBodies.the_sun;
-        newShuttle.Modules = new List<ShipModule>();
-        newShuttle.Modules.Add(new ShipModule());
-        newShuttle.ShipState = Ship_States.Docked;
-        newShuttle.Fuel = 250;
-        newShuttle.Engine = true;
-        newShuttle.FuelType = Enums.ItemTypes.meh_fuel;
-        newShuttle.OnGround = true;
-        newShuttle.Pilot = null;
-        newShuttle.PlanetLocation = Enums.StellarBodies.earth;
-        newShuttle.ShipType = Enums.Ship_Types.Shuttle;
-        newShuttle.LocationView = false;
-        newShuttle.Name = "Shuttle Craft";
+		var newShuttle = new Shuttle();
+		newShuttle.StartTravelDay = 0;
+		newShuttle.StarLocation = Enums.StellarBodies.the_sun;
+		newShuttle.Modules = new List<ShipModule>();
+		newShuttle.Modules.Add(new ShipModule());
+		newShuttle.ShipState = Ship_States.Docked;
+		newShuttle.Fuel = 250;
+		newShuttle.Engine = true;
+		newShuttle.FuelType = Enums.ItemTypes.meh_fuel;
+		newShuttle.OnGround = true;
+		newShuttle.Pilot = null;
+		newShuttle.PlanetLocation = Enums.StellarBodies.earth;
+		newShuttle.ShipType = Enums.Ship_Types.Shuttle;
+		newShuttle.LocationView = false;
+		newShuttle.Name = "Shuttle Craft";
 
-        GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newShuttle);
+		GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Add(newShuttle);
 
-        GameCore.SingletonInstance.TriggerShipCreated(newShuttle);
-    }
+		GameCore.SingletonInstance.TriggerShipCreated(newShuttle);
+	}
 
-    private void SoundToggle_ButtonUp()
-    {
-        SoundOn = !SoundOn;
+	private void SoundToggle_ButtonUp()
+	{
+		SoundOn = !SoundOn;
 
-        SoundToggleText.Text = SoundOn ? "ON" : "OFF";
-                
-        AudioServer.SetBusMute(BusMasterIndex, !SoundOn);
+		SoundToggleText.Text = SoundOn ? "ON" : "OFF";
+				
+		AudioServer.SetBusMute(BusMasterIndex, !SoundOn);
 
-        QueueRedraw();
-    }
+		QueueRedraw();
+	}
 
-    // Called every update.
-    public override void _Draw()
-    {
-    }
+	// Called every update.
+	public override void _Draw()
+	{
+	}
 }
