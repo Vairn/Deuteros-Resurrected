@@ -49,7 +49,6 @@ namespace Deuteros.Code.Platform
         {
             
         }
-
         private void SingletonInstance_ProductionFinished(Objects.Factory factory)
         {
             if (factory.CurrentProductionItem().Product.ItemType == Enums.ItemTypes.i_chassis && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.IOS_Attachments))
@@ -65,6 +64,28 @@ namespace Deuteros.Code.Platform
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.r_frame).Research.Locked = false;
             }
 
+        }
+
+        public void TriggerUnlock(Enums.Game_Unlocks unlock)
+        {
+            switch (unlock)
+            {
+                case Enums.Game_Unlocks.Mass_Tranceiver:
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.matter_transmitter);
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Mass_Tranceiver);
+                    break;
+
+                case Enums.Game_Unlocks.D_F_C_C:
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.drone_ships);
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.D_F_C_C);
+                    break;
+
+                case Enums.Game_Unlocks.Self_Destruct:
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.self_destruct);
+                    GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Self_Destruct);
+                    break;
+
+            }
         }
     }
 }

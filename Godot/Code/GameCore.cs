@@ -123,55 +123,55 @@ namespace Deuteros.Code
 				{
 					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true,
 					new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Orbit,
-                    }, null, null, "Production"),
+						Enums.SceneVariables.Orbit,
+					}, null, null, "Production"),
 
-                    new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Orbit,
-                        Enums.SceneVariables.Shuttle
-                    }, null, null, "Space Bay"),
+					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Orbit,
+						Enums.SceneVariables.Shuttle
+					}, null, null, "Space Bay"),
 
-                    new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
-                        new Godot.Collections.Array<Enums.SceneVariables>() {
-                            Enums.SceneVariables.Orbit
-                        },
+					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
+						new Godot.Collections.Array<Enums.SceneVariables>() {
+							Enums.SceneVariables.Orbit
+						},
 						new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID },
-                        () => GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Exists(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId),
+						() => GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Exists(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId),
 
 
-                        "Shuttle"),
-                    null,
-                    new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground,
-                        Enums.SceneVariables.Shuttle
-                    }, null,() => GetCurrentPlanet().BaseBuildParts==2,"Shuttle Bay"),
-                    null,
-                    new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Orbit
-                    }, null, null, "Stores"),
-                    new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Orbit,
-                        Enums.SceneVariables.Ship
-                    }, null, null, "SpaceDock"),
-                    null,
+						"Shuttle"),
 					null,
-                    new Objects.MenuButton(Enums.Menu_Buttons.GroundMaterials, Enums.Scenes.GroundMaterials, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground
-                    }, null, () => GetCurrentPlanet().BaseBuildParts==2, "Resource"),
-                    new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
-                    new Godot.Collections.Array<Enums.SceneVariables>() {
-                        Enums.SceneVariables.Ground
-                    }, null, () => GetCurrentPlanet().BaseBuildParts==2, "MiningStore")
-                };
+					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle_Bay, Enums.Scenes.ShipBay, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Ground,
+						Enums.SceneVariables.Shuttle
+					}, null,() => GetCurrentPlanet().BaseBuildParts==2,"Shuttle Bay"),
+					null,
+					new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Orbit
+					}, null, null, "Stores"),
+					new Objects.MenuButton(Enums.Menu_Buttons.Ship_Bay, Enums.Scenes.ShipBay, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Orbit,
+						Enums.SceneVariables.Ship
+					}, null, null, "SpaceDock"),
+					null,
+					null,
+					new Objects.MenuButton(Enums.Menu_Buttons.GroundMaterials, Enums.Scenes.GroundMaterials, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Ground
+					}, null, () => GetCurrentPlanet().BaseBuildParts==2, "Resource"),
+					new Objects.MenuButton(Enums.Menu_Buttons.Store, Enums.Scenes.Store, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Ground
+					}, null, () => GetCurrentPlanet().BaseBuildParts==2, "MiningStore")
+				};
 			}
 		}
 
-        private List<Objects.MenuButton> OverviewMenuButtons
+		private List<Objects.MenuButton> OverviewMenuButtons
 		{
 			get
 			{
@@ -351,6 +351,11 @@ namespace Deuteros.Code
 			}
 		}
 
+		public void TriggerUnlock(Game_Unlocks unlock)
+		{
+			_unlocker.TriggerUnlock(unlock);
+		}
+
 		public void ShowBulletin(BulletinTypes bulletin)
 		{
 			GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Bulletins, new List<SceneVariables>());
@@ -358,7 +363,7 @@ namespace Deuteros.Code
 			((Bulletins)_currentScreen).DisplayBulletin(bulletin);
 		}
 
-        public void ChangeScene(Enums.Scenes sceneToLoad, List<Enums.SceneVariables> sceneVariables)
+		public void ChangeScene(Enums.Scenes sceneToLoad, List<Enums.SceneVariables> sceneVariables)
 		{
 			currentScene = sceneToLoad;
 			SceneVariables = sceneVariables;
@@ -378,7 +383,7 @@ namespace Deuteros.Code
 
 			if (sceneToLoad == Scenes.Earth_Ground) GameData.ActiveSaveFile.CurrentPlanet = StellarBodies.earth;
 
-            var newScene = GD.Load<PackedScene>("res://Screens/" + newSceneName).Instantiate<BaseSubScene>();
+			var newScene = GD.Load<PackedScene>("res://Screens/" + newSceneName).Instantiate<BaseSubScene>();
 			newScene.SceneVariables = sceneVariables;
 			GetNode<Node>("/root/Master/MainScene").AddChild(newScene);
 			_currentScreen = newScene;
@@ -404,38 +409,38 @@ namespace Deuteros.Code
 				_menuScreen.Location.Text = "Earth Orbital";
 				_menuScreen.Star.Text = "The Sun";
 
-                //disable menus or ship interior while in transit
-                if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType != Ship_Types.Shuttle)
-                {
-                    if (((ShipInterior)_currentScreen).Ship.ShipState == Ship_States.InTransit)
-                    {
-                        _menuScreen.MenuButtons = OverviewMenuButtons;
-                    }
+				//disable menus or ship interior while in transit
+				if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType != Ship_Types.Shuttle)
+				{
+					if (((ShipInterior)_currentScreen).Ship.ShipState == Ship_States.InTransit)
+					{
+						_menuScreen.MenuButtons = OverviewMenuButtons;
+					}
 
-                }
+				}
 
-                _menuScreen.SetupMenus();
-                Earth.GroundSelected = false;
-            }
-            else if (_menuScreen != null && GetCurrentPlanet().PlanetId != Enums.StellarBodies.earth)
+				_menuScreen.SetupMenus();
+				Earth.GroundSelected = false;
+			}
+			else if (_menuScreen != null && GetCurrentPlanet().PlanetId != Enums.StellarBodies.earth)
 			{
 				if (GetCurrentPlanet().Station.Built && !GetCurrentPlanet().ActiveMethanoid)
 					_menuScreen.MenuButtons = StandardMenuButtons;
 				else
-                    _menuScreen.MenuButtons = OverviewMenuButtons;
+					_menuScreen.MenuButtons = OverviewMenuButtons;
 
 				//disable menus or ship interior while in transit
-                if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType!=Ship_Types.Shuttle)
+				if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType!=Ship_Types.Shuttle)
 				{
 					if (((ShipInterior)_currentScreen).Ship.ShipState==Ship_States.InTransit)
-                    {
-                        _menuScreen.MenuButtons = OverviewMenuButtons;
-                    }
+					{
+						_menuScreen.MenuButtons = OverviewMenuButtons;
+					}
 
-                }
+				}
 
 
-                if (_currentScreen.GetType() == typeof(ShipBay) || _currentScreen.GetType() == typeof(GroundMaterials) || _currentScreen.GetType() == typeof(Deuteros.Code.Platform.Screens.Store))
+				if (_currentScreen.GetType() == typeof(ShipBay) || _currentScreen.GetType() == typeof(GroundMaterials) || _currentScreen.GetType() == typeof(Deuteros.Code.Platform.Screens.Store))
 				{
 					_menuScreen.Location.Text = GetCurrentPlanet().PlanetId.ToString() + " colony";
 				}

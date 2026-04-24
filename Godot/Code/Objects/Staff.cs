@@ -39,9 +39,9 @@ namespace Deuteros.Code.Objects
             }
             else if (Type == Enums.StaffType.Marines)
             {
-                if (ActionsTaken >= 10 && ActionsTaken < 30)
+                if (ActionsTaken >= 10 && ActionsTaken < 40)
                     return (int)Enums.StaffLevel_Marines.Captain;
-                else if (ActionsTaken >= 30)
+                else if (ActionsTaken >= 40)
                     return (int)Enums.StaffLevel_Marines.Admiral;
                 else
                     return (int)Enums.StaffLevel_Marines.Pilot;

@@ -31,17 +31,17 @@ public partial class Overview : BaseSubScene
 		{
 			for (int j = 0; j < 8; j++)
 			{
-                var curIndex = i * 8 + j;
-                StationButtons.Add(GetNode<TextureButton>("Stations/Col" + i.ToString() + "/Station0" + j.ToString()));
-                StationButtons.Last().Pressed += () => Station_Pressed(curIndex);
+				var curIndex = i * 8 + j;
+				StationButtons.Add(GetNode<TextureButton>("Stations/Col" + i.ToString() + "/Station0" + j.ToString()));
+				StationButtons.Last().Pressed += () => Station_Pressed(curIndex);
 
-                IOSButtons.Add(GetNode<TextureButton>("IOS/Col" + i.ToString() + "/IOS0" + j.ToString()));
+				IOSButtons.Add(GetNode<TextureButton>("IOS/Col" + i.ToString() + "/IOS0" + j.ToString()));
 				IOSButtons.Last().Pressed += () => IOS_Pressed(curIndex);
 
-                SCGButtons.Add(GetNode<TextureButton>("SCG/Col" + i.ToString() + "/SCG0" + j.ToString()));
+				SCGButtons.Add(GetNode<TextureButton>("SCG/Col" + i.ToString() + "/SCG0" + j.ToString()));
 				SCGButtons.Last().Pressed += () => SCG_Pressed(curIndex);
 
-            }
+			}
 		}
 
 		UpdateState();
@@ -69,33 +69,36 @@ public partial class Overview : BaseSubScene
 		Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Station, sceneVariables);
 	}
 
-    private void IOS_Pressed(int buttonPressed)
+	private void IOS_Pressed(int buttonPressed)
 	{
-        //show ios
-        var iosList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.IOS).ToList();
+		//show ios
+		var iosList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.IOS).ToList();
 
-        GameCore.SingletonInstance.ShipSelected = iosList[buttonPressed].ShipID;
-        GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = iosList[buttonPressed].PlanetLocation;
+		GameCore.SingletonInstance.ShipSelected = iosList[buttonPressed].ShipID;
+		GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = iosList[buttonPressed].PlanetLocation;
 
-        //Underscores in scene names represent a folder
-        Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
-    }
+		var sceneVariables = new List<SceneVariables>();
+		sceneVariables.Add(Enums.SceneVariables.Orbit);
 
-    private void SCG_Pressed(int buttonPressed)
-    {
-        //show scg
-        var scgList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.SCG).ToList();
+		//Underscores in scene names represent a folder
+		Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, sceneVariables);
+	}
 
-        GameCore.SingletonInstance.ShipSelected = scgList[buttonPressed].ShipID;
+	private void SCG_Pressed(int buttonPressed)
+	{
+		//show scg
+		var scgList = Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Where(T => T.ShipType == Ship_Types.SCG).ToList();
+
+		GameCore.SingletonInstance.ShipSelected = scgList[buttonPressed].ShipID;
 		GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = scgList[buttonPressed].PlanetLocation;
 
-        //Underscores in scene names represent a folder
-        Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
-    }
+		//Underscores in scene names represent a folder
+		Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.ShipInterior, new List<SceneVariables>());
+	}
 
 
-    //Triggered from gamecore
-    protected override void DayTick(uint previousDay, uint currentDay)
+	//Triggered from gamecore
+	protected override void DayTick(uint previousDay, uint currentDay)
 	{
 		UpdateState();
 	}

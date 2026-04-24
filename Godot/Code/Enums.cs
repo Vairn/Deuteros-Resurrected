@@ -358,6 +358,9 @@ namespace Deuteros.Code
             Shuttle_Unlock,
             Space_Stations,
             IOS_Attachments,
+            Mass_Tranceiver,
+            Self_Destruct,
+            D_F_C_C,
             Interstellar_Travel
         }
 

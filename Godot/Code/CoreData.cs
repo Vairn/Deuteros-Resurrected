@@ -3693,7 +3693,9 @@ namespace Deuteros.Code
                     {
                         p.Station.BuildParts = 8;
                         p.Station.Built = true;
-                        p.PlanetResources.Derricks = 2;
+                        p.Station.MtxInstalled = true;
+                        p.Station.SdmInstalled = true;
+                        p.Station.Factory.AOC = true;
                         p.BaseBuildParts = 2;
                         p.BaseDamaged = false;
                     }

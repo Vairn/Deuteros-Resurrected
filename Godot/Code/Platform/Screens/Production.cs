@@ -8,6 +8,7 @@ using Deuteros.Code.Platform.Helpers;
 using System.Security.Cryptography.X509Certificates;
 using Deuteros.Code.Objects.Interfaces;
 using static System.Collections.Specialized.BitVector32;
+using System.ComponentModel.Design;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -264,6 +265,7 @@ namespace Deuteros.Code.Platform.Screens
 							//Production complete
 							if (currentFactory.CurrentProductionItem().Complete)
 							{
+
 								currentPlanet.AddItems(currentFactory.CurrentProductionItem().Product.ItemType, 1);
 
 								currentFactory.Builder.ActionsTaken++;
@@ -273,6 +275,13 @@ namespace Deuteros.Code.Platform.Screens
 
 								if (!currentFactory.AOC)
 								{
+									if (currentFactory.CurrentProductionItem().Product.ItemType == Enums.ItemTypes.a__o__c)
+									{
+										currentPlanet.Station.Resources.AddStaff(currentFactory.Builder);
+										currentFactory.Builder = null;
+										currentFactory.AOC = true;
+									}
+
 									currentFactory.ProductionQueue.Remove(currentFactory.CurrentProductionItem());
 								}
 								else if (currentFactory.ProductionQueue.Any(T => T.AOCRepeat))
@@ -307,10 +316,10 @@ namespace Deuteros.Code.Platform.Screens
 								{
 									autoProduced.AutoProduceFlip = true;
 									RemoveResourceByItem(currentPlanet, autoProduced, currentFactory.Ground);
-                                    if (currentFactory.Ground)
-                                        currentPlanet.PlanetResources.Stores[autoProduced.ItemType] += 3;
-                                    else
-                                        currentPlanet.Station.Resources.Stores[autoProduced.ItemType] += 3;
+									if (currentFactory.Ground)
+										currentPlanet.PlanetResources.Stores[autoProduced.ItemType] += 3;
+									else
+										currentPlanet.Station.Resources.Stores[autoProduced.ItemType] += 3;
 								}
 							}
 						}

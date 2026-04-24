@@ -25,11 +25,12 @@ namespace Deuteros.Code.Platform.Screens.ModuleScenes
 		public string RFrameText4 = "Station Is Now Operational.";
 
 		public string MethanoidText = "Wujic Flakra, Tarran Tak\nGablak, Spligh Caboon.\n\nApologeek Dasmin Pag Fo\nOwst Meethane Stolt.\n\nSha-Sha.";
-        public int PauseBetweenLabelsMs { get; set; }
+		public string MethanoidText2 = "Wujic Flakra, Tarran Tak\nGablak, Spligh Caboon.\n\nBarga San 'Grapple' Tak\nFreze Gifta Pag Vill !\n\nApologeek Dasmin Pag Fo\nOwst Meethane Stolt.\n\nSha-Sha.";
+		public int PauseBetweenLabelsMs { get; set; }
 		public int LetterDelayMs { get; set; }
-        public int WordDelayMs { get; set; }
+		public int WordDelayMs { get; set; }
 
-        public override void _Ready()
+		public override void _Ready()
 		{
 			Text01 = GetNode<Label>("Window/Text01");
 			Text02 = GetNode<Label>("Window/Text02");
@@ -95,16 +96,26 @@ namespace Deuteros.Code.Platform.Screens.ModuleScenes
 
 		public async Task PlayMethanoidText()
 		{
-            Text01.Text = "";
-            Text02.Text = "";
-            Text03.Text = "";
-            Text04.Text = "";
+			Text01.Text = "";
+			Text02.Text = "";
+			Text03.Text = "";
+			Text04.Text = "";
 
-            await TypeText(Text01, MethanoidText,true);
-            await WaitMs(5000);
-        }
+			await TypeText(Text01, MethanoidText,true);
+			await WaitMs(5000);
+		}
 
-        private async Task TypeText(Label label, string fullText, bool wordDelayOnly = false)
+		public async Task PlayMethanoidText2()
+		{
+			Text01.Text = "";
+			Text02.Text = "";
+			Text03.Text = "";
+			Text04.Text = "";
+
+			await TypeText(Text01, MethanoidText2, true);
+			await WaitMs(5000);
+		}
+		private async Task TypeText(Label label, string fullText, bool wordDelayOnly = false)
 		{
 			label.Text = "";
 
@@ -114,23 +125,23 @@ namespace Deuteros.Code.Platform.Screens.ModuleScenes
 
 				if (wordDelayOnly == false)
 				{
-                    // Optional: don't blip on spaces
-                    if (fullText[i] != ' ' && TypeSound != null)
-                    {
-                        TypeSound.Stop(); // restarts the sound cleanly
-                        TypeSound.Play();
-                    }
-                    
+					// Optional: don't blip on spaces
+					if (fullText[i] != ' ' && TypeSound != null)
+					{
+						TypeSound.Stop(); // restarts the sound cleanly
+						TypeSound.Play();
+					}
+					
 					await WaitMs(LetterDelayMs);
 				}
 				else
 				{
 					if (fullText[i] == ' ')
-                        await WaitMs(WordDelayMs);
+						await WaitMs(WordDelayMs);
 					if (fullText[i] == '\n')
-                        await WaitMs(WordDelayMs*2);
-                }
-            }
+						await WaitMs(WordDelayMs*2);
+				}
+			}
 		}
 
 		private async Task WaitMs(int ms)

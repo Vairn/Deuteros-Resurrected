@@ -121,7 +121,7 @@ namespace Deuteros.Code.Platform.Screens
 
 			base._Ready();
 		}
-        private async void ShipInterior_Pressed(int modulePressed)
+		private async void ShipInterior_Pressed(int modulePressed)
 		{
 			if (Ship.ShipState == Ship_States.Docked)
 			{
@@ -133,6 +133,8 @@ namespace Deuteros.Code.Platform.Screens
 
 					if (Ship.Modules[modulePressed].ItemStored == ItemTypes.r_frame && CurrentPlanet.BaseBuildParts < 2 && Ship.Pilot != null && Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround)
 					{
+						if (Ship.Pilot != null) Ship.Pilot.ActionsTaken++;
+						
 						GameCore.LockScreen();
 
 						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
@@ -153,17 +155,17 @@ namespace Deuteros.Code.Platform.Screens
 						GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
 						newScene = Enums.Scenes.ShipInterior;
-                    }
+					}
 
-                    if (Ship.Modules[modulePressed].ItemStored == ItemTypes.bandaid && CurrentPlanet.BaseDamaged && Ship.Pilot != null && Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround)
+					if (Ship.Modules[modulePressed].ItemStored == ItemTypes.bandaid && CurrentPlanet.BaseDamaged && Ship.Pilot != null && Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround)
 					{
 						((Shuttle)Ship).ShipState = Ship_States.CrewRepairing;
 						((Shuttle)Ship).StartRepairDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
 						UpdateState();
-                        GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
+						GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
-                        newScene = Enums.Scenes.ShipInterior;
-                    }
+						newScene = Enums.Scenes.ShipInterior;
+					}
 
 					if (newScene==Scenes.ShipBay)
 					{ 
@@ -181,27 +183,32 @@ namespace Deuteros.Code.Platform.Screens
 				}
 				else if (Ship.ShipType != Ship_Types.Shuttle)
 				{
-                    if (CurrentPlanet.ActiveMethanoid && (Ship.Modules[modulePressed].ItemStored != ItemTypes.commspod))
-                    {
-                        GameCore.LockScreen();
 
-                        OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
-                        Window.AddChild(OfFrameDeployScene);
-                        OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
-                        await OfFrameDeployScene.PlayMethanoidText();
-                        Window.RemoveChild(OfFrameDeployScene);
-                        OfFrameDeployScene = null;
+					
+					if (CurrentPlanet.ActiveMethanoid && !Ship.Modules.Any<ShipModule>(m => m.ItemStored == ItemTypes.commspod))
+					{
+						GameCore.LockScreen();
 
-                        GameCore.UnLockScreen();
+						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
+						Window.AddChild(OfFrameDeployScene);
+						OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
+						if (Ship.Modules.Any<ShipModule>(m => m.ItemStored == ItemTypes.grapple))
+							await OfFrameDeployScene.PlayMethanoidText2();
+						else
+							await OfFrameDeployScene.PlayMethanoidText();
+						Window.RemoveChild(OfFrameDeployScene);
+						OfFrameDeployScene = null;
 
-                        Ship.TakeOff();
+						GameCore.UnLockScreen();
 
-                        UpdateState();
-                        GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
+						Ship.TakeOff();
+
+						UpdateState();
+						GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 						newScene = Scenes.ShipInterior;
-                    }
+					}
 
-                    GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = Ship.PlanetLocation;
+					GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = Ship.PlanetLocation;
 
 					CurrentPlanet.Station.StarShipState = modulePressed + 1;
 					sceneVariables.Add(Enums.SceneVariables.Orbit);
@@ -219,6 +226,8 @@ namespace Deuteros.Code.Platform.Screens
 					if(Ship.Modules[modulePressed].ItemStored == ItemTypes.of_frame && CurrentPlanet.Station.Built == false && Ship.Pilot != null)
 					{
 						GameCore.LockScreen();
+
+						if (Ship.Pilot != null) Ship.Pilot.ActionsTaken++;
 
 						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
 						Window.AddChild(OfFrameDeployScene);
@@ -274,7 +283,7 @@ namespace Deuteros.Code.Platform.Screens
 
 		private void DisengageEngine_Pressed()
 		{
-			//TODO - Actually not sure what to do with this, need help from data miner
+			Ship.DisengageEngine();
 		}
 
 		private void EngageEngine_Pressed()
@@ -325,24 +334,33 @@ namespace Deuteros.Code.Platform.Screens
 
 			ShipName.Text = Ship.Name;
 
-            if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.CrewRepairing)
-                Status.Text = "Crew Active On\n" + Ship.PlanetLocation.ToScreenString(" ");
-            else if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.Landing)
+			if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.CrewRepairing)
+				Status.Text = "Crew Active On\n" + Ship.PlanetLocation.ToScreenString(" ");
+			else if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.Landing)
 				Status.Text = "Landing On\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.GetType() == typeof(Shuttle) && Ship.ShipState == Ship_States.TakingOff)
 				Status.Text = "Climbing From\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.GetType() == typeof(Shuttle) && ((Shuttle)Ship).OnGround)
-				Status.Text = "In Ground Bay\n" + Ship.PlanetLocation.ToScreenString(" ");
+				if (Ship.ACC != null && Ship.ACC.Active && Ship.Fuel < 50)
+					Status.Text = "Refueling at\n" + Ship.PlanetLocation.ToScreenString(" ");
+				else
+					Status.Text = "In Ground Bay\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Launching)
 				Status.Text = "Launching From\n" + Ship.PlanetLocation.ToScreenString(" ");
-			else if (Ship.ShipState == Ship_States.Launching)
-				Status.Text = "Docking With\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Docked)
-				Status.Text = "Docked Above\n" + Ship.PlanetLocation.ToScreenString(" ");
+				if (Ship.ACC!=null && Ship.ACC.Active && Ship.Fuel<50)
+					Status.Text = "Refueling at\n" + Ship.PlanetLocation.ToScreenString(" ");
+				else
+					Status.Text = "Docked Above\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.InTransit)
-				Status.Text = "In Transit To\n" + Ship.DestinationPlanetLocation.ToScreenString(" ");
+				if (Ship.EngineEngaged)
+					Status.Text = "In Transit To\n" + Ship.DestinationPlanetLocation.ToScreenString(" ");
+				else
+					Status.Text = "Drifting To\n" + Ship.DestinationPlanetLocation.ToScreenString(" ");
 			else if (Ship.ShipState == Ship_States.Docking)
 				Status.Text = "Docking With\n" + Ship.PlanetLocation.ToScreenString(" ");
+			else if (Ship.Fuel==0)
+				Status.Text = "Falling To\n" + Ship.PlanetLocation.ToScreenString(" ");
 			else
 				Status.Text = "Orbitting\n" + Ship.PlanetLocation.ToScreenString(" ");
 
@@ -575,13 +593,13 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			if (GameCore.SingletonInstance.currentScene == Scenes.ShipInterior)
 			{
-                var sceneVariables = new List<SceneVariables>();
+				var sceneVariables = new List<SceneVariables>();
 
 				if (Ship.ShipType!=Ship_Types.Shuttle)
 				{
-                    sceneVariables.Add(Enums.SceneVariables.Orbit);
-                }
-                else
+					sceneVariables.Add(Enums.SceneVariables.Orbit);
+				}
+				else
 				{
 					if (((Shuttle)Ship).OnGround)
 					{
@@ -590,23 +608,46 @@ namespace Deuteros.Code.Platform.Screens
 					else
 					{
 						sceneVariables.Add(Enums.SceneVariables.Orbit);
-                    }
-                }
+					}
+				}
 
-                GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
-				GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = Ship.PlanetLocation;
-                GameCore.SingletonInstance.ChangeScene(Scenes.ShipInterior, sceneVariables);
+				if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Contains(Ship))
+				{
+					if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets.Values.Select(p => p).Where(p => p.Station.Built && !p.ActiveMethanoid).ToList().Count() == 0)
+						GameCore.SingletonInstance.ChangeScene(Scenes.Earth_Ground, new List<SceneVariables>());
+					else
+						GameCore.SingletonInstance.ChangeScene(Scenes.Overview, new List<SceneVariables>());
+
+				}
+				else
+				{
+					GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
+					GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentPlanet = Ship.PlanetLocation;
+					GameCore.SingletonInstance.ChangeScene(Scenes.ShipInterior, sceneVariables);
+				}
 			}
 			else
+
 				UpdateState();
-        }
+		}
 
-        #region Statics
+		#region Statics
 
-        public static void UpdateShips(uint previousDay, uint currentDay)
+		public static void UpdateShips(uint previousDay, uint currentDay)
 		{
+
 			foreach (var ship in GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships)
 			{
+				if ((ship.ShipState == Enums.Ship_States.Launching || ship.ShipState == Enums.Ship_States.Landing || ship.ShipState == Enums.Ship_States.TakingOff || ship.ShipState == Enums.Ship_States.Docking || ship.ShipState == Enums.Ship_States.InTransit) && ship.Fuel > 0)
+				{
+					ship.Fuel--;
+					ship.FallingCount = 0;
+				}
+				else if (ship.Fuel == 0 && ship.ShipState == Ship_States.UnDocked)
+				{
+					ship.FallingCount++;
+				}
+
 				if (ship.ShipType == Ship_Types.Shuttle && ship.ShipState == Ship_States.CrewRepairing)
 				{
 					((Shuttle)ship).CompleteRepairs();
@@ -667,6 +708,18 @@ namespace Deuteros.Code.Platform.Screens
 					//The ship is docked, and we're not updating it - Might be waiting for fuel
 					ship.ACC?.Update(Ship_States.Docked);
 				}
+			}
+
+			for (int i = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.Count-1; i>=0; i--)
+			{
+				var ship = GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships[i];
+
+				if (ship.FallingCount==5)
+				{
+					//ship destroyed
+					GameCore.SingletonInstance.GameData.ActiveSaveFile.Ships.RemoveAt(i);
+				}
+
 			}
 		}
 		#endregion

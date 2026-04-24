@@ -13,6 +13,8 @@ namespace Deuteros.Code.Objects
 		public Factory Factory { get; set; }
 		public int ShuttleState { get; set; }
 		public int StarShipState { get; set; }
+		public bool SdmInstalled { get; set; }
+		public bool MtxInstalled { get; set; }
 
 		public SpaceStation(Enums.StellarBodies planetId)
 		{

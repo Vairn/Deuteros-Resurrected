@@ -164,8 +164,16 @@ namespace Deuteros.Code.Platform.Screens
 			SourceCycleButtons.ForEach(T => T.Modulate = new Color(T.Modulate, 0f));
 			DestinationCycleButtons.ForEach(T => T.Modulate = new Color(T.Modulate, 0f));
 
-			SourceName.Text = CurrentACC.Source.ToString();
-			DestinationName.Text = CurrentACC.Destination.ToString();
+			if (CurrentACC.Ship.ShipType == Ship_Types.Shuttle)
+			{
+				SourceName.Text = "Surface";
+				DestinationName.Text = "Orbit";
+			}
+			else
+			{
+				SourceName.Text = CurrentACC.Source.ToString();
+				DestinationName.Text = CurrentACC.Destination.ToString();
+			}
 
 			Warning.Visible = !CurrentACC.Ship.Modules.Any(T => T.ModuleType == Module_Types.Supply);
 

@@ -27,6 +27,8 @@ namespace Deuteros.Code.Objects
         public Enums.ItemTypes FuelType { get; set; }
         public List<ShipModule> Modules { get; set; }
         public ACC ACC { get; set; }
+        public bool EngineEngaged { get; set; }
+        public int FallingCount { get; set; }
 
         public void Dock()
         {
@@ -39,7 +41,7 @@ namespace Deuteros.Code.Objects
 
         public void Land()
         {
-            if (ShipType == Ship_Types.Shuttle && ShipState == Ship_States.UnDocked)
+            if (ShipType == Ship_Types.Shuttle && ShipState == Ship_States.UnDocked && Fuel>0)
             {
                 ShipState = Ship_States.Landing;
                 StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
@@ -48,7 +50,10 @@ namespace Deuteros.Code.Objects
 
         public void TakeOff()
         {
-            if (Engine && Fuel > 0 && ShipState!=Ship_States.CrewRepairing)
+            if (Engine && Fuel > 0 && ShipState != Ship_States.CrewRepairing)
+            {
+
+                if (Pilot != null) Pilot.ActionsTaken++;
 
                 //clear the Shuttle/Ship State to prevent scrolling in ship bay when ship is not there
                 if (ShipType == Ship_Types.Shuttle)
@@ -63,7 +68,7 @@ namespace Deuteros.Code.Objects
                     GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Station.StarShipState = 0;
                 }
 
-            if (ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
+                if (ShipType == Ship_Types.Shuttle && ((Shuttle)this).OnGround == true)
                 {
                     ((Shuttle)this).OnGround = false;
                     ShipState = Ship_States.TakingOff;
@@ -74,12 +79,16 @@ namespace Deuteros.Code.Objects
                     ShipState = Ship_States.Launching;
                     StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
                 }
+            }
         }
 
         public bool EngageEngine()
         {
             if (ShipState == Ship_States.UnDocked && Engine && DestinationPlanetLocation != PlanetLocation)
             {
+                if (Pilot != null) Pilot.ActionsTaken++;
+
+                EngineEngaged = true;
                 ShipState = Ship_States.InTransit;
                 StartTravelDay = GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay;
                 
@@ -89,6 +98,11 @@ namespace Deuteros.Code.Objects
             {
                 return false;
             }
+        }
+
+        public void DisengageEngine()
+        {
+            EngineEngaged = false;
         }
 
         public virtual int TravelTimeRemain()
