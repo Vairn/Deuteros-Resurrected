@@ -130,7 +130,7 @@ text = "Tech Level"
 [node name="TeamWorkingLabel" type="Label" parent="Labels/InProgress"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 63.0
+offset_left = 71.0
 offset_top = 56.0
 offset_right = 159.0
 offset_bottom = 65.0
@@ -141,14 +141,13 @@ horizontal_alignment = 2
 [node name="ProjectCompletionLabel" type="Label" parent="Labels/InProgress"]
 anchors_preset = -1
 anchor_bottom = 0.012
-offset_left = 65.0
+offset_left = 71.0
 offset_top = 66.0
 offset_right = 157.0
 offset_bottom = 90.0
 theme = ExtResource("7_o4ukq")
 text = "Project is
-1% Complete"
-horizontal_alignment = 2
+ 1% Complete"
 
 [node name="Researched" type="Node2D" parent="Labels"]
 
