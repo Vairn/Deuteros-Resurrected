@@ -422,28 +422,37 @@ namespace Deuteros.Code
 
         public enum BulletinTypes
         {
-            ios,
-            ios_attachments,
-            methanoid_laser,
-            self_destruct,
-            matter_transmitter,
-            scg_drone,
-            hyperlight_speed,
-            fuel_weapon,
-            drone_ships,
-            sol_cleared,
-            rogue_ship,
-            mutiny,
-            transmission1,
-            transmission2,
-            storm,
-            storm_over,
-            mining_dump,
-            meteor_warning,
-            meteor_strike,
-            sonic_weapon,
-            eureka
-
+            IOS,
+            IOS_Attachments,
+            Methanoid_Laser,
+            Self_Destruct,
+            Matter_Transmitter,
+            SCG_Drone,
+            Hyperlight_Speed,
+            Fuel_Weapon,
+            Drone_Ships,
+            Sol_Cleared,
+            Rogue_Ship,
+            Mutiny,
+            Transmission1,
+            Transmission2,
+            Storm,
+            Storm_Over,
+            Mining_Dump,
+            Meteor_Warning,
+            Meteor_Strike,
+            Sonic_Weapon,
+            Eureka
         }
+
+        public enum ModuleFrameText
+        {
+            Station_Deploy,
+            Station_Deploy_Complete,
+            RFrame_Deploy,
+            RFrame_Deploy_Complete,
+			Methanoid_Intro,
+			Methanoid_Intro_With_Grapple
+		}
     }
 }

@@ -23,7 +23,7 @@ namespace Deuteros.Code.Platform
             {
                 GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.First_Station_Segment);
 
-                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.ios);
+                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.IOS);
 
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
@@ -49,13 +49,14 @@ namespace Deuteros.Code.Platform
         {
             
         }
+
         private void SingletonInstance_ProductionFinished(Objects.Factory factory)
         {
             if (factory.CurrentProductionItem().Product.ItemType == Enums.ItemTypes.i_chassis && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.IOS_Attachments))
             {
                 GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.IOS_Attachments);
 
-                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.ios_attachments);
+                GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.IOS_Attachments);
 
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__m__a).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__o__c).Research.Locked = false;
@@ -63,7 +64,6 @@ namespace Deuteros.Code.Platform
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.grapple).Research.Locked = false;
                 GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.r_frame).Research.Locked = false;
             }
-
         }
 
         public void TriggerUnlock(Enums.Game_Unlocks unlock)
@@ -71,20 +71,19 @@ namespace Deuteros.Code.Platform
             switch (unlock)
             {
                 case Enums.Game_Unlocks.Mass_Tranceiver:
-                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.matter_transmitter);
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.Matter_Transmitter);
                     GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Mass_Tranceiver);
                     break;
 
                 case Enums.Game_Unlocks.D_F_C_C:
-                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.drone_ships);
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.Drone_Ships);
                     GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.D_F_C_C);
                     break;
 
                 case Enums.Game_Unlocks.Self_Destruct:
-                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.self_destruct);
+                    GameCore.SingletonInstance.ShowBulletin(Enums.BulletinTypes.Self_Destruct);
                     GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Self_Destruct);
                     break;
-
             }
         }
     }

@@ -20,9 +20,9 @@ namespace Deuteros.Code
 	public partial class GameCore : BaseSubScene
 	{
 		#region DEBUGVARS
-		
+
 		//TODO DEBUG
-		
+
 		public bool InfiniteResources { get; set; }
 
 		#endregion
@@ -34,9 +34,9 @@ namespace Deuteros.Code
 			{
 				return new List<Objects.MenuButton>()
 				{
-					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true, 
-					new Godot.Collections.Array<Enums.SceneVariables>() { 
-						Enums.SceneVariables.Ground 
+					new Objects.MenuButton(Enums.Menu_Buttons.Production, Enums.Scenes.Production, true,
+					new Godot.Collections.Array<Enums.SceneVariables>() {
+						Enums.SceneVariables.Ground
 					}, null,null, "Production"),
 					null,
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
@@ -93,7 +93,7 @@ namespace Deuteros.Code
 					new Objects.MenuButton(Enums.Menu_Buttons.Shuttle, Enums.Scenes.ShipInterior, true,
 						new Godot.Collections.Array<Enums.SceneVariables>() {
 							Enums.SceneVariables.Orbit
-						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null, 
+						}, new List<Action> { () => GameCore.SingletonInstance.ShipSelected = GameData.ActiveSaveFile.Ships.Single(T => T.ShipType == Enums.Ship_Types.Shuttle && T.PlanetLocation == GetCurrentPlanet().PlanetId).ShipID }, null,
 						"Shuttle"),
 
 					null,
@@ -341,7 +341,7 @@ namespace Deuteros.Code
 				if (GameData.ActiveSaveFile.TimeSkipDay || Time.GetTicksMsec() - GameData.ActiveSaveFile.TimeSkipStart >= 500)
 				{
 					GameData.ActiveSaveFile.CurrentDay++;
-					TriggerDay(GameData.ActiveSaveFile.CurrentDay -1, GameData.ActiveSaveFile.CurrentDay);
+					TriggerDay(GameData.ActiveSaveFile.CurrentDay - 1, GameData.ActiveSaveFile.CurrentDay);
 
 					GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
 					GameData.ActiveSaveFile.TimeSkipDay = false;
@@ -395,7 +395,7 @@ namespace Deuteros.Code
 				_menuScreen.Star.Text = GetCurrentPlanet().ParentStar.ToScreenString(" ");
 				_menuScreen.SetupMenus();
 			}
-			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground)) 
+			else if (_menuScreen != null && GetCurrentPlanet().PlanetId == Enums.StellarBodies.earth && sceneVariables.Contains(Enums.SceneVariables.Ground))
 			{
 				_menuScreen.MenuButtons = EarthMenuButtons;
 				_menuScreen.Location.Text = "Earth City";
@@ -416,7 +416,6 @@ namespace Deuteros.Code
 					{
 						_menuScreen.MenuButtons = OverviewMenuButtons;
 					}
-
 				}
 
 				_menuScreen.SetupMenus();
@@ -430,15 +429,13 @@ namespace Deuteros.Code
 					_menuScreen.MenuButtons = OverviewMenuButtons;
 
 				//disable menus or ship interior while in transit
-				if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType!=Ship_Types.Shuttle)
+				if (_currentScreen.GetType() == typeof(ShipInterior) && ((ShipInterior)_currentScreen).Ship.ShipType != Ship_Types.Shuttle)
 				{
-					if (((ShipInterior)_currentScreen).Ship.ShipState==Ship_States.InTransit)
+					if (((ShipInterior)_currentScreen).Ship.ShipState == Ship_States.InTransit)
 					{
 						_menuScreen.MenuButtons = OverviewMenuButtons;
 					}
-
 				}
-
 
 				if (_currentScreen.GetType() == typeof(ShipBay) || _currentScreen.GetType() == typeof(GroundMaterials) || _currentScreen.GetType() == typeof(Deuteros.Code.Platform.Screens.Store))
 				{
@@ -489,7 +486,7 @@ namespace Deuteros.Code
 
 		public static void UnLockScreen()
 		{
-			lock(SingletonInstance._screenLocker)
+			lock (SingletonInstance._screenLocker)
 			{
 				SingletonInstance._lockCount = Math.Max(0, SingletonInstance._lockCount - 1);
 
@@ -509,7 +506,6 @@ namespace Deuteros.Code
 		{
 			return (PlanetType)SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[planet];
 		}
-
 
 		public static Earth Earth
 		{

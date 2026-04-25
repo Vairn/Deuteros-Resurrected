@@ -103,11 +103,11 @@ namespace Deuteros.Code.Platform.Screens
 		{
 			var currentPlanet = Deuteros.Code.GameCore.SingletonInstance.GetCurrentPlanet();
 			
-			if (ViewTypeToggle && currentPlanet.Station.MtxInstalled && 
-				!GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Mass_Tranceiver))
+			if (ViewTypeToggle && currentPlanet.Station.MtxInstalled && !GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.Mass_Tranceiver))
 			{
 				GameCore.SingletonInstance.TriggerUnlock(Enums.Game_Unlocks.Mass_Tranceiver);
 			}
+
 			DrawData();
 		}
 
@@ -120,6 +120,7 @@ namespace Deuteros.Code.Platform.Screens
 			var currentStore = SceneVariables.Contains(Enums.SceneVariables.Ground) ? currentPlanet.PlanetResources.Stores : currentPlanet.Station.Resources.Stores;
 
 			int padlength = 1;
+
 			foreach (var item in GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => !T.Locked && (T.ItemCategory == Enums.ItemCategory.item) == ViewTypeToggle))
 			{
 				padlength = Math.Max(padlength, currentStore[item.ItemType].ToString().Length);

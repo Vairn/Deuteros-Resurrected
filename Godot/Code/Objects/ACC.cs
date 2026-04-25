@@ -154,8 +154,7 @@ namespace Deuteros.Code.Objects
             {
                 Ship.Dock();
             }
-            else 
-            if (Ship.ShipState == Ship_States.UnDocked && oldState == Ship_States.TakingOff)
+            else if (Ship.ShipState == Ship_States.UnDocked && oldState == Ship_States.TakingOff)
             {
                 Ship.Dock();
             }
@@ -169,7 +168,6 @@ namespace Deuteros.Code.Objects
                 {
                     Ship.EngageEngine();
                 }
-
             }
             //If we're docked, and the old state was either docking or landing, then we're due a resupply
             else if (Ship.ShipState == Ship_States.Docked && (oldState == Ship_States.Docking || oldState == Ship_States.Landing))

@@ -9,6 +9,8 @@ using Deuteros.Code.Objects.Interfaces;
 using static Deuteros.Code.Enums;
 using Deuteros.Code.Utility;
 using Deuteros.Code.Platform.Screens.ModuleScenes;
+using Deuteros.Code.Objects.ModuleTextFrame;
+using System.Threading.Tasks;
 
 namespace Deuteros.Code.Platform.Screens
 {
@@ -52,7 +54,7 @@ namespace Deuteros.Code.Platform.Screens
 		Label ETA { get; set; }
 
 		StarMap DestinationStarMap { get; set; }
-		OFFrameDeploy OfFrameDeployScene {get; set;}
+		ModuleTextFrame ModuleTextFrame {get; set;}
 		ACC ACCScreen { get; set; }
 
 		public override void _Ready()
@@ -121,6 +123,7 @@ namespace Deuteros.Code.Platform.Screens
 
 			base._Ready();
 		}
+
 		private async void ShipInterior_Pressed(int modulePressed)
 		{
 			if (Ship.ShipState == Ship_States.Docked)
@@ -130,29 +133,23 @@ namespace Deuteros.Code.Platform.Screens
 
 				if (Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround)
 				{
-
 					if (Ship.Modules[modulePressed].ItemStored == ItemTypes.r_frame && CurrentPlanet.BaseBuildParts < 2 && Ship.Pilot != null && Ship.ShipType == Ship_Types.Shuttle && ((Shuttle)Ship).OnGround)
 					{
 						if (Ship.Pilot != null) Ship.Pilot.ActionsTaken++;
-						
-						GameCore.LockScreen();
-
-						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
-						Window.AddChild(OfFrameDeployScene);
-						OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
-						await OfFrameDeployScene.PlayRFrameThreeLabels(CurrentPlanet.BaseBuildParts + 1);
-						Window.RemoveChild(OfFrameDeployScene);
-						OfFrameDeployScene = null;
 
 						CurrentPlanet.BaseBuildParts++;
+
+						if (CurrentPlanet.BaseBuildParts == 2)
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.RFrame_Deploy_Complete], new List<string>() { CurrentPlanet.BaseBuildParts.ToString() }, (modulePressed + 1));
+						else
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.RFrame_Deploy], new List<string>() { CurrentPlanet.BaseBuildParts.ToString() }, (modulePressed + 1));
 
 						Ship.Modules[modulePressed].ItemStored = ItemTypes.none;
 						Ship.Modules[modulePressed].ItemCount = 0;
 
-						GameCore.UnLockScreen();
+						GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
 						UpdateState();
-						GameCore.SingletonInstance.ShipSelected = Ship.ShipID;
 
 						newScene = Enums.Scenes.ShipInterior;
 					}
@@ -183,23 +180,14 @@ namespace Deuteros.Code.Platform.Screens
 				}
 				else if (Ship.ShipType != Ship_Types.Shuttle)
 				{
-
-					
 					if (CurrentPlanet.ActiveMethanoid && !Ship.Modules.Any<ShipModule>(m => m.ItemStored == ItemTypes.commspod))
 					{
-						GameCore.LockScreen();
 
-						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
-						Window.AddChild(OfFrameDeployScene);
-						OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
+
 						if (Ship.Modules.Any<ShipModule>(m => m.ItemStored == ItemTypes.grapple))
-							await OfFrameDeployScene.PlayMethanoidText2();
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.Methanoid_Intro_With_Grapple], new List<string>(), (modulePressed + 1));
 						else
-							await OfFrameDeployScene.PlayMethanoidText();
-						Window.RemoveChild(OfFrameDeployScene);
-						OfFrameDeployScene = null;
-
-						GameCore.UnLockScreen();
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.Methanoid_Intro], new List<string>(), (modulePressed + 1));
 
 						Ship.TakeOff();
 
@@ -225,35 +213,42 @@ namespace Deuteros.Code.Platform.Screens
 				{ 				
 					if(Ship.Modules[modulePressed].ItemStored == ItemTypes.of_frame && CurrentPlanet.Station.Built == false && Ship.Pilot != null)
 					{
-						GameCore.LockScreen();
-
 						if (Ship.Pilot != null) Ship.Pilot.ActionsTaken++;
 
-						OfFrameDeployScene = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/OFFrameDeploy.tscn").Instantiate<OFFrameDeploy>();
-						Window.AddChild(OfFrameDeployScene);
-						OfFrameDeployScene.WindowNumber.Text = (modulePressed + 1).ToString();
-						await OfFrameDeployScene.PlayThreeLabels(CurrentPlanet.Station.BuildParts + 1);
-						Window.RemoveChild(OfFrameDeployScene);
-						OfFrameDeployScene = null;
-
 						CurrentPlanet.Station.BuildParts++;
+
+						if (CurrentPlanet.Station.BuildParts == 8)
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.Station_Deploy_Complete], new List<string>() { CurrentPlanet.Station.BuildParts.ToString() }, (modulePressed + 1));
+						else
+							await ShowModuleTextFrame(GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ModuleFrameTexts[Enums.ModuleFrameText.Station_Deploy], new List<string>() { CurrentPlanet.Station.BuildParts.ToString() }, (modulePressed + 1));
 
 						Ship.Modules[modulePressed].ItemStored = ItemTypes.none;
 						Ship.Modules[modulePressed].ItemCount = 0;
 
 						if (CurrentPlanet.Station.BuildParts == 8)
-						{
 							CurrentPlanet.Station.Built = true;
-						}
 
 						GameCore.SingletonInstance.TriggerStationPiecePlaced(CurrentPlanet.PlanetId);
-
-						GameCore.UnLockScreen();
 
 						UpdateState();
 					}
 				}
 			}
+		}
+
+		private async Task ShowModuleTextFrame(TextFrame newTextFrame, List<string> dynamicProperties, int windowNumber)
+		{
+			GameCore.LockScreen();
+
+			ModuleTextFrame = GD.Load<PackedScene>("res://PreFabs/ShipModuleWindows/ModuleTextFrame.tscn").Instantiate<ModuleTextFrame>();
+			Window.AddChild(ModuleTextFrame);
+
+			await ModuleTextFrame.PlayText(newTextFrame, dynamicProperties, windowNumber);
+
+			Window.RemoveChild(ModuleTextFrame);
+			ModuleTextFrame = null;
+
+			GameCore.UnLockScreen();
 		}
 
 		private void Land_Pressed()

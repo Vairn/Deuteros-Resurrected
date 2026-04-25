@@ -4,9 +4,8 @@
 [ext_resource type="AudioStream" uid="uid://c5vjyvse1fcx1" path="res://Sounds/Typing.wav" id="2_u6sgg"]
 [ext_resource type="Theme" uid="uid://ca7skhjpl6nn5" path="res://Themes/WhiteFont5.tres" id="8_2qqnl"]
 
-[node name="Bulletins" type="Node2D" node_paths=PackedStringArray("TypeSound")]
+[node name="Bulletins" type="Node2D"]
 script = ExtResource("1_gqrd5")
-TypeSound = NodePath("TypeSound")
 
 [node name="TypeSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_u6sgg")
@@ -14,22 +13,12 @@ stream = ExtResource("2_u6sgg")
 [node name="Labels" type="Node2D" parent="."]
 
 [node name="BulletinLabel" type="RichTextLabel" parent="Labels"]
-offset_left = 79.0
+offset_left = 57.0
 offset_top = 21.0
 offset_right = 317.0
 offset_bottom = 197.0
 theme = ExtResource("8_2qqnl")
-theme_override_constants/line_separation = -1
+theme_override_constants/line_separation = 0
 bbcode_enabled = true
-text = "1
-2
-3
-4
-5
-6
-7
-8
-9
-"
 fit_content = true
 autowrap_mode = 0
