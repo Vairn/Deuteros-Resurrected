@@ -24,7 +24,6 @@ namespace Deuteros.Code.Platform
             {
                 TimerHold_ButtonUp();
             }
-
         }
 
         private void TimerHold_ButtonUp()
@@ -32,6 +31,7 @@ namespace Deuteros.Code.Platform
             ButtonDownFlag = false;
             Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkip = false;
             Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart = Time.GetTicksMsec();
+
             if (Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.CurrentDay - DaysAtStart == 0 && Time.GetTicksMsec() - Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipStart < 999)
             {
                 Deuteros.Code.GameCore.SingletonInstance.GameData.ActiveSaveFile.TimeSkipDay = true;

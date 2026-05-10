@@ -14,8 +14,9 @@ namespace Deuteros.Code.Objects
         public bool DFCC { get; set; }
         public bool Scanning { get; set; }
         public bool Mining { get; set; }
+		public Asteroid AsteroidScanResults { get; set; }
 
-        public override int TravelTimeRemain()
+		public override int TravelTimeRemain()
         {
             int totalJourneyTime = 0;
 

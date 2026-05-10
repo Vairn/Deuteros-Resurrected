@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy6u4h4xvnly1"]
+
+[ext_resource type="PackedScene" uid="uid://dfxcpnk8y4m45" path="res://PreFabs/UI/Window.tscn" id="1_iacv4"]
+
+[node name="Ama" type="Node2D"]
+
+[node name="Window" parent="." instance=ExtResource("1_iacv4")]

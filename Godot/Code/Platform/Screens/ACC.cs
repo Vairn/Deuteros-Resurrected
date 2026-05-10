@@ -147,6 +147,7 @@ namespace Deuteros.Code.Platform.Screens
 
 			UpdateState();
 		}
+
 		private void DisplayShipInterior()
 		{
 			CloseWindow?.Invoke();

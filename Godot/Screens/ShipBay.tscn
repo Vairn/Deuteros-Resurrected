@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://du6cxq2xabkyu"]
+[gd_scene load_steps=23 format=3 uid="uid://du6cxq2xabkyu"]
 
 [ext_resource type="Script" path="res://Code/Platform/Screens/ShipBay.cs" id="1_ka4jh"]
 [ext_resource type="Texture2D" uid="uid://c75qloyqqj1ad" path="res://Sprites/Scenes/ShipBay.png" id="2_2703a"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://b8c5qo11ls550" path="res://Sprites/SceneSprites/Ships/FuelGauge_Minus.png" id="17_jaqr8"]
 [ext_resource type="Texture2D" uid="uid://dkyqkrw1tcabb" path="res://Sprites/SceneSprites/Ships/FuelGauge_Middle.png" id="18_dvytx"]
 [ext_resource type="Texture2D" uid="uid://yt7ht1f0rxff" path="res://Sprites/SceneSprites/Ships/FuelGauge_Plus.png" id="19_iifyq"]
+[ext_resource type="PackedScene" uid="uid://drqcefeqnqfsw" path="res://PreFabs/UI/DynamicWindow.tscn" id="21_m37m8"]
 [ext_resource type="PackedScene" uid="uid://dlpf322m5s804" path="res://PreFabs/Buttons/RepeatingButton.tscn" id="22_ykcnk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_10r56"]
@@ -117,6 +118,7 @@ offset_bottom = 168.0
 layout_mode = 0
 offset_right = 224.0
 offset_bottom = 116.0
+scroll_horizontal = 100
 horizontal_scroll_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ShipContainer/ScrollContainer2"]
@@ -821,7 +823,7 @@ offset_left = 160.0
 offset_top = 52.0
 offset_right = 240.0
 offset_bottom = 168.0
-ShowDividers = null
+ShowDividers = false
 ShowBackground = true
 
 [node name="Fuel" type="Control" parent="."]
@@ -900,3 +902,39 @@ offset_right = 9.0
 offset_bottom = 10.0
 flat = true
 RepeatRate = 0.01
+
+[node name="GrappleWindow" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 56.0
+offset_right = 280.0
+offset_bottom = 144.0
+
+[node name="GrappleEmptier" parent="GrappleWindow" instance=ExtResource("21_m37m8")]
+layout_mode = 1
+
+[node name="Title" type="Label" parent="GrappleWindow/GrappleEmptier"]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 10.0
+offset_right = 158.0
+offset_bottom = 26.0
+text = "Asteroid Break-Up
+Sequence."
+
+[node name="Quantites" type="Label" parent="GrappleWindow/GrappleEmptier"]
+layout_mode = 0
+offset_left = 39.0
+offset_top = 36.0
+offset_right = 183.0
+offset_bottom = 52.0
+text = "100 Titanium 50000"
+
+[node name="Complete" type="Label" parent="GrappleWindow/GrappleEmptier"]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 54.0
+offset_right = 170.0
+offset_bottom = 70.0
+text = "Sequence Complete."

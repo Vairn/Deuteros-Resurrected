@@ -39,6 +39,7 @@ namespace Deuteros.Code.Platform.Screens
 		Control CargoService { get; set; }
 		Control EquipmentStock { get; set; }
 		Control StaffList { get; set; }
+		Control GrappleWindowControl { get; set; }
 
 		Label[] EquipmentStockNameLabels { get; set; } = new Label[11];
 		Label[] EquipmentStockCountLabels { get; set; } = new Label[11];
@@ -49,6 +50,7 @@ namespace Deuteros.Code.Platform.Screens
 		Button[] EquipmentStockButtons { get; set; } = new Button[11];
 
 		StaffList TorsoStaffList { get; set; }
+		DynamicWindow GrappleWindow { get; set; }
 
 		ShipBayScenes.Cockpit CockpitInstance { get; set; }
 		List<ShipBayScenes.Torso> TorsoInstances { get; set; }
@@ -107,6 +109,9 @@ namespace Deuteros.Code.Platform.Screens
 			CargoService = GetNode<Control>("CargoService");
 			EquipmentStock = GetNode<Control>("EquipmentStock");
 			StaffList = GetNode<Control>("StaffList");
+			GrappleWindowControl = GetNode<Control>("GrappleWindow");
+
+			GrappleWindow = GetNode<DynamicWindow>("GrappleWindow/GrappleEmptier");
 
 			for (int i = 0; i < 11; i++)
 			{
@@ -171,9 +176,12 @@ namespace Deuteros.Code.Platform.Screens
 			FuelGaugeMinus.Pressed += FuelGaugeMinus_Pressed;
 			FuelGaugePlus.Pressed += FuelGaugePlus_Pressed;
 
+			GrappleWindow.Closed = GrappleClosed;
+
 			CargoService.Visible = false;
 			EquipmentStock.Visible = false;
 			StaffList.Visible = false;
+			GrappleWindowControl.Visible = false;
 
 			ScreenState = GetScreenState();
 
@@ -393,6 +401,17 @@ namespace Deuteros.Code.Platform.Screens
 				UpdateScreenState(ScreenState);
 				RefreshButtons();
 			}
+		}
+
+		private void GrappleClosed(object DataObject)
+		{
+			var currentModule = Ship.Modules[(int)DataObject];
+
+			ResourceList.Stores[currentModule.HeldAsteroid.Type] = Math.Min(50000, ResourceList.Stores[currentModule.HeldAsteroid.Type] + currentModule.HeldAsteroid.Mass);
+
+			currentModule.HeldAsteroid = null;
+
+			GameCore.UnLockScreen();
 		}
 
 		private void ScrollToScreen()
@@ -765,11 +784,23 @@ namespace Deuteros.Code.Platform.Screens
 			}
 			else if (currentModule.ModuleType == Enums.Module_Types.Tool)
 			{
-				UpdateEquipmentStock();
+				//We have a grapple with an item in it
+				if (currentModule.ItemStored == ItemTypes.grapple && currentModule.HeldAsteroid != null)
+				{
+					GrappleWindowControl.Visible = true;
+					GrappleWindow.DataObject = torsoSection;
+					GrappleWindow.StartCloseTimer(5f);
 
-				EquipmentStock.Visible = true;
+					GameCore.LockScreen();
+				}
+				else
+				{
+					UpdateEquipmentStock();
 
-				cursor.LockToRect(EquipmentStock.GetGlobalRect());
+					EquipmentStock.Visible = true;
+
+					cursor.LockToRect(EquipmentStock.GetGlobalRect());
+				}
 			}
 			else if (currentModule.ModuleType == Enums.Module_Types.Cryo)
 			{
@@ -944,18 +975,6 @@ namespace Deuteros.Code.Platform.Screens
 		protected override void DayTick(uint previousDay, uint currentDay)
 		{
 			UpdateState();
-			DrawData();
-		}
-
-		// Called every update.
-		public override void _Draw()
-		{
-			DrawData();
-		}
-
-		public void DrawData()
-		{
-
 		}
 	}
 }

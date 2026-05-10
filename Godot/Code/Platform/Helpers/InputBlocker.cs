@@ -50,7 +50,7 @@ namespace Deuteros.Code.Platform.Helpers
             AcceptEvent(); // eats pointer GUI events
         }
 
-        public override void _Input(InputEvent @event)
+        public override void _UnhandledInput(InputEvent @event)
         {
             if (!Blocked)
             {
@@ -64,6 +64,7 @@ namespace Deuteros.Code.Platform.Helpers
                             Deuteros.Code.GameCore.SingletonInstance.ChangeScene(Enums.Scenes.Overview, new List<Enums.SceneVariables>());
                     }
                 }
+
                 return;
             }
 

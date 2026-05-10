@@ -134,7 +134,7 @@ namespace Deuteros.Code.Platform.Screens
 						}
 					}
 				}
-				else
+				else if (CurrentFactory.AOC)
 				{
 					var production = CurrentFactory.ProductionQueue.SingleOrDefault(T => T.Product.ItemType == addedItem.ItemType);
 

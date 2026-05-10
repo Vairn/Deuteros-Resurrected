@@ -30,7 +30,7 @@ namespace Deuteros.Code.Objects
         public bool EngineEngaged { get; set; }
         public int FallingCount { get; set; }
 
-        public void Dock()
+		public void Dock()
         {
             if (ShipState == Ship_States.UnDocked && GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.Planets[PlanetLocation].Station.Built)
             {

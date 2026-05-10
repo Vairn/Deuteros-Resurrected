@@ -227,6 +227,8 @@ namespace Deuteros.Code
 
 		public Guid ShipSelected { get; set; }
 
+		public GameConfig Config { get; set; }
+
 		//Data stored in the GameCore is temporary
 		public delegate void DayPassedDelegate(uint previousDay, uint currentDay);
 		public event DayPassedDelegate DayPassed;
@@ -255,6 +257,14 @@ namespace Deuteros.Code
 			DefaultFont = fontLoadLabel.GetThemeFont("");
 			fontLoadLabel.QueueFree();
 			HoverText = "";
+
+			Config = new GameConfig();
+
+			// Load with default fallback
+			var width = (int)Config.GetValue("display", "window_width", 960);
+			var height = (int)Config.GetValue("display", "window_width", 600);
+
+			DisplayServer.WindowSetSize(new Vector2I(width, height));
 		}
 
 		// Called when the node enters the scene tree for the first time.

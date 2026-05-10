@@ -15,7 +15,12 @@ public partial class Settings : Node2D
 	public Button SoundToggle { get; set; }
 	public Button SkipToShuttles { get; set; }
 	public Button EarthStationTo7 { get; set; }
+	public Button ProdInEarthOrbit { get; set; }
+	public Button IOSModulesReady { get; set; }
+	
 	public Button MaxResources { get; set; }
+	
+
 	public Label MaxResourcesText { get; set; }
 	public Label SoundToggleText { get; set; }
 	public bool SoundOn { get; set; }
@@ -29,12 +34,16 @@ public partial class Settings : Node2D
 		EarthStationTo7 = (Button)GetNode("EarthStationTo7");
 		MaxResources = (Button)GetNode("MaxResources");
 		SoundToggle = (Button)GetNode("SoundToggle");
+		ProdInEarthOrbit = (Button)GetNode("EarthOrbitProduction");
+		IOSModulesReady = (Button)GetNode("IOSModulesReady");
 		SoundToggle.Connect("button_up", new Callable(this, nameof(SoundToggle_ButtonUp)));
 
 
 		SkipToShuttles.Pressed += SkipToShuttles_Pressed;
 		EarthStationTo7.Pressed += EarthStationTo7_Pressed;
 		MaxResources.Pressed += MaxResources_Pressed;
+		ProdInEarthOrbit.Pressed += ProdInEarthOrbit_Pressed;
+		IOSModulesReady.Pressed += IOSModulesReady_Pressed;
 
 		SoundToggleText = (Label)GetNode("SoundToggle/SoundToggleText");
 		MaxResourcesText = (Label)GetNode("MaxResources/MaxResourcesText");
@@ -43,6 +52,71 @@ public partial class Settings : Node2D
 		SoundToggleText.Text = SoundOn ? "ON" : "OFF";
 
 		base._Ready();
+	}
+
+	private void IOSModulesReady_Pressed()
+	{
+		var gameData = GameCore.SingletonInstance.GameData;
+		var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
+
+		if (!GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Contains(Enums.Game_Unlocks.IOS_Attachments))
+		{
+			if (!earth.Station.Built)
+				ProdInEarthOrbit_Pressed();
+
+			GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.IOS_Attachments);
+
+			GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__m__a).Research.Locked = false;
+			GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__o__c).Research.Locked = false;
+			GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.bandaid).Research.Locked = false;
+			GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.grapple).Research.Locked = false;
+			GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.r_frame).Research.Locked = false;
+
+
+
+			gameData.GetItem(Enums.ItemTypes.a__m__a).Research.Researched = true;
+			gameData.GetItem(Enums.ItemTypes.a__m__a).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+			gameData.GetItem(Enums.ItemTypes.a__m__a).Locked = false;
+
+			gameData.GetItem(Enums.ItemTypes.a__o__c).Research.Researched = true;
+			gameData.GetItem(Enums.ItemTypes.a__o__c).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+			gameData.GetItem(Enums.ItemTypes.a__o__c).Locked = false;
+
+			gameData.GetItem(Enums.ItemTypes.bandaid).Research.Researched = true;
+			gameData.GetItem(Enums.ItemTypes.bandaid).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+			gameData.GetItem(Enums.ItemTypes.bandaid).Locked = false;
+
+			gameData.GetItem(Enums.ItemTypes.grapple).Research.Researched = true;
+			gameData.GetItem(Enums.ItemTypes.grapple).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+			gameData.GetItem(Enums.ItemTypes.grapple).Locked = false;
+
+			gameData.GetItem(Enums.ItemTypes.r_frame).Research.Researched = true;
+			gameData.GetItem(Enums.ItemTypes.r_frame).Research.ResearchOrder = GameCore.SingletonInstance.GameData.ActiveSaveFile.BaseGameData.ItemList.Where(T => T.Research != null && T.Research.Researched).Count();
+			gameData.GetItem(Enums.ItemTypes.r_frame).Locked = false;
+		}
+	}
+
+	private void ProdInEarthOrbit_Pressed()
+	{
+		var gameData = GameCore.SingletonInstance.GameData;
+		var earth = (Earth)gameData.ActiveSaveFile.BaseGameData.Planets[Enums.StellarBodies.earth];
+
+		//Make sure we have a station at all
+		if (earth.Station.BuildParts < 7)
+		{
+			EarthStationTo7_Pressed();
+		}
+
+		earth.Station.Built = true;
+		earth.Station.BuildParts = 8;
+		earth.Station.Factory.AOC = true;
+
+		GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.First_Station_Segment);
+		GameCore.SingletonInstance.GameData.ActiveSaveFile.Unlocks.Add(Enums.Game_Unlocks.Space_Stations);
+
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_chassis).Research.Locked = false;
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.i_drive).Research.Locked = false;
+		GameCore.SingletonInstance.GameData.GetItem(Enums.ItemTypes.a__c__c).Research.Locked = false;
 	}
 
 	private void MaxResources_Pressed()

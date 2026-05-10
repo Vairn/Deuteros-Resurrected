@@ -11,14 +11,17 @@ namespace Deuteros.Code.Objects
         public Enums.Module_Types ModuleType { get; set; }
         public Enums.ItemTypes ItemStored { get; set; }
         public Staff StaffStored { get; set; }
+        //Used for count of items and amount of ore
         public int ItemCount { get; set; }
+		public Asteroid HeldAsteroid { get; set; }
 
-        public ShipModule()
+		public ShipModule()
         {
             ItemStored = Enums.ItemTypes.none;
             ModuleType = Enums.Module_Types.None;
             StaffStored = null;
             ItemCount = 0;
-        }
+            HeldAsteroid = null;
+		}
     }
 }

@@ -477,3 +477,11 @@ offset_right = 103.0
 offset_bottom = 35.0
 texture_normal = ExtResource("11_fwf6c")
 metadata/_edit_use_anchors_ = true
+
+[node name="GrappleHolder" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
