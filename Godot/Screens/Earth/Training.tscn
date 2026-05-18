@@ -23,6 +23,15 @@ mouse_filter = 2
 texture = ExtResource("2_7nv2c")
 stretch_mode = 5
 
+[node name="LightSwitchButton" parent="." instance=ExtResource("5_esdh4")]
+show_behind_parent = true
+offset_left = 117.0
+offset_top = 127.0
+offset_right = 125.0
+offset_bottom = 135.0
+keep_pressed_outside = true
+RepeatRate = 0.005
+
 [node name="Doors" type="Node" parent="."]
 
 [node name="Marines" type="Node" parent="Doors"]
